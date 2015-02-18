@@ -30,8 +30,8 @@ function doZoom(zoomvalue) {
    
    var dx = (globalZoom-oldZoom)*(window.innerWidth/2);
    var dy = (globalZoom-oldZoom)*(window.innerHeight/2);
-   shiftX -= dx;
-   shiftY -= dy;
+   shiftX += dx;
+   shiftY += dy;
    updateView(null,true);
 }
 
