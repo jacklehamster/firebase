@@ -258,5 +258,7 @@ function updateToolbar() {
    document.getElementById("pencil").style.borderColor = action=="pencil"?"blue":"silver";
    document.getElementById("zoom").style.borderColor = action=="zoom"?"blue":"silver";
    document.getElementById("palette").style.borderColor = action=="palette"?"blue":"silver";
+   
+   document.getElementById("palette").style.display="none";
 }
 
