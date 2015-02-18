@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html style="height:100%">
+<head><title>YOUPI loops your video forever and ever</title>
+<style>
+a:link {
+    color: #FF00FF;
+}
+a:visited {
+    color: #FF00FF;
+}
+
+</style>    
+<script>
+        function getParameterByName(search,name,defaultValue) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(search);
+            return results === null ? defaultValue 
+            : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }    
+        
+        function getSeconds(time) {
+            var splits = time.split(":");
+            var seconds = parseFloat(splits.pop());
+            if(splits.length)
+                seconds += parseFloat(splits.pop())*60;
+            if(splits.length)
+                seconds += parseFloat(splits.pop())*3600;
+            return seconds;
+        }
+    
+    
+        var demoSearch = "?videoID=vbU2VXGjQj8&start=4:24&end=4:29.9";
+        var url = document.URL.split("?")[0];
+        var videoID = getParameterByName(location.search,"videoID");
+        var ref = getParameterByName(location.search,"ref");
+        var start = getSeconds(getParameterByName(location.search,"start","0"));
+        var end = getSeconds(getParameterByName(location.search,"end","0"));
+        var mute = getParameterByName(location.search,"mute");
+        var secret = null;
+</script>
+<script src="list.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+        var demoVideo = getParameterByName(location.search,"ref",getParameterByName(demoSearch,"videoID"));
+        var demoStart = getParameterByName(location.search,"start",getParameterByName(demoSearch,"start")); 
+        var demoEnd = getParameterByName(location.search,"end",getParameterByName(demoSearch,"end"));
+        var demoURL = url+"?videoID="+demoVideo+"&start="+demoStart+"&demoEnd="+demoEnd;
+
+
+        var looping = false;
+        if(end<start)
+            end = 0;
+    
+        function onYouTubeIframeAPIReady() {
+            if(videoID) {
+                player = new YT.Player('player', {
+                    width: '100%',
+                    height:'100%',
+                    videoId: videoID,
+                    playerVars: { 
+                        controls: 0, 
+                        autohide:1,
+                        modestbranding:1,
+                        origin:document.domain, 
+                        disablekb :1,
+                        enablejsapi :1 
+                    },
+                    events: {
+                        onReady: onPlayerReady,
+                        onStateChange: onPlayerStateChange
+                    }
+                });
+                document.getElementById("youpi").href = "?ref="
+                    +videoID+"&start="+start+"&end="+end;
+                document.getElementById("tweet").setAttribute("data-url",url+"?videoID="+videoID+"&start="+start+"&end="+end);
+                setTweet();
+            }
+            else {
+                var instructions = document.getElementById("instructions");
+                instructions.innerHTML = instructions.innerHTML
+                    .split("%URL").join(url)
+                    .split("%DEMOVIDEO").join(demoVideo)
+                    .split("%DEMOSTART").join(demoStart)
+                    .split("%DEMOEND").join(demoEnd)
+                    .split("%TWEET").join(tweet);
+                instructions.style.display="";
+                document.body.style.margin = "5px";
+                document.getElementById("demoframe").src = 
+                    "?videoID="+demoVideo+"&start="+demoStart+"&end="+demoEnd+"&mute="+(mute=='0'?0:1);
+                if(secret)
+                    document.getElementById("youpi").href = secret;
+                document.getElementById("tweetbox").style.display="none";
+                setTweet();
+            }
+        }
+    
+        function onPlayerStateChange(event) {
+            if(event.data==YT.PlayerState.ENDED) {
+                playSeek(true);
+            }
+            else if(event.data==YT.PlayerState.PLAYING && !looping) {
+                looping = true;
+                setInterval(playSeek,1000*(end-start),false);
+            }
+        }
+    
+        function onPlayerReady(event) {
+            document.title = player.getVideoData().title + " played over and over and over";
+            if(parseInt(mute)) {
+                player.mute();
+            }
+            playSeek(true);
+        }
+    
+        function playSeek(force) {
+            if(force || end && player.getPlayerState()==YT.PlayerState.PLAYING)
+                player.seekTo(start);
+        }
+    
+</script>
+</head>
+<body style="margin:0px; height:100%" 
+      onmouseover="document.getElementById('youpi').style.display = 'none';if(videoID) document.getElementById('tweetbox').style.display = 'none';" 
+      onmouseout="document.getElementById('youpi').style.display = 'none';if(videoID) document.getElementById('tweetbox').style.display = 'none';">
+<div id="player"></div>
+<a id="youpi" target="_top" href="?videoID=2VzE8Ii12Js&start=1:04.7&end=1:18.3" style="display:none;position:absolute;right:5px;bottom:10px">YOUPI</a>
+<div id="tweetbox" style="display:none;position:absolute;left:5px;bottom:10px">
+
+<a id="tweet" href="https://twitter.com/share" class="twitter-share-button" data-text="I love this part so much I made it loop forever: " data-url="%URL?videoID=%DEMOVIDEO&start=%DEMOSTART&end=%DEMOEND" data-via="youpikarioka"></a>
+</div>
+<script>
+function setTweet() {
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+}
+</script>
+
+<div id="instructions" style="display:none">
+    <h2>YOUPI loops your video forever</h2>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="%URL"></a>
+    <a href="https://twitter.com/youpikarioka" class="twitter-follow-button" data-show-count="false">Follow @youpikarioka</a>
+<hr>
+<ul>
+<li>Step1: Find video on <a target="_blank" href="http://www.youtube.com">YouTube</a></li>
+<li>Step2: Look for a part you really like</li>
+<script>
+    function updateLink() {
+        var videoID = document.getElementById("input_videoID").value;
+        var start = document.getElementById("input_start").value;
+        var end = document.getElementById("input_end").value;
+        
+        document.getElementById("videoID").innerHTML = videoID;
+        document.getElementById("start").innerHTML = start;
+        document.getElementById("end").innerHTML = end;
+        document.getElementById("link").href = url +"?videoID=" + videoID + "&start="+start +"&end="+end;
+        
+    }
+</script>
+
+<li>Step3: Pass the <input id='input_videoID' type='text' size=10 value='YOUTUBEID' onkeydown="updateLink()" onpaste="updateLink()" oninput="updateLink()"></input>, 
+<input id='input_start' type='text' size=5 value='START' onkeydown="updateLink()" onpaste="updateLink()" oninput="updateLink()"></input> and 
+<input id='input_end' type='text' size=5 value='END' onkeydown="updateLink()" onpaste="updateLink()" oninput="updateLink()"></input> to YOUPI and let it loop that part forever</li>
+</ul>
+<a id='link' href=''>%URL?videoID=<span id='videoID'>YOUTUBEID</span>&start=<span id='start'>START</span>&end=<span id='end'>END</span></a>
+    <hr>
+<h3>USAGE:</h3>
+    <ul>
+    <li><b>Loop a video:</b>
+    %URL?<font color='green'>videoID=&lt;YOUTUBEID&gt;</font><br>
+    <i>ex: <a href="?videoID=Kaouy4QT9vE">
+        %URL?videoID=Kaouy4QT9vE</a></i><br>
+    </li>
+    <li><b>Loop a video muted:</b>
+    %URL?<font color='green'>videoID=&lt;YOUTUBEID&gt;&amp;mute=1</font><br>
+    <i>ex: <a href="?videoID=Tp6HQCb70yM&mute=1">
+        %URL?videoID=Tp6HQCb70yM&amp;mute=1</a></i><br>
+    </li>
+    <li><b>Loop a video from START to END:</b>
+    %URL?<font color='green'>video=&lt;YOUTUBEID&gt;</font>&amp;<font color='green'>start=&lt;START&gt;</font>&amp;<font color='green'>end=&lt;END&gt;</font><br>
+    <i>ex: <a href="?videoID=ptFt1ffCFf0&start=1:02&end=1:11">
+        %URL?videoID=ptFt1ffCFf0&amp;start=1:02&amp;end=1:11</a></i>
+    </li>
+    <li><b>You can use this in an iframe:</b><br>
+        <i>ex: <pre>&lt;iframe src="<a href="?videoID=%DEMOVIDEO&start=%DEMOSTART&end=%DEMOEND">%URL?videoID=%DEMOVIDEO&amp;start=%DEMOSTART&amp;end=%DEMOEND</a>"&gt;<br>&lt;/iframe&gt;</pre></i><br>
+        <iframe scrolling="no" id="demoframe" style="overflow:hidden"></iframe>
+</li>
+    </ul>
+    <h6>
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Youpi</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">jacklehamster</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jacklehamster/youpi" rel="dct:source">https://github.com/jacklehamster/youpi</a>.    
+    </h6>
+    
+<a class="twitter-timeline" href="https://twitter.com/youpikarioka" data-widget-id="541083520605511680">Tweets by @youpikarioka</a>
+
+</div></body>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-41589840-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</html>

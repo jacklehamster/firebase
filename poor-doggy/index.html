@@ -1,0 +1,57 @@
+<html>
+<head>
+   <meta charset="UTF-8">
+   <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+   <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
+</head> 
+
+<body bgcolor="0" background="russian.png" style="background-repeat:no-repeat;height:100%" text="white">
+<h2><pre><span id="texto">On March 2013, a video of a poor doggy getting
+scolded by a Russian lady became viral.
+A lot of us couldn't understand what the Russian
+lady was saying, but only one thing became clear: 
+THE POOR DOGGY WOULD NOT MAKE IT OUT ALIVE!
+
+We never found out what happened to poor doggy,
+but this is your chance to save him. In this game,
+your goal is to save the poor doggy, by choosing
+or creating the dialog that will lead the Russian
+lady to forgive poor doggy and turn him into a
+HAPPY DOGGY.
+
+Note: This unique experience allows you to create 
+the game as it is being played. When you do get a
+chance to do that, be mindful about about what 
+you post:
+YOUR CONTENT WILL SHARED WITH OTHER PLAYERS!
+</span></pre>
+<button style="width:584px;height:40px" id="playbutton" type="button" onClick="window.location='tagjam18.html'" value="PLAY">PLAY</button>
+</h2>
+<div id="notenote" style="visibility:hidden">
+<font size="0" color="yellow">Note: this game works best on Google Chrome</font>
+</div>
+<script language="javascript">
+var playbutton = document.getElementById("playbutton");
+var texto = document.getElementById("texto");
+playbutton.style.visibility = "hidden";
+var orgText = texto.innerHTML;
+texto.innerHTML = "";
+var sub = 0;
+document.addEventListener("mousedown",
+   function(e) {
+      sub += 100;
+      e.preventDefault();
+   });
+var interval = setInterval(
+  function() {
+     sub++;
+     var tt = orgText.substr(0,sub);
+     texto.innerHTML = tt;
+     if(tt==orgText) {
+        clearInterval(interval);
+        playbutton.style.visibility = "";
+        document.getElementById('notenote').style.visibility = "";
+     }
+  },50);
+</script>
+</body></html>

@@ -1,0 +1,215 @@
+<html>
+<head>
+   <meta charset="UTF-8">
+   <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+   <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
+</head> 
+
+<body bgcolor="0" style="margin:0px; height:100%">
+<!--iframe id="translate" styleo="position:absolute;visibility:hidden" srcc="about:blank" src="http://translate.google.com/translate_tts?client=tw-ob&tl=ru&q=What%20a%20good%20doggy!"></iframe-->
+
+<img id="img" style="position:absolute;visibility:hidden"  width="600" height="338">
+<!--iframe id="snd" style="position:absolute;visibility:hidden" src="youpi.html?videoID=a_Am4cHMBKM"></iframe-->
+<iframe id="view" style="border:0" width="600" height="338" src="youpi.html?videoID=NKLHteKdbl4&start=4.2&end=69&mute=1"></iframe>
+<br><font color="white" size="+1"><span id="dialog"></span><br>
+<button style="-webkit-appearance: none;width:600px;height:30px" type="button" id="resp_1" value="What a good doggy!" onClick="answer(this.innerHTML,this.getAttribute('ending'))"></button><br> 
+<button style="-webkit-appearance: none;width:600px;height:30px" type="button" id="resp_2" value="What a bad doggy!" onClick="answer(this.innerHTML,this.getAttribute('ending'))"></button><br>
+<button style="-webkit-appearance: none;width:600px;height:30px" type="button" id="resp_3" value="What an ugly doggy!" onClick="answer(this.innerHTML,this.getAttribute('ending'))"></button><br>
+<hr>
+<span id="note"><font size=0 color="pink">Lucky you! You have the option of continuing the story. Please do not post inappropriate content.</font></span><br>
+<button style="-webkit-appearance: none;height:30px" type="button" id="create" value="CHOOSE YOUR OWN ANSWER" onClick="create()">CHOOSE YOUR OWN ANSWER</button>
+<button style="-webkit-appearance: none;height:30px" type="button" id="createend" value="CREATE AN ENDING" onClick="createEnding()">CREATE AN ENDING</button>
+<button style="-webkit-appearance: none;height:30px" type="button" id="startover" value="START OVER CONVERSATION" onClick="startOver()">START OVER CONVERSATION</button>
+<button style="-webkit-appearance: none;height:30px" type="button" id="keepplaying" value="KEEP PLAYING" onClick="keepPlaying()">KEEP PLAYING</button>
+<br><span style="visibility:" id="numendings"></span>
+</font>
+<br><br>
+<font size="0" color="silver">Game by <a href="https://twitter.com/jacklehamster">jacklehamster</a> created for <a target="_blank" href="http://gamejolt.com/tag/tagjam18">#tagjam18</a>. Tool used: <a href="http://jacklehamster.github.io/youpi" target="_blank">Youpi Karioka</a>. Source video <a target="_blank" href="https://www.youtube.com/watch?v=NKLHteKdbl4">here</a></font>
+</body><script>
+var orgSrc = document.getElementById("view").src;
+var dlg = document.getElementById('dialog');
+var crea = document.getElementById('create');
+var creaend = document.getElementById('createend');
+var note = document.getElementById('note');
+var start = document.getElementById('startover');
+var keep = document.getElementById('keepplaying');
+var resp = [document.getElementById("resp_1"),document.getElementById("resp_2"),document.getElementById("resp_3")];
+var trans = null;// document.getElementById("translate");
+var fbase = new Firebase('https://gamejam.firebaseio.com/tagjam18/main3');
+var fbchild = null;
+var finalAnswer = null;
+
+function checkFirebase(dialog) {
+   var hash = CryptoJS.MD5(dialog);
+   hash = (hash+"").substr(0,12);
+   fbchild = fbase.child(hash);
+   fbchild.once('value', function(snapshot) {
+      var choices = [];
+      var val = snapshot.val();
+      console.log(val);
+      for(var i in val) {
+         choices.push(val[i]);
+         var index = Math.floor(Math.random()*choices.length);
+         var temp = choices[index];
+         choices[index] = choices[choices.length-1];
+         choices[choices.length-1] = temp;         
+      }
+      processChoices(choices);
+   });
+}
+
+function processChoices(choices) {
+  start.style.visibility = choices?"":"hidden";
+  keep.style.visibility = "hidden";
+  if(!choices) {
+    choices = [
+     {answer:"What a good doggy!"},
+     {answer:"What a bad doggy!"},
+     {answer:"What an ugly doggy!"}];
+  }
+  for(var i=0;i<resp.length;i++) {
+    var choice = choices[i];
+    console.log(choice);
+    if(!choice) {
+       crea.style.visibility = "";
+       creaend.style.visibility = "";
+       note.style.visibility = "";
+    }
+    else {
+       resp[i].innerHTML = choice.answer;
+       resp[i].setAttribute("ending",choice.ending?choice.ending:"");
+       resp[i].style.visibility = "";
+    }
+  }
+}
+
+function create() {
+   var ans = prompt("What do you want to say to doggy?");
+   if(ans && ans.trim()) {
+      ans = ans.trim();
+      fbchild.push({answer:ans});
+      answer(ans);
+   }
+}
+
+function createEnding() {
+   var ans = prompt("Final word for doggy?");
+   if(ans && ans.trim()) {
+      ans = ans.trim();
+      var end = prompt("Search for an appropriate image and enter the URL here to show the ending of this story");
+      if(end && end.trim()) {
+          end = end.trim();
+          fbchild.push({answer:ans,ending:end});
+          gotoEnding(ans,end);
+      }
+   }
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+
+
+function gotoEnding(ans,end) {
+   finalAnswer = ans;
+   clear();
+   dlg.innerHTML = ans + " THE END";
+   document.getElementById("img").src = end;
+   document.getElementById("img").style.visibility="";
+   document.getElementById('view').style.visibility="";
+   startAudio("end.mp3");
+   start.style.visibility = "";
+   keep.style.visibility = "";
+
+   var hash =  CryptoJS.MD5(ans);
+   if(!getCookie(hash)) {
+     document.cookie=hash+"=1";
+    document.cookie="score="+(parseInt("0"+getCookie("score"))+1);
+   }
+  document.getElementById('numendings').innerHTML=parseInt(0+getCookie("score"))+" endings";;
+}
+
+function keepPlaying() {
+  startAudio("sad.mp3");
+  answer(finalAnswer);
+  finalAnswer = null;
+}
+
+function clear() {
+   dlg.innerHTML = ''; 
+   for(var i=0;i<resp.length;i++) resp[i].style.visibility = "hidden";
+   crea.style.visibility = "hidden";
+   creaend.style.visibility = "hidden";
+   note.style.visibility = "hidden";
+   start.style.visibility = "hidden";
+   keep.style.visibility = "hidden";
+}
+
+function answer(value,end) {
+   //if(trans)
+   //  document.body.removeChild(trans);
+   trans = document.createElement("iframe");
+   trans.style.visibility = "hidden";
+   trans.src = "http://translate.google.com/translate_tts?client=tw-ob&total=1&idx=0&tl=ru&q="+encodeURIComponent(value)+"&texlen="+encodeURIComponent(value).length;
+   document.body.appendChild(trans);
+   if(end) {
+      gotoEnding(value,end);
+      return;
+   }
+   var sub=0;
+   clear();
+  
+   var interval = setInterval(
+      function() {
+         sub++;
+         var txt = value.substr(0,sub);
+         dlg.innerHTML = txt;
+         if(txt==value) {
+            clearInterval(interval);
+            checkFirebase(value);
+         }
+      }
+   ,50);
+}
+
+function startOver() {
+   startAudio("sad.mp3");
+   document.getElementById('view').style.visibility="";
+   document.getElementById("img").style.visibility="hidden";
+   clear();
+   processChoices();
+}
+
+var audio = null;
+function startAudio(src) {
+  if(audio) document.body.removeChild(audio);
+//<audio controls loop autoplay style="position:absolute; top:0px;left:573px;">
+//  <source id="snd" src="sad.mp3" type="audio/mpeg">
+//</audio>
+ audio = document.createElement("audio");
+ audio.setAttribute("controls",1);
+ audio.setAttribute("loop",1);
+ audio.setAttribute("autoplay",1);
+ audio.style.position = "absolute";
+ audio.style.top = "0px";
+ audio.style.left = "573px";
+ var source = document.createElement("source");
+ source.id = "snd";
+ source.type = "audio/mpeg";
+ source.src = src; 
+ audio.appendChild(source);
+ document.body.appendChild(audio);
+}
+
+startOver();
+
+</script><br>
+</html>
