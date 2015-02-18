@@ -22,14 +22,17 @@ return results === null ? defaultValue
 var pixel,xx,yy,pendown,globalZoom=1;
 
 function doZoom(zoomvalue) {
+   var oldZoom = globalZoom;
    globalZoom = Math.min(10,Math.max(.1,globalZoom + zoomvalue));
    var antiZoom = 1/globalZoom;
    var screen = document.getElementById("screen");
    changeZoom(screen,globalZoom);
-//   changeZoom(document.getElementById("zoom"),antiZoom);
-//   changeZoom(document.getElementById("hand"),antiZoom);
-//   changeZoom(document.getElementById("pencil"),antiZoom);
-//   changeZoom(document.getElementById("palette"),antiZoom);
+   
+   var dx = (globalZoom-oldZoom)*(window.innerWidth/2);
+   var dy = (globalZoom-oldZoom)*(window.innerHeight/2);
+   shiftX -= dx;
+   shiftY -= dy;
+   updateView(null,true);
 }
 
 function changeZoom(element,value) {
