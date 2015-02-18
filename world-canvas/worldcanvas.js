@@ -27,11 +27,6 @@ function doZoom(zoomvalue) {
    var antiZoom = 1/globalZoom;
    var screen = document.getElementById("screen");
    changeZoom(screen,globalZoom);
-   
-   var dx = (globalZoom-oldZoom)*(window.innerWidth/2);
-   var dy = (globalZoom-oldZoom)*(window.innerHeight/2);
-   shiftX += dx;
-   shiftY += dy;
    updateView(null,true);
 }
 
@@ -229,7 +224,7 @@ function performUpdate(cellid,cellX,cellY) {
 window.addEventListener("resize",updateView);
 
 function updateView(event,doUpdate) {
-   var rect = {x:0,y:0,width:window.innerWidth,height:innerHeight};
+   var rect = {x:0,y:0,width:window.innerWidth/globalZoom,height:innerHeight/globalZoom};
   for(var cellY=Math.floor(shiftY/CELLSIZE);cellY<=Math.ceil((shiftY+rect.height)/CELLSIZE);cellY++) {
     for(var cellX=Math.floor(shiftX/CELLSIZE);cellX<=Math.ceil((shiftX+rect.width)/CELLSIZE);cellX++) {
       showCanvas(cellX,cellY,doUpdate);
