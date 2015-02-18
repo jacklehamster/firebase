@@ -23,7 +23,7 @@ var pixel,xx,yy,pendown,globalZoom=1;
 
 function doZoom(zoomvalue) {
    var oldZoom = globalZoom;
-   globalZoom = Math.min(10,Math.max(.1,globalZoom + zoomvalue));
+   globalZoom = Math.min(10,Math.max(.2,globalZoom + zoomvalue));
    var antiZoom = 1/globalZoom;
    var screen = document.getElementById("screen");
    changeZoom(screen,globalZoom);
