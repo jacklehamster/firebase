@@ -54,10 +54,12 @@ function addBlankCells(json) {
 
 function addColumn(json) {
     var columnNames = {};
+    var firstColumn  = null;
     //  get columns name
     for(var i in json[0]) {
         if(i!='') {
             columnNames[i] = true;
+            if(!firstColumn) firstColumn = i;
         }
     }
     
@@ -65,10 +67,9 @@ function addColumn(json) {
     while(columnNames["col"+count]) {
         count++;
     }
-    for(var i in json[0]) {
-        if(i!="") {
-            firebase.child("col"+count).child(i).set({value:i});
-        }
+    for(var i=0;i<json.length;i++) {
+        var name = json[i][firstColumn];
+        firebase.child("col"+count).child(name).set({value:name});
     }
     firebase.child("col"+count).child("dummy").set({value:"dummy"});
     
