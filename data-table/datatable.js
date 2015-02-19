@@ -82,7 +82,23 @@ function addRow(json) {
     }
 }
 
+function countColumns(json) {
+    var columnNames = {};
+    //  get columns name
+    for(var j in json) {
+        for(var i in json[j]) {
+            if(i!='') {
+                columnNames[i] = true;
+            }
+        }
+    }
 
+    var count = 0;
+    for(var i in columnNames) {
+        count++;
+    }
+    return count;
+}
 
 function resetColumns(json,destroy) {
     if(destroy)
@@ -90,9 +106,10 @@ function resetColumns(json,destroy) {
     $('#columns').columns({data:json});
     $(".ui-table").find('td').on("mousedown",
         function() {
+            var cols = countColumns(json);
             var index = $(".ui-table").find('td').index(this);
-            var col = index % (json.length+1);
-            var row = Math.floor(index/json.length);
+            var col = index % cols;
+            var row = Math.floor(index/cols);
             alert(row+","+col);
         });;
     $(".ui-table").find('th').on("mousedown",
