@@ -56,11 +56,22 @@ function addBlankCells(json) {
 //    json.push({"":""});
 }
 
-function addColumn() {
-    var title = prompt("Name of the new column","col");
-    if(title) {
-        firebase.child(title).set({"dummy":"dummy"});
+function addColumn(json) {
+    var columnNames = {};
+    //  get columns name
+    for(var i in json[0]) {
+        if(i!='') {
+            columnNames[i] = true;
+        }
     }
+    
+    var count = 1;
+    while(columnNames["col"+count]) {
+        count++;
+    }
+    
+    firebase.child("col"+count).set({"dummy":"dummy"});
+    
 }
 
 function addRow(json) {
@@ -78,7 +89,7 @@ function resetColumns(json,destroy) {
     var ths = $(".ui-table").find("thead").find("th");
     ths[ths.length-1].addEventListener("mousedown",
         function() {
-            addColumn();
+            addColumn(json);
         }
     );
     var lastRow = $('tr[data-columns-row-id="'+(json.length-1)+'"]')[0];
