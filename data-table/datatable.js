@@ -66,7 +66,9 @@ function addColumn(json) {
         count++;
     }
     for(var i in json[0]) {
-        firebase.child("col"+count).child(i).set({value:i});
+        if(i!="") {
+            firebase.child("col"+count).child(i).set({value:i});
+        }
     }
     firebase.child("col"+count).child("dummy").set({value:"dummy"});
     
