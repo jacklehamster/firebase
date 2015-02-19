@@ -155,16 +155,4 @@ function resetColumns(json,destroy) {
                 e.preventDefault();
             }
         });
-    /*
-    var ths = $(".ui-table").find("thead").find("th");
-    ths[ths.length-1].addEventListener("mousedown",
-        function() {
-            addColumn(json);
-        }
-    );
-    var lastRow = $('tr[data-columns-row-id="'+(json.length-1)+'"]')[0];
-    lastRow.addEventListener("mousedown",
-        function() {
-            addRow(json);
-        });*/
 }
