@@ -111,9 +111,15 @@ function resetColumns(json,destroy) {
             alert(col+","+row);
         });;
     $(".ui-table").find('th').on("mousedown",
-        function() {
-            var index = $(".ui-table").find('td').index(this);
-            alert(index);
+        function(e) {
+            var cols = countColumns(json);
+            var index = $(".ui-table").find('th').index(this);
+            if(index==cols-1) {
+                addColumn(json);
+            }
+            else {
+                e.preventDefault();
+            }
         });
     /*
     var ths = $(".ui-table").find("thead").find("th");
