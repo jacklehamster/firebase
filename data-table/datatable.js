@@ -15,13 +15,11 @@ function onBaseChanged(snapshot) {
     var rows = {};
     for(var col in o) {
         for(var row in o[col]) {
-            if(row!="dummy") {
-                if(!rows[row]) {
-                    rows[row] = {};
-                }
-                var value = o[col][row].value;
-                rows[row][col] = value;
+            if(!rows[row]) {
+                rows[row] = {};
             }
+            var value = o[col][row].value;
+            rows[row][col] = value;
         }
     }
     for(var row in rows) {
