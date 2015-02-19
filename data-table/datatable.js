@@ -86,7 +86,7 @@ function resetColumns(json,destroy) {
     if(destroy)
         $("#columns").columns('destroy');
     $('#columns').columns({data:json});
-    $$(".ui-table").find('td').on("mousedown",
+    $(".ui-table").find('td').on("mousedown",
         function() {
             alert(this.innerHTML);
         });;
