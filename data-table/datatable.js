@@ -12,18 +12,16 @@ $(document).ready(function() {
 function onBaseChanged(snapshot) {
     var o = snapshot.val();
     json = [];
-    var columns = {};
-    for(var col in o) {
-        columns[col] = true;
-    }
     var rows = {};
     for(var col in o) {
-        for(var row in o[col]) {
-            if(!rows[row]) {
-                rows[row] = {};
+        if(col!="dummy") {
+            for(var row in o[col]) {
+                if(!rows[row]) {
+                    rows[row] = {};
+                }
+                var value = o[col][row].value;
+                rows[row][col] = value;
             }
-            var value = o[col][row].value;
-            rows[row][col] = value;
         }
     }
     for(var row in rows) {
