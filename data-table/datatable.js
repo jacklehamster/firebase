@@ -95,17 +95,7 @@ function countColumns(json) {
 }
 
 function countRows(json) {
-    var count = 0;
-    var rows = {};
-    for(var col in o) {
-        for(var row in o[col]) {
-            if(!rows[row]) {
-                rows[row] = {};
-                count++;
-            }
-        }
-    }
-    return count;
+    return json.length;
 }
 
 function resetColumns(json,destroy) {
