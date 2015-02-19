@@ -14,7 +14,7 @@ function addBlankCells(json) {
 function addColumn() {
     var title = prompt("Name of the new column","col");
     if(title) {
-        firebase.child(title).set({a:"a"});
+        firebase.child(title).set({"":""});
     }
 }
 
