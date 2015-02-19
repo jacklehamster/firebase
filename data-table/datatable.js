@@ -14,8 +14,8 @@ function onBaseChanged(snapshot) {
     json = [];
     var rows = {};
     for(var col in o) {
-        if(col!="dummy") {
-            for(var row in o[col]) {
+        for(var row in o[col]) {
+            if(row!="dummy") {
                 if(!rows[row]) {
                     rows[row] = {};
                 }
