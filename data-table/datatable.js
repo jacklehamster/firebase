@@ -108,7 +108,7 @@ function resetColumns(json,destroy) {
             var index = $(".ui-table").find('td').index(this);
             var col = index % cols;
             var row = Math.floor(index/cols);
-            alert(row+","+col);
+            alert(col+","+row);
         });;
     $(".ui-table").find('th').on("mousedown",
         function() {
