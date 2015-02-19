@@ -70,7 +70,9 @@ function addColumn(json) {
     if(firstColumn) {
         for(var i=0;i<json.length;i++) {
             var name = json[i][firstColumn];
-            firebase.child("col"+count).child(name).set({value:name});
+            if(name) {
+                firebase.child("col"+count).child(name).set({value:name});
+            }
         }
     }
     firebase.child("col"+count).child("dummy").set({value:"dummy"});
