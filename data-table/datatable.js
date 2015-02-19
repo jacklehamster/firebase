@@ -86,6 +86,11 @@ function resetColumns(json,destroy) {
     if(destroy)
         $("#columns").columns('destroy');
     $('#columns').columns({data:json});
+    $$(".ui-table").find('td').on("mousedown",
+        function() {
+            alert(this.innerHTML);
+        });;
+    /*
     var ths = $(".ui-table").find("thead").find("th");
     ths[ths.length-1].addEventListener("mousedown",
         function() {
@@ -96,5 +101,5 @@ function resetColumns(json,destroy) {
     lastRow.addEventListener("mousedown",
         function() {
             addRow(json);
-        });
+        });*/
 }
