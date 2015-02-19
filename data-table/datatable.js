@@ -94,6 +94,20 @@ function countColumns(json) {
     return count;
 }
 
+function countRows(json) {
+    var count = 0;
+    var rows = {};
+    for(var col in o) {
+        for(var row in o[col]) {
+            if(!rows[row]) {
+                rows[row] = {};
+                count=++;
+            }
+        }
+    }
+    return count;
+}
+
 function resetColumns(json,destroy) {
     if(destroy)
         $("#columns").columns('destroy');
@@ -104,7 +118,13 @@ function resetColumns(json,destroy) {
             var index = $(".ui-table").find('td').index(this);
             var col = index % cols;
             var row = Math.floor(index/cols);
-            alert(col+","+row);
+            var rows = countRows(json);
+            if(row==rows-1) {
+                addRows(json);
+            }
+            else {
+                e.preventDefault();
+            }
         });;
     $(".ui-table").find('th').on("mousedown",
         function(e) {
