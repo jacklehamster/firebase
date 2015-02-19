@@ -91,14 +91,14 @@ function resetColumns(json,destroy) {
     $(".ui-table").find('td').on("mousedown",
         function() {
             var index = $(".ui-table").find('td').index(this);
-            alert(index);
-        });;
-    $(".ui-table").find('th').on("mousedown",
-        function() {
-            var index = $(".ui-table").find('th').index(this);
             var col = index % json.length;
             var row = Math.floor(index/json.length);
             alert(row+","+col);
+        });;
+    $(".ui-table").find('th').on("mousedown",
+        function() {
+            var index = $(".ui-table").find('td').index(this);
+            alert(index);
         });
     /*
     var ths = $(".ui-table").find("thead").find("th");
