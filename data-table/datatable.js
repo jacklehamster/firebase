@@ -70,11 +70,16 @@ function addColumn(json) {
     
 }
 
-function addRow(json) {
+function addRow(json,col) {
+    var c = 0;
     for(var i in json[0]) {
-        if(i!='') {
-           firebase.child(i).child("newvalue").set({value:"newvalue"});
+        if(c==col) {
+            if(i!='') {
+               firebase.child(i).child("newvalue").set({value:"newvalue"});
+            }
+            break;
         }
+        c++;
     }
 }
 
@@ -110,7 +115,7 @@ function resetColumns(json,destroy) {
             var row = Math.floor(index/cols);
             var rows = countRows(json);
             if(row==rows-1) {
-                addRow(json);
+                addRow(json,col);
             }
             else {
                 e.preventDefault();
