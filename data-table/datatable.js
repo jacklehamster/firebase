@@ -30,6 +30,7 @@ function onBaseChanged(snapshot) {
         json.push(rows[row]);
     }
     addBlankCells(json);
+    console.log(json);
     resetColumns(json);
 }
 
