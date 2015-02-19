@@ -82,14 +82,20 @@ function addRow(json) {
     }
 }
 
+
+
 function resetColumns(json,destroy) {
     if(destroy)
         $("#columns").columns('destroy');
     $('#columns').columns({data:json});
     $(".ui-table").find('td').on("mousedown",
         function() {
-            alert(this.innerHTML);
+            alert($(".ui-table").find('td').indexOf(this));
         });;
+    $(".ui-table").find('th').on("mousedown",
+        function() {
+            alert($(".ui-table").find('th').indexOf(this));
+        });
     /*
     var ths = $(".ui-table").find("thead").find("th");
     ths[ths.length-1].addEventListener("mousedown",
