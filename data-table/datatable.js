@@ -26,11 +26,9 @@ function onBaseChanged(snapshot) {
             rows[row][col] = value;
         }
     }
-    console.log(rows);
-//        var cell = {};
-//        cell[col] = 
-//        json.push({})
-//    }
+    for(var row in rows) {
+        json.push(rows[row]);
+    }
     addBlankCells(json);
 }
 
