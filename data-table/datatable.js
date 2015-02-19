@@ -22,7 +22,7 @@ function onBaseChanged(snapshot) {
             if(!rows[row]) {
                 rows[row] = {};
             }
-            var value = o[col][row];
+            var value = o[col][row].value;
             rows[row][col] = value;
         }
     }
