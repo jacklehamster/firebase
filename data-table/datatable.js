@@ -63,14 +63,25 @@ function addColumn() {
     }
 }
 
+function addRow(json) {
+    for(var i in json[0]) {
+        firebase.child(i).set({"newvalue":"newvalue"});
+    }
+}
+
 function resetColumns(json,destroy) {
     if(destroy)
         $("#columns").columns('destroy');
     $('#columns').columns({data:json});
-    $(".ui-table").find("thead")[0].addEventListener("mousedown",
+    var ths = $(".ui-table").find("thead").find("th");
+    ths[ths.length-1]].addEventListener("mousedown",
         function() {
             addColumn();
-            
         }
     );
+    var lastRow = $('tr[data-columns-row-id="'+(json.length-1)+'"]')[0];
+    lastRow.addEventListener("mousedown",
+        function() {
+            addRow(json);
+        });
 }
