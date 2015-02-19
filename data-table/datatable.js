@@ -1,4 +1,7 @@
-  $(document).ready(function() {
-    var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}]; 
+var firebase;
+
+$(document).ready(function() {
+    var json = []; 
     $('#columns').columns({data:json});
-  });
+    firebase = new Firebase('https://firelang.firebaseio.com/translations/');
+});
