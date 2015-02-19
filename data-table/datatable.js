@@ -101,7 +101,7 @@ function countRows(json) {
         for(var row in o[col]) {
             if(!rows[row]) {
                 rows[row] = {};
-                count=++;
+                count++;
             }
         }
     }
