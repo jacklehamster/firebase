@@ -64,6 +64,7 @@ function addColumn() {
 }
 
 function resetColumns(json) {
+    $("#columns").columns('destroy');
     $('#columns').columns({data:json});
     $(".ui-table").find("thead")[0].addEventListener("mousedown",
         function() {
