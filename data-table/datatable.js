@@ -110,7 +110,7 @@ function resetColumns(json,destroy) {
             var row = Math.floor(index/cols);
             var rows = countRows(json);
             if(row==rows-1) {
-                addRows(json);
+                addRow(json);
             }
             else {
                 e.preventDefault();
