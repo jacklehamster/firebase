@@ -30,6 +30,7 @@ function onBaseChanged(snapshot) {
         json.push(rows[row]);
     }
     addBlankCells(json);
+    resetColumns(json);
 }
 
 function onChildAdded(snapshot) {
