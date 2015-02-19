@@ -6,7 +6,7 @@ $(document).ready(function() {
     firebase = new Firebase('https://firelang.firebaseio.com/translations/');
 //    firebase.on("child_added",onChildAdded);
     firebase.on("value",onBaseChanged)
-    resetColumns(json);
+    resetColumns(json,false);
 });
 
 function onBaseChanged(snapshot) {
@@ -31,7 +31,7 @@ function onBaseChanged(snapshot) {
     }
     addBlankCells(json);
     console.log(json);
-    resetColumns(json);
+    resetColumns(json,true);
 }
 
 function onChildAdded(snapshot) {
@@ -63,8 +63,9 @@ function addColumn() {
     }
 }
 
-function resetColumns(json) {
-    $("#columns").columns('destroy');
+function resetColumns(json,destroy) {
+    if(destroy)
+        $("#columns").columns('destroy');
     $('#columns').columns({data:json});
     $(".ui-table").find("thead")[0].addEventListener("mousedown",
         function() {
