@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Columns : Search, sort, and paginate your JSON data" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/hemisu-light.css">
+
+    <link rel="stylesheet" href="stylesheets/clean.css">
+
+    <title>Columns</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/eisenbraun/columns">View on GitHub</a>
+
+          <h1 id="project_title">Columns</h1>
+          <h2 id="project_tagline">Search, sort, and paginate your JSON data</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/eisenbraun/columns/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/eisenbraun/columns/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a name="columns" class="anchor" href="#columns"><span class="octicon octicon-link"></span></a>Columns</h2>
+
+<h4>
+<a name="by-michael-eisenbraun" class="anchor" href="#by-michael-eisenbraun"><span class="octicon octicon-link"></span></a>by Michael Eisenbraun</h4>
+
+<p>Columns is an easy way of creating JSON data into HTML tables that are sortable, searchable, and paginating. All you need is to provide the data, and Columns will do the rest.</p>
+
+
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>Include the jQuery Library 1.7 or later and Columns Plugin File: </p>
+
+<pre class="prettyprint"><code>&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="js/jquery.columns.min.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>Include a pre-built Columns theme or create your own</p>
+
+<pre class="prettyprint"><code>&lt;link rel="stylesheet" href="css/classic.css"&gt;
+</code></pre>
+
+<p>Because Columns create all the necessary HTML dynamically, the only HTML needed is a empty HTML element, such as a <code>&lt;div&gt;</code> tag, with the corresponding id as using in the initialization.</p>
+
+<pre class="prettyprint"><code>&lt;div id="columns"&gt;&lt;/div&gt;
+</code></pre>
+
+<p>Finally, initialize Columns. </p>
+
+<pre class="prettyprint"><code>&lt;script&gt;
+  $(document).ready(function() {
+    var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}]; 
+    $('#columns').columns({
+      data:json
+    });
+  });
+&lt;/script&gt;
+</code></pre>
+
+<h3>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h3>
+
+<p><strong>Example 1: Setting data inline</strong></p>
+<div id="example1"></div>
+<pre class="prettyprint"><code>$('#example1').columns({
+      data: [
+          {'Emp. Number': 00001, 'First Name':'John', 'Last Name':'Smith' },
+          {'Emp. Number': 00002, 'First Name':'Jane', 'Last Name':'Doe' },
+          {'Emp. Number': 00003, 'First Name':'Ted', 'Last Name':'Johnson' },
+          {'Emp. Number': 00004, 'First Name':'Betty', 'Last Name':'Smith' },
+          {'Emp. Number': 00005, 'First Name':'Susan', 'Last Name':'Wilson' },
+          {'Emp. Number': 00006, 'First Name':'John', 'Last Name':'Doe' },
+          {'Emp. Number': 00007, 'First Name':'Bill', 'Last Name':'Watson' },
+          {'Emp. Number': 00008, 'First Name':'Walter', 'Last Name':'Wright' }
+      ]
+  });
+</code></pre> 
+
+<hr><p><strong>Example 2: Setting data from external source</strong></p>
+<div id="example2"></div>
+<pre class="prettyprint"><code>$.ajax({
+      url:'data.json',
+      dataType: 'json', 
+      success: function(json) { 
+          example2 = $('#example2').columns({
+              data:json, 
+          }); 
+      }
+  }); 
+</code></pre>
+      
+<hr><p><strong>Example 3: Using a custom schema</strong></p>
+<div id="example3"></div>
+<pre class="prettyprint"><code>$.ajax({
+      url:'data.json',
+      dataType: 'json', 
+      success: function(json) { 
+          example3 = $('#example3').columns({
+              data:json,
+              schema: [
+                  {"header":"ID", "key":"id", "template":"000{{id}}"},
+                  {"header":"Name", "key":"name"},
+                  {"header":"Email", "key":"email", "template":'&lt;a href="mailto:{{email}}"&gt;{{email}}&lt;/a&gt;'},
+                  {"header":"Gender", "key":"gender"}
+              ]
+
+          }); 
+      }
+  });</code></pre>
+
+<hr><p><strong>Example 4: Using a conditional statement</strong></p>
+<div id="example4"></div>
+<pre class="prettyprint"><code>$.ajax({
+      url:'data.json',
+      dataType: 'json', 
+      success: function(json) { 
+          example4 = $('#example4').columns({
+              data:json,
+              schema: [
+                  {"header":"ID", "key":"id", "template":"000{{id}}"},
+                  {"header":"Name", "key":"name"},
+                  {"header":"Email", "key":"email", "template":'&lt;a href="mailto:{{email}}"&gt;{{email}}&lt;/a&gt;'},
+                  {"header":"Gender", "key":"gender", "condition":function(val) {return (val=="male");}}
+              ]
+
+          }); 
+      }
+  });</code></pre>
+
+
+<hr><p><strong>Example 5: Destroying an old table and creating a new table</strong></p>
+<div id="example5"></div>
+<button id="example5Button">Create New Table</button>
+<pre class="prettyprint"><code>$.ajax({
+        url:'data.json',
+        dataType: 'json', 
+        success: function(json) { 
+            example5 = $('#example5').columns({
+                data:json,
+                schema: [
+                    {"header":"ID", "key":"id", "template":"000{{id}}"},
+                    {"header":"Name", "key":"name"},
+                    {"header":"Email", "key":"email", "template":'&lt;a href="mailto:{{email}}"&gt;{{email}}&lt;/a&gt;'},
+                    {"header":"Gender", "key":"gender"}
+                ]
+
+            }); 
+        }
+    });
+
+    $('#example5Button').click(function() { 
+        $('#example5').columns('destroy');
+
+        $.ajax({
+            url:'data.json',
+            dataType: 'json', 
+            success: function(json) { 
+                example8 = $('#example8').columns({
+                    data:json,
+                    schema: [
+                        {"header":"Name", "key":"name"},
+                        {"header":"Email", "key":"email", "template":'&lt;a href="mailto:{{email}}"&gt;{{email}}&lt;/a&gt;'},
+                        {"header":"Address", "key":"address"},
+                        {"header":"City", "key":"city"},
+                        {"header":"State", "key":"state"}
+                        {"header":"Zip", "key":"zip"}
+                    ]
+                });
+            }
+        });
+    });</code></pre>
+
+
+<h3>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<p>The changing how Columns builds the table is created can be manipulated by passing a object as a parameter during invocation.</p>
+
+<p>There is only one required object attribute, the data attribute, which must be an array of objects (see example above). All other attributes are optional.</p>
+
+<p><strong>conditioning</strong> <em>(Boolean)</em></p>
+
+<p>If false, the default conditioning functionality will be disabled. This may be used to create custom functionality. See <a href="#creating-plugins"> Create Plugins</a> for more information.</p>
+
+<p>Default: <code>true</code></p>
+
+<p>Default: <code>'ui-table-rows-even'</code></p>
+
+<hr><p><strong>data</strong> <em>(Object)</em></p>
+
+<p>REQUIRED. This is the data that columns uses to build the table.</p>
+
+<pre class="prettyprint"><code> var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+ 
+ $('#columns').columns({ 
+   data: json
+ });
+</code></pre>
+
+<hr><p><strong>evenRowClass</strong> <em>(String)</em></p>
+
+<p>This class is added to all the even rows within the tbody.</p>
+
+<p>Default: <code>'ui-table-rows-even'</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json, 
+  evenRowClass: 'even-rows'
+});
+</code></pre>
+
+<hr><p><strong>oddRowClass</strong> <em>(String)</em></p>
+
+<p>This class is added to all the odd rows within the tbody.</p>
+
+<p>Default: <code>'ui-table-rows-even'</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json, 
+  oddRowClass: 'odd-rows'
+});
+</code></pre>
+
+<hr><p><strong>liveSearch</strong> <em>(Boolean)</em></p>
+
+<p>If true, results will be filter on keyup. If false, search will not initiate until the "enter" is pressed.</p>
+
+<p>Default: <code>true</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  liveSearch: false
+});
+</code></pre>
+
+<hr><p><strong>page</strong> <em>(Number)</em></p>
+
+<p>The page to be displayed</p>
+
+<p>Default: <code>1</code></p>
+
+<hr><p><strong>pages</strong> <em>(Number)</em></p>
+
+<p>The total number of pages in the table. By default, this number is calculated automatically by Columns.</p>
+
+<hr><p><strong>paginating</strong> <em>(Number)</em></p>
+
+<p>If false, the default paginating functionality will be disabled. This may be used to create custom functionality. See <a href="#creating-plugins"> Create Plugins</a> for more information.</p>
+
+<p>Default: <code>true</code></p>
+
+<hr><p><strong>plugins</strong> <em>(Array)</em></p>
+
+<p>Columns will attempt to call the list of plugins. See Plugins for more information.</p>
+
+<p>Default: <code>null</code></p>
+
+<hr><p><strong>query</strong> <em>(String)</em></p>
+
+<p>If set, will filter data to only to those rows with values that match query.</p>
+
+<p>Default: <code>null</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  query:'row2'
+});
+</code></pre>
+
+<hr><p><strong>reverse</strong> <em>(Boolean)</em></p>
+
+<p>If true, sort data in reverse order; sortBy must be set.</p>
+
+<p>Default: <code>false</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  sortBy: 'col2',
+  reverse: true
+});
+</code></pre>
+
+<hr><p><strong>schema</strong> <em>(Array of Objects)</em></p>
+
+<p>If set, formats the table to the schema's design. 
+Each schema object requires two attributes: header (the title of column) and key (the corresponding data attribute key). See <a href="#schema">Schema</a>, for more information.</p>
+
+<p>Default: <code>null</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  schema:[
+      { "header":"Column 1","key":"col1"},
+      { "header":"Column 2","key":"col2"}
+  ]
+});
+</code></pre>
+
+<p><strong>search</strong> <em>(Boolean)</em></p>
+
+<p>If true, the search box will be displayed. By default, the search box is true only during initialization. See <a href="#templating">Templating</a> for more information.</p>
+
+<p>Default: <code>true</code></p>
+
+<hr><p><strong>searchableFields</strong> <em>(Array of JSON keys)</em></p>
+
+<p>If set, the listed keys and there associated values will be searched. If null, all data is searchable.</p>
+
+<p>Default: <code>null</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  searchableFields: ['col1'],
+  schema:[
+    { "header":"Column 1","key":"col1"},
+    { "header":"Column 2","key":"col2"}
+  ]
+});
+</code></pre>
+
+<p><strong>searching</strong> <em>(Boolean)</em></p>
+
+<p>If false, the default searching functionality will be disabled. This may be used to create custom functionality. See <a href="#creating-plugins"> Create Plugins</a> for more information.</p>
+
+<p>Default: <code>true</code></p>
+
+<hr><p><strong>showRows</strong> <em>(Array of Numbers)</em></p>
+
+<p>If set, displays a select box with each number as an option.</p>
+
+<p>Default: <code>[5, 10, 25, 50]</code></p>
+
+<hr><p><strong>size</strong> <em>(Number)</em></p>
+
+<p>The number of rows to display per page.</p>
+
+<p>Default: <code>10</code></p>
+
+<hr><p><strong>sortableFields</strong> <em>(Array of JSON keys)</em></p>
+
+<p>If set, the columns associated with the listed keys will be sortable. If null, all columns will be sortable.</p>
+
+<p>Default: <code>null</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  sortableFields: ['col1'],
+  schema:[
+    { "header":"Column 1","key":"col1"},
+    { "header":"Column 2","key":"col2"}
+  ]
+});
+</code></pre>
+
+<hr><p><strong>sortBy</strong> <em>(String)</em></p>
+
+<p>If set, sort data by at that attribute key</p>
+
+<p>Default: <code>null</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  sortBy: 'col2'
+});
+</code></pre>
+
+<p><strong>sorting</strong> <em>(Boolean)</em></p>
+
+<p>If false, the default sorting functionality will be disabled. This may be used to create custom functionality. See <a href="#creating-plugins"> Create Plugins</a> for more information.</p>
+
+<p>Default: <code>true</code></p>
+
+<hr><p><strong>templateFile</strong> <em>(String)</em></p>
+
+<p>The path to an external Mustache Template. If null, default template will be used. See <a href="#templating">Templating</a> for more information.</p>
+
+<p>Default: <code>null</code></p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  template: 'template/custom.mst'
+});
+</code></pre>
+
+<p><br></p>
+
+<h3>
+<a name="schema" class="anchor" href="#schema"><span class="octicon octicon-link"></span></a>Schema</h3>
+
+<p>Schema is a blueprint for columns to build the table. With schema you can set column order and column header or even remove columns all together from the original data. Schema allows for templates to be create for row data, and conditional statements can be added to show only desired data.</p>
+
+<p>Schema is an Array of Objects. Each object serves as a table column, and must contain a header and key attribute. The order in which the object are place in the array is the order that they will appear in the table. See below for additional information about the different options that can be applied to each schema object.</p>
+
+<p><strong>condition</strong> <em>(Function)</em></p>
+
+<p>This is a condition that each column data must meet to be displayed. The function must return a <code>Boolean</code>.</p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"1", "col2":"one"}, {"col1":"2", "col2":"two"}, {"col1":"3", "col2":"three"}];
+
+$('#columns').columns({ 
+  data: json,
+  schema:[
+      {"header":"Numbers","key":"col1", "condition":function(val) { return (val%2 != 0); /*only show odd numbers */ } },
+      {"header":"Words","key":"col2"}
+  ]
+});
+</code></pre>
+
+<hr><p><strong>header</strong> <em>(String)</em></p>
+
+<p>REQUIRED. The title for the column header.</p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"1", "col2":"one"}, {"col1":"2", "col2":"two"}, {"col1":"3", "col2":"three"}];
+
+$('#columns').columns({ 
+  data: json,
+  schema:[
+      {"header":"Numbers","key":"col1"},
+      {"header":"Words","key":"col2"}
+  ]
+});
+</code></pre>
+
+<hr><p><strong>key</strong> <em>(String)</em></p>
+
+<p>REQUIRED. The corresponding data attribute key for this columns data.</p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"1", "col2":"one"}, {"col1":"2", "col2":"two"}, {"col1":"3", "col2":"three"}];
+
+$('#columns').columns({ 
+  data: json,
+  schema:[
+      {"header":"Numbers","key":"col1"},
+      {"header":"Words","key":"col2"}
+  ]
+});
+</code></pre>
+
+<hr><p><strong>template</strong> <em>(String)</em></p>
+
+<p>The template allows for a row data to be customized by utilizing a Mustache template. All Mustache compatible syntax is available to the Schema Template.</p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"1", "col2":"one"}, {"col1":"2", "col2":"two"}, {"col1":"3", "col2":"three"}];
+
+$('#columns').columns({ 
+  data: json,
+  schema:[
+      {"header":"Numbers","key":"col1", "template":"This is row {{#col1}}&lt;strong&gt;{{col1}}&lt;/strong&gt;{{/col1}}."},
+      {"header":"Words","key":"col2"}
+  ]
+});
+</code></pre>
+
+<h3>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>Templating</h3>
+
+<p>Columns allows for customize templates to be created using the Mustache template system. This allows developers to add their own classes and structure to Columns.</p>
+
+<p><strong>View Variables</strong></p>
+<p>If no custom template is provide, the default template will be used. The variables that are provide to the template are stored in the <code>view</code> object. By default, the follow variables are stored in the <code>this.view</code>:
+
+<p><code>prevPage</code>: The number of the previous page.</p>
+
+<p><code>nextPage</code>: The number of the next page.</p>
+
+<p><code>prevPageExist</code>: If true, there is a valid previous page.</p>
+
+<p><code>nextPageExists</code>: If true, there is a valid next page.</p>
+
+<p><code>resultRange</code>: The range of rows currently being displayed.</p>
+
+<p><code>tableTotal</code>: The total number of rows for the entire table.</p>
+
+<p><code>showRowsMenu</code>: Outputs the Show Rows select box.</p>
+
+<p><code>rows</code>: An object containing the rows data for the current page.</p>
+
+<p><code>headers</code>: An object containing the header data. Headers can be one of four possible states (<code>sortable</code>,<code>notSortable</code>,<code>sortedUp</code>,<code>sortedDown</code>)</p>
+
+<p><code>query</code>: The current query value, if any.</p>
+
+<p><code>search</code>: If true, the search box will be rendered. By default Columns will only render the search box once during initialization.</p>
+
+<p><code>table</code>: If true, the table will be rendered. Unlike the search box, the table is render each time the user calls for different data (i.e. next page, search, sort)</p>
+
+<hr><p><strong>Default Template</strong></p>
+
+<pre class="prettyprint"><code>&lt;!-- Search Box: Only rendered while search is true --&gt; 
+
+{{#search}}
+&lt;div class="ui-columns-search"&gt;
+  &lt;input class="ui-table-search" placeholder="Search" type="text" name="query" data-columns-search="true" value="{{query}}" /&gt;
+&lt;/div&gt;
+{{/search}}
+
+&lt;!-- Search Box: Only rendered while search is true --&gt; 
+
+
+&lt;!-- Columns Table: Only rendered while table is true --&gt; 
+
+{{#table}}
+&lt;div class="ui-columns-table" data-columns-table="true"&gt;
+  &lt;table class="ui-table"&gt;
+
+    &lt;!-- Columns Table Head: Headers have 4 possible states (sortable, notSortable, sortedUp, sortedDown) --&gt;
+    &lt;thead&gt;
+      {{#headers}} 
+        {{#sortable}}
+          &lt;th class="" data-columns-sortby="{{key}}"&gt;{{header}}&lt;/th&gt;
+        {{/sortable}}
+
+        {{#notSortable}}
+          &lt;th class="" data-columns-sortby="{{key}}"&gt;{{header}}&lt;/th&gt;
+        {{/notSortable}}
+
+        {{#sortedUp}}
+          &lt;th class="ui-table-sort-up" data-columns-sortby="{{key}}"&gt;{{header}} &lt;span class="ui-arrow"&gt;▲&lt;&lt;/span&gt;/th&gt;
+        {{/sortedUp}}
+
+        {{#sortedDown}}
+          &lt;th class="ui-table-sort-down" data-columns-sortby="{{key}}"&gt;{{header}} &lt;span class="ui-arrow"&gt;▼&lt;/span&gt;&lt;/th&gt;
+        {{/sortedDown}} 
+      {{/headers}}  
+    &lt;/thead&gt;
+    &lt;!-- Columns Table Head: Headers have 4 possible states (sortable, notSortable, sortedUp, sortedDown) --&gt;
+
+    &lt;!-- Columns Table Body: Table columns are rendered outside of this template  --&gt;
+    &lt;tbody&gt;
+      {{#rows}}
+        {{{.}}}
+      {{/rows}}
+    &lt;/tbody&gt;
+    &lt;!-- Columns Table Body: Table columns are rendered outside of this template  --&gt;
+
+  &lt;/table&gt;
+
+
+  &lt;!-- Columns Controls  --&gt;
+  &lt;div class="ui-table-footer"&gt;
+    &lt;span class="ui-table-show-rows"&gt;Show rows: {{{showRowsMenu}}}&lt;/span&gt; 
+    &lt;span class="ui-table-results"&gt;Results:
+      &lt;strong&gt;{{pageRange.start}} – {{pageRange.end}}&lt;/strong&gt; of
+      &lt;strong&gt;{{tableTotal}}&lt;/strong&gt;
+    &lt;/span&gt; 
+    &lt;span class="ui-table-controls"&gt;
+      {{#prevPageExists}} 
+        &lt;span class="ui-table-control-prev" data-columns-page="{{prevPage}}"&gt;
+          &lt;img src="images/arrow-left.png"&gt;
+        &lt;/span&gt;
+      {{/prevPageExists}}
+
+      {{^prevPageExists}}
+        &lt;span class="ui-table-control-disabled"&gt;
+          &lt;img src="images/arrow-left.png"&gt;
+        &lt;/span&gt;
+      {{/prevPageExists}}       
+
+      {{#nextPageExists}}
+        &lt;span class="ui-table-control-next" data-columns-page="{{nextPage}}"&gt;
+          &lt;img src="images/arrow-right.png"&gt;
+        &lt;/span&gt;
+      {{/nextPageExists}}
+
+      {{^nextPageExists}}
+        &lt;span class="ui-table-control-disabled"&gt;
+          &lt;img src="images/arrow-right.png"&gt;
+        &lt;/span&gt;
+      {{/nextPageExists}}
+    &lt;/span&gt;
+  &lt;/div&gt;
+  &lt;!-- Columns Controls  --&gt;
+
+&lt;/div&gt;
+{{/table}}
+
+&lt;!-- Columns Table: Only rendered while table is true --&gt;
+</code>
+</pre>
+
+<h3>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h3>
+
+<p><strong>create</strong> </p>
+
+<p>This method creates the Columns table on demand.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>$('#columns').columns('create');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.create()</code>.</p>
+
+<hr><p><strong>destroy</strong> </p>
+
+<p>This method destroys all Columns data associated with the selector and removes it from the DOM. This method is necessary for reinitializing Columns.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>$('#columns').columns('destroy');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.destroy()</code>.</p>
+
+<hr><p><strong>getObject</strong> </p>
+
+<p>This method returns Columns' object</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var columns_object = $('#columns').columns('getObject');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this</code>.</p>
+
+<hr><p><strong>getPage</strong></p>
+
+<p>This method returns the table's current page.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var current_page = $('#columns').columns('getPage');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.page</code>.</p>
+
+<hr><p><strong>getQuery</strong></p>
+
+<p>This method returns the current search query.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var search_query = $('#columns').columns('getQuery');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.query</code>.</p>
+
+<hr><p><strong>getRange</strong></p>
+
+<p>This method returns the table's current page range. Range is returned as an object.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var range = $('#columns').columns('getRange');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.range</code>.</p>
+
+<hr><p><strong>getRows</strong></p>
+
+<p>This method returns the table's current page rows. Rows are returned as an array.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var rows = $('#columns').columns('getRows');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.rows</code>.</p>
+
+<hr><p><strong>getTemplate</strong></p>
+
+<p>This method returns the Column's Mustache template.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var template = $('#columns').columns('getTemplate');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.template</code>.</p>
+
+<hr><p><strong>getThead</strong></p>
+
+<p>This method returns the table's thead. Thead is returned as an array.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var thead = $('#columns').columns('getThead');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.thead</code>.</p>
+
+<hr><p><strong>getTotal</strong>
+This method returns an interger of the table's current total. Note: This is total after filters and conditions have been applied.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var total = $('#columns').columns('getTotal');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.total</code>.</p>
+
+<hr><p><strong>getView</strong></p>
+
+<p>This method returns the view object that was used to render the Mustache template.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var columns_view = $('#columns').columns('getView');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.view</code>.</p>
+
+<hr><p><strong>gotoPage(int)</strong></p>
+
+<p>This method takes an intiger and if the page exists, changes the table's current page. Note: false is returned if page doesn't exist.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>$('#columns').columns('gotoPage', 3);
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.gotoPage(3)</code>.</p>
+
+<hr><p><strong>pageExists(int)</strong></p>
+
+<p>This method takes an intiger and checks if the page exists in the current table. Returns boolean. Note: Pages start with 1.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>var page_exists = $('#columns').columns('pageExists', 3);
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.pageExists(3)</code>.</p>
+
+<hr><p><strong>resetData</strong></p>
+
+<p>This method resets data to it original state and returns the result.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>$('#columns').columns('resetData');
+</code></pre>
+
+<p>To call internally from a plugin use <code>this.resetDate()</code>.</p>
+
+<hr><p><strong>setMaster(Array)</strong></p>
+
+<p>This method overwrites the master data object and requires an Array. This method would be used to display new data after initialization.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>$('#columns').columns('setMaster', data);</code></pre>
+
+<p>To call internally from a plugin use <code>this.setMaster(data)</code>.</p>
+
+<hr><p><strong>setRange()</strong></p>
+
+<p>This method sets the range of rows based on the current page and total.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>$('#columns').columns('setRange');</code></pre>
+
+<p>To call internally from a plugin use <code>this.setRange()</code>.</p>
+
+<hr><p><strong>setTotal(int)</strong></p>
+
+<p>This method sets the total number of rows for the table. By default, total is calculated by Columns. To prevent Columns from overwriting total, <code>searching</code> should be disabled.</p>
+
+<p>External call:</p>
+
+<pre class="prettyprint"><code>$('#columns').columns('setTotal', 100);</code></pre>
+
+<p>To call internally from a plugin use <code>this.setTotal(100)</code>.</p>
+
+<h3>
+<a name="creating-plugins" class="anchor" href="#creating-plugins"><span class="octicon octicon-link"></span></a>Creating plugins</h3>
+
+<p>Columns is extensible through the use of plugins and Columns API.</p>
+
+<p>The basic plugin structure should look like this. All plugins must include a <code>init</code> and a <code>create</code> method. The <code>init</code> method is only called once during initialization. The <code>create</code> method is called write before a new table display is called.</p>
+
+<pre class="prettyprint"><code>if (typeof ColumnsPlugins === 'undefined') var ColumnsPlugins = {};
+  ColumnsPlugins.your_plugin = {
+      init: function() {
+
+      },
+
+      create: function() {
+
+      }
+  }</code></pre>
+
+<p>Plugins can be added to Columns by using the plugins option</p>
+
+<pre class="prettyprint"><code>var json = [{"col1":"row1", "col2":"row1", "col3":"row1"}, {"col1":"row2", "col2":"row2", "col3":"row2"}];
+
+$('#columns').columns({ 
+  data: json,
+  plugins: ['gotopage']
+});
+</code></pre>
+
+<p><strong>Event Handlers</strong></p>
+<p>It is possible for plugins to customize event handlers by overwriting the following variables.</p>
+
+<p><code>pageHandler</code>: Called when the page navigation (previous or next page) is used. The requested page is set to <code>this.page</code> prior to pageHandler being called.</p>
+
+<p><code>searchHandler</code>: Called when a search is initiated. The search query is set to <code>this.query</code> prior to searchHandler being called.</p>
+
+<p><code>sizeHandler</code>: Called when the table size is changed. The table size is set to <code>this.size</code> prior to sizeHandler being called.</p>
+
+<p><code>sortHandler</code>: Called when the table is sorted. The field to sortBy is set to <code>this.sortBy</code> and the direction is set to <code>this.reverse</code> (if true, ascending) prior to sortHandler being called.</p>
+  </section>
+</div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Columns maintained by <a href="https://github.com/eisenbraun">eisenbraun</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="javascripts/jquery.columns.min.js"></script>
+    <script>
+            //example 1 
+            var columns1 = $('#example1').columns({
+                data: [
+                    {'Emp. Number': 00001, 'First Name':'John', 'Last Name':'Smith' },
+                    {'Emp. Number': 00002, 'First Name':'Jane', 'Last Name':'Doe' },
+                    {'Emp. Number': 00003, 'First Name':'Ted', 'Last Name':'Johnson' },
+                    {'Emp. Number': 00004, 'First Name':'Betty', 'Last Name':'Smith' },
+                    {'Emp. Number': 00005, 'First Name':'Susan', 'Last Name':'Wilson' },
+                    {'Emp. Number': 00006, 'First Name':'John', 'Last Name':'Doe' },
+                    {'Emp. Number': 00007, 'First Name':'Bill', 'Last Name':'Watson' },
+                    {'Emp. Number': 00008, 'First Name':'Walter', 'Last Name':'Wright' }
+                ]
+            });
+            
+            //example 2 
+            $.ajax({
+                url:'data.json',
+                dataType: 'json', 
+                success: function(json) { 
+                    example2 = $('#example2').columns({
+                        data:json
+                    }); 
+                }
+            }); 
+            
+            //example 3
+            $.ajax({
+                url:'data.json',
+                dataType: 'json', 
+                success: function(json) { 
+                    example3 = $('#example3').columns({
+                        data:json,
+                        schema: [
+                            {"header":"ID", "key":"id", "template":"000{{id}}"},
+                            {"header":"Name", "key":"name"},
+                            {"header":"Email", "key":"email", "template":'<a href="mailto:{{email}}">{{email}}</a>'},
+                            {"header":"Gender", "key":"gender"}
+                        ]
+
+                    }); 
+                }
+            });
+
+            //example 4
+            $.ajax({
+                url:'data.json',
+                dataType: 'json', 
+                success: function(json) { 
+                    example4 = $('#example4').columns({
+                        data:json,
+                        schema: [
+                            {"header":"ID", "key":"id", "template":"000{{id}}"},
+                            {"header":"Name", "key":"name", "template":'{{#name}} {{name}} {{/name}} {{^name}} Unknown Author {{/name}}'},
+                            {"header":"Email", "key":"email", "template":'<a href="mailto:{{email}}">{{email}}</a>'},
+                            {"header":"Gender", "key":"gender", "condition":function(val) {return (val=="male");}}
+                        ]
+ 
+                    }); 
+                }
+            });
+
+            //example 5 
+            $.ajax({
+                url:'data.json',
+                dataType: 'json', 
+                success: function(json) { 
+                    example8 = $('#example5').columns({
+                        data:json,
+                        schema: [
+                            {"header":"ID", "key":"id", "template":"000{{id}}"},
+                            {"header":"Name", "key":"name"},
+                            {"header":"Email", "key":"email", "template":'<a href="mailto:{{email}}">{{email}}</a>'},
+                            {"header":"Gender", "key":"gender"}
+                        ]
+
+                    }); 
+                }
+            });
+
+            $('#example5Button').click(function() { 
+                $('#example5').columns('destroy');
+
+                $.ajax({
+                    url:'data.json',
+                    dataType: 'json', 
+                    success: function(json) { 
+                        example8 = $('#example5').columns({
+                            data:json,
+                            schema: [
+                                {"header":"Name", "key":"name"},
+                                {"header":"Email", "key":"email", "template":'<a href="mailto:{{email}}">{{email}}</a>'},
+                                {"header":"Address", "key":"address"},
+                                {"header":"City", "key":"city"},
+                                {"header":"State", "key":"state"},
+                                {"header":"Zip", "key":"zip"}
+                            ]
+                        });
+                    }
+                });
+            });
+    </script>
+  </body>
+</html>
