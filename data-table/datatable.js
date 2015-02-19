@@ -65,7 +65,9 @@ function addColumn() {
 
 function addRow(json) {
     for(var i in json[0]) {
-        firebase.child(i).child("newvalue").set("newvalue");
+        if(i!='') {
+           firebase.child(i).child("newvalue").set("newvalue");
+        }
     }
 }
 
