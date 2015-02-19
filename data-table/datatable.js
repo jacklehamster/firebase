@@ -127,15 +127,18 @@ function resetColumns(json,destroy) {
             }
             else {
                 var line = json[row];
-                var firstC = null;
+                var firstC = null, cc = null, count = 0;
                 for(var c in line) {
-                    firstC = c;
-                    break;
+                    if(!firstC)
+                        firstC = c;
+                    if(count==col)
+                        cc = c;
+                    count++;
                 }
                 var en = line[firstC];
                 var newvalue = prompt("New value: ("+en+")",this.innerHTML);
                 if(newvalue) {
-                    firebase.child(firstC).child(en).set({value:newvalue});
+                    firebase.child(cc).child(en).set({value:newvalue});
                 }
                 
                 e.preventDefault();
