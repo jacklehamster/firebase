@@ -71,9 +71,12 @@ function addColumn(json) {
 }
 
 function addRow(json,col) {
-    for(var i in json[0]) {
-        if(i!='') {
-            firebase.child(i).child(title).set({value:title});
+    var title = prompt("Enter new string");
+    if(title) {
+        for(var i in json[0]) {
+            if(i!='') {
+                firebase.child(i).child(title).set({value:title});
+            }
         }
     }
 }
