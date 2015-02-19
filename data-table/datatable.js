@@ -71,15 +71,10 @@ function addColumn(json) {
 }
 
 function addRow(json,col) {
-    var c = 0;
     for(var i in json[0]) {
-        if(c==col) {
-            if(i!='') {
-               firebase.child(i).push({value:"newvalue"});
-            }
-            break;
+        if(i!='') {
+            firebase.child(i).child(title).set({value:title});
         }
-        c++;
     }
 }
 
