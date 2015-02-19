@@ -87,9 +87,7 @@ function countColumns(json) {
     //  get columns name
     for(var j in json) {
         for(var i in json[j]) {
-            if(i!='') {
-                columnNames[i] = true;
-            }
+            columnNames[i] = true;
         }
     }
 
