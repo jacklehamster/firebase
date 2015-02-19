@@ -66,7 +66,7 @@ function addColumn(json) {
         count++;
     }
     
-    firebase.child("col"+count).push({value:"dummy"});
+    firebase.child("col"+count).child("dummy").set({value:"dummy"});
     
 }
 
@@ -108,7 +108,7 @@ function resetColumns(json,destroy) {
         $("#columns").columns('destroy');
     $('#columns').columns({data:json});
     $(".ui-table").find('td').on("mousedown",
-        function() {
+        function(e) {
             var cols = countColumns(json);
             var index = $(".ui-table").find('td').index(this);
             var col = index % cols;
