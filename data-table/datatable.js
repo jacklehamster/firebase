@@ -65,7 +65,8 @@ function addColumn(json) {
     while(columnNames["col"+count]) {
         count++;
     }
-    
+    for(var i in json[0])
+        firebase.child("col"+count).set({i:{value:i}});
     firebase.child("col"+count).set({"dummy":{value:"dummy"}});
     
 }
