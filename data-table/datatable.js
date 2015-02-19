@@ -110,6 +110,7 @@ function countRows(json) {
     return json.length;
 }
 
+
 function resetColumns(json,destroy) {
     if(destroy)
         $("#columns").columns('destroy');
@@ -125,6 +126,18 @@ function resetColumns(json,destroy) {
                 addRow(json);
             }
             else {
+                var line = json[row];
+                var firstC = null;
+                for(var c in line) {
+                    firstC = c;
+                    break;
+                }
+                var en = line[firstC];
+                var newvalue = prompt("New value: ("+en+")",this.innerHTML);
+                if(newvalue) {
+                    firebase.child(firstC).child(en).set({value:newvalue});
+                }
+                
                 e.preventDefault();
             }
         });;
