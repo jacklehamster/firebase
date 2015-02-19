@@ -79,7 +79,7 @@ function addColumn(json) {
     
 }
 
-function addRow(json,col) {
+function addRow(json) {
     var title = prompt("Enter new string");
     if(title) {
         for(var i in json[0]) {
@@ -122,7 +122,7 @@ function resetColumns(json,destroy) {
             var row = Math.floor(index/cols);
             var rows = countRows(json);
             if(row==rows-1) {
-                addRow(json,col);
+                addRow(json);
             }
             else {
                 e.preventDefault();
