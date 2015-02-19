@@ -41,7 +41,19 @@ function onChildAdded(snapshot) {
 }
 
 function addBlankCells(json) {
-    json.push({"":""});
+    //  add a blank column
+    for(var i=0;i<json.length;i++) {
+        json[i][""] = "";
+    }
+    
+    //  add a blank row
+    var newRow = {"":""};
+    for(var col in json[0]) {
+        newRow[col] = "";
+    }
+    json.push(newRow);
+    
+//    json.push({"":""});
 }
 
 function addColumn() {
