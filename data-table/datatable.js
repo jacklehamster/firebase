@@ -8,5 +8,5 @@ $(document).ready(function() {
 });
 
 function addBlankCells(json) {
-    json.push({"":""});
+    json.push({"row":"col"});
 }
