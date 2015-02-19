@@ -1,7 +1,7 @@
 var firebase;
+var json = [];
 
 $(document).ready(function() {
-    var json = []; 
     addBlankCells(json);
     firebase = new Firebase('https://firelang.firebaseio.com/translations/');
     firebase.on("child_added",onChildAdded);
@@ -11,10 +11,27 @@ $(document).ready(function() {
 
 function onBaseChanged(snapshot) {
     var o = snapshot.val();
-    console.log("---");
-    console.log(o);
-    console.log(firebase);
-    
+    json = [];
+    var columns = {};
+    for(var col in o) {
+        columns[col] = true;
+    }
+    var rows = {};
+    for(var col in o) {
+        for(var row in o[col]) {
+            if(!rows[row]) {
+                rows[row] = {};
+            }
+            var value = o[col][row];
+            rows[row][col] = value;
+        }
+    }
+    console.log(rows);
+//        var cell = {};
+//        cell[col] = 
+//        json.push({})
+//    }
+    addBlankCells(json);
 }
 
 function onChildAdded(snapshot) {
