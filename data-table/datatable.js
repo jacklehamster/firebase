@@ -20,5 +20,5 @@ function addColumn() {
 
 function resetColumns(json) {
     $('#columns').columns({data:json});
-    $(".ui-table").find("thead")[0].addEventListener("mousedown",function() {alert(123);});
+    $(".ui-table").find("thead")[0].addEventListener("mousedown",function() {addColumn());});
 }
