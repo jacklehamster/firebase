@@ -70,14 +70,14 @@ function addColumn(json) {
         count++;
     }
     
-    firebase.child("col"+count).set({"dummy":"dummy"});
+    firebase.child("col"+count).set({"dummy":{value:"dummy"}});
     
 }
 
 function addRow(json) {
     for(var i in json[0]) {
         if(i!='') {
-           firebase.child(i).child("newvalue").set("newvalue");
+           firebase.child(i).child("newvalue").set({value:"newvalue"});
         }
     }
 }
