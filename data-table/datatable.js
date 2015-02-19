@@ -4,9 +4,18 @@ $(document).ready(function() {
     var json = []; 
     addBlankCells(json);
     firebase = new Firebase('https://firelang.firebaseio.com/translations/');
-    firebase.on("child_added",onChildAdded)
+    firebase.on("child_added",onChildAdded);
+    firebase.on("value",onBaseChanged)
     resetColumns(json);
 });
+
+function onBaseChanged(snapshot) {
+    var o = snapshot.val();
+    console.log("---");
+    console.log(o);
+    console.log(firebase);
+    
+}
 
 function onChildAdded(snapshot) {
     var o = snapshot.val();
