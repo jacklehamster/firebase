@@ -4,7 +4,7 @@ var json = [];
 $(document).ready(function() {
     addBlankCells(json);
     firebase = new Firebase('https://firelang.firebaseio.com/translations/');
-    firebase.on("child_added",onChildAdded);
+//    firebase.on("child_added",onChildAdded);
     firebase.on("value",onBaseChanged)
     resetColumns(json);
 });
