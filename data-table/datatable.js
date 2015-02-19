@@ -90,11 +90,11 @@ function resetColumns(json,destroy) {
     $('#columns').columns({data:json});
     $(".ui-table").find('td').on("mousedown",
         function() {
-            alert($(".ui-table").find('td').indexOf(this));
+            alert($(".ui-table").find('td').index(this));
         });;
     $(".ui-table").find('th').on("mousedown",
         function() {
-            alert($(".ui-table").find('th').indexOf(this));
+            alert($(".ui-table").find('th').index(this));
         });
     /*
     var ths = $(".ui-table").find("thead").find("th");
