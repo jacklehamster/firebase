@@ -4,8 +4,15 @@ $(document).ready(function() {
     var json = []; 
     addBlankCells(json);
     firebase = new Firebase('https://firelang.firebaseio.com/translations/');
+    firebase.on("child_added",onChildAdded)
     resetColumns(json);
 });
+
+function onChildAdded(snapshot) {
+    var o = snapshot.val();
+    console.log(o);
+    console.log(firebase);
+}
 
 function addBlankCells(json) {
     json.push({"":""});
