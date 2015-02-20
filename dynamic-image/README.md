@@ -17,3 +17,8 @@ For example:
 http://jacklehamster.github.io/firebase/dynamic-image#pizza
 will be a different image than
 http://jacklehamster.github.io/firebase/dynamic-image#penguin
+
+Note: The script also saves the date when the image was uploaded and the link where that image is located. This is useful when looking at Forge to figure out which image just got uploaded and where it is.
+
+
+This prototype might be used later a game that can accept user generated content in real time.
