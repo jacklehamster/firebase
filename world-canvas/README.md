@@ -15,4 +15,4 @@ This is a real-time collaborative drawing program with the following features:
 
 It is virtually infinite. The canvas is divided as a grid of 200x200 cells, and each cell is a separate Firebase location. As we move the canvas around, revealing more cells, the Firebase data gets loaded further and we end up with more drawings.
 
-The drawing is real time, so users can see other users' strokes unfolding as they draw.
+Users can see other users' strokes unfolding as they draw.
