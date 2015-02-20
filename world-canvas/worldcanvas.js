@@ -29,6 +29,8 @@ var firebase = new Firebase('https://art-depot.firebaseio.com/firedraw/');
 function init(event) {
    updateView();
    updateToolbar();
+   refreshTip(true);
+
    document.getElementById("zoom").src = zoomDataURI;
    document.getElementById("hand").src = handDataURI;
    document.getElementById("pencil").src = pencilDataURI;
@@ -244,12 +246,10 @@ function performUpdate(cellid,cellX,cellY) {
    ctx.moveTo(commands[0].x*2-cellX*CELLSIZE*2,commands[0].y*2-cellY*CELLSIZE*2);
    if(commands[0].penColor) {
        ctx.strokeStyle = commands[0].penColor;
-       console.log(">>",ctx.strokeStyle);
    }
    for(var i=1;i<commands.length;i++) {
       var command = commands[i];
-      if(ctx.strokeStyle != command.penColor) {
-          console.log("pen",ctx.strokeStyle,command.penColor);
+      if(command.penColor && ctx.strokeStyle != command.penColor) {
           ctx.stroke();
           ctx.beginPath();
           ctx.lineWidth=2;
