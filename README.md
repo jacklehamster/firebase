@@ -1,4 +1,4 @@
-# firebase repo
+# Firebase repo
 Demos built in JavaScript using Firebase
 
 https://github.com/jacklehamster/firebase/
