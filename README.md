@@ -1,4 +1,4 @@
-![Firebase](https://pbs.twimg.com/profile_images/1974595305/firebase_branding_r4_FINAL_03.png)
+![Firebase](https://raw.githubusercontent.com/jacklehamster/firebase/gh-pages/images/firebase_100x100.png)
 
 # Firebase repo
 Demos built in JavaScript using Firebase
