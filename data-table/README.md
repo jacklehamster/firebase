@@ -26,3 +26,6 @@ The translation table uses Firebase to store data translation in the following f
 }
 
 Since the data is accessible from any program, it can be used to streamline the localization of apps or games dynamically. The app sends a missing string to the firebase store, and a new entry gets created. Then the table is used to manually enter the translation for the sentence that's missing translation.
+
+Note: The table uses third-party code: https://github.com/eisenbraun
+
