@@ -10,7 +10,7 @@ color: #FF00FF;
 }
 
 </style>
-<script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
+<script src='js/firebase.js'></script>
 <script src="worldcanvas.js"></script>
 </head>
 <body style="margin:0px; height:100%;position:fixed" onLoad="init(event)">
@@ -21,14 +21,15 @@ color: #FF00FF;
 <img title="Draw on paper" id="pencil" width=50 height=50 style="border:5px solid blue; cursor:pointer">
 <img title="Move paper" id="hand" width=50 height=50 style="border:5px solid silver; cursor:pointer">
 <img title="Zoom image" id="zoom" width=50 height=50 style="border:5px solid silver; cursor:pointer">
-<img title="Change color" id="palette" width=50 height=50 style="border:5px solid silver; cursor:pointer"><br>
-<img title="Palette" id="colorpalette" style="border:5px solid silver; cursor:pointer">
+<img title="Change color" id="palette" width=50 height=50 style="border:5px solid silver; cursor:pointer">
 </nobr>
-<!--hr>
-<input type="button" value="clear" onclick="clearAll()">
 <br>
-<span id="span"></span>
-<span id="span2"></span-->
+<font color="#999999">
+<img id="colorpalette" style="border:5px solid silver; cursor:pointer; display:none">
+<span id="movetip" style="display:none; padding-left:5px"><i>drag the image around to move it</i></span>
+<span id="zoomtip" style="display:none; padding-left:5px"><i>drag down/up to zoom in/out</i></span>
+<span id="drawtip" style="display:none; padding-left:5px"><i>Draw!</i></span>
+</font>
 
 </div>
 </body>

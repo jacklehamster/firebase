@@ -14,12 +14,11 @@ var preState = {};
 
 var pixel,xx,yy,pendown,globalZoom=1;
 
-var updater = {}, updateInterval = setInterval(keepUpdating,10);
+var updater = {}, updateInterval = setInterval(keepUpdating,50);
 
 var cursorPoint =null;
 var action="pencil";
 var penColor = [0,0,0,255];
-var pendingPenColor = null;
 
 var firebase = new Firebase('https://art-depot.firebaseio.com/firedraw/');
 
@@ -40,9 +39,17 @@ function init(event) {
    document.getElementById("pencil").addEventListener("mousedown",onToolbar);
    document.getElementById("palette").addEventListener("mousedown",onToolbar);
     
+   document.getElementById("zoom").addEventListener("mouseover",onTip);
+   document.getElementById("hand").addEventListener("mouseover",onTip);
+   document.getElementById("pencil").addEventListener("mouseover",onTip);
+   document.getElementById("zoom").addEventListener("mouseout",onTip);
+   document.getElementById("hand").addEventListener("mouseout",onTip);
+   document.getElementById("pencil").addEventListener("mouseout",onTip);
+    
    document.getElementById("colorpalette").addEventListener("mousemove",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mousedown",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mouseout",leavePalette);
+   document.getElementById("colorpalette").addEventListener("mouseup",leavePalette);
 }
 /**
  *    Perform a zoom. zoomValue is the scale
@@ -162,9 +169,9 @@ function mousePen(x,y,ispen) {
  * */
 function processPen(cell,fromState,toState,doPre) {
    if(doPre) {
-       firebase.child(cell.id).push({x:fromState.x,y:fromState.y,pen:fromState.pen,penColor:hexRGBA(penColor)});
+       firebase.child(cell.id).push({x:fromState.x,y:fromState.y,pen:fromState.pen,penColor:hexRGB(penColor)});
    }
-   firebase.child(cell.id).push({x:toState.x,y:toState.y,pen:toState.pen,penColor:hexRGBA(penColor)});
+   firebase.child(cell.id).push({x:toState.x,y:toState.y,pen:toState.pen,penColor:hexRGB(penColor)});
 }
 
 /**
@@ -197,8 +204,8 @@ function showCanvas(cellX,cellY,updatePosition) {
   }
   if(updatePosition) {
      canvas =document. getElementById(cellid);
-     canvas.style.left=(cellX*CELLSIZE*zoomScale-shiftX)+"px";
-     canvas.style.top=(cellY*CELLSIZE*zoomScale-shiftY)+"px";
+     canvas.style.left=Math.round(cellX*CELLSIZE*zoomScale-shiftX)+"px";
+     canvas.style.top=Math.round(cellY*CELLSIZE*zoomScale-shiftY)+"px";
 
   }
 }
@@ -233,14 +240,19 @@ function performUpdate(cellid,cellX,cellY) {
    var commands = map[cellid];
    ctx.beginPath();
    ctx.lineWidth=2;
+   ctx.strokeStyle = "#000000";
    ctx.moveTo(commands[0].x*2-cellX*CELLSIZE*2,commands[0].y*2-cellY*CELLSIZE*2);
    if(commands[0].penColor) {
        ctx.strokeStyle = commands[0].penColor;
+       console.log(">>",ctx.strokeStyle);
    }
    for(var i=1;i<commands.length;i++) {
       var command = commands[i];
       if(ctx.strokeStyle != command.penColor) {
+          console.log("pen",ctx.strokeStyle,command.penColor);
           ctx.stroke();
+          ctx.beginPath();
+          ctx.lineWidth=2;
           ctx.strokeStyle = command.penColor;
       }
       if(commands[i-1].pen) {
@@ -268,23 +280,99 @@ function updateView(event,doUpdate) {
 /**
  *    Selected a tool on the toolbar
  * */
+function setAction(value) {
+    if(action!=value) {
+        var canvases = document.getElementsByTagName("canvas");
+        
+        if(action=="palette") {
+            for(var i=0;i<canvases.length;i++) {
+                canvases[i].removeEventListener("mouseup",pickColor);
+                canvases[i].removeEventListener("mousemove",pickColor);
+            }
+        }
+        
+        action = value;
+        updateToolbar();
+        
+        if(action=="palette") {
+            for(var i=0;i<canvases.length;i++) {
+                canvases[i].addEventListener("mouseup",pickColor);
+                canvases[i].addEventListener("mousemove",pickColor);
+            }
+        }
+    }
+}
+
+/**
+ *    Pick a color using eyedrop tool on canvas
+ * */
+function pickColor(event) {
+    var canvas = event.target;
+    var pendingPenColor = canvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1).data;
+    if(event.type=="mousemove") {
+        if(pendingPenColor[3]==0)
+            pendingPenColor = penColor;
+    }
+    else if(event.type=="mouseup") {
+        if(pendingPenColor[3]!=0)
+            penColor = pendingPenColor;
+        closePalette();
+    }
+    changeColor(document.getElementById("pencil"),pendingPenColor);    
+    
+    event.preventDefault();
+    
+}
+
+/**
+ *    Selected a tool on the toolbar
+ * */
 function onToolbar(event) {
-   action = event.target.id;
-   updateToolbar();
-   event.preventDefault();
+    setAction(event.target.id);
+    event.preventDefault();
 }
 
 /**
  *    Refresh the toolbar to reflect the selected tool
  * */
 function updateToolbar() {
-   document.getElementById("hand").style.borderColor = action=="hand"?"blue":"silver";
-   document.getElementById("pencil").style.borderColor = action=="pencil"?"blue":"silver";
-   document.getElementById("zoom").style.borderColor = action=="zoom"?"blue":"silver";
-   document.getElementById("palette").style.borderColor = action=="palette"?"blue":"silver";
-   document.getElementById("colorpalette").style.display = action=="palette"?"":"none";
-    //$("img").addEventListener("mousemove",function(e){document.title=(e.pageX-$("img").x)+","+(e.pageY-$("img").y);});
-   
+    updateToolbarItem(document.getElementById("hand"),action=="hand");
+    updateToolbarItem(document.getElementById("pencil"),action=="pencil");
+    updateToolbarItem(document.getElementById("zoom"),action=="zoom");
+    updateToolbarItem(document.getElementById("palette"),action=="palette");
+    document.getElementById("colorpalette").style.display = action=="palette"?"":"none";
+    refreshTip(false);
+    
+    var canvases = document.getElementsByTagName("canvas");
+    for(var i=0;i<canvases.length;i++) {
+        canvases[i].style.cursor = action=="pencil"?"":"pointer";
+    }
+}
+
+/**
+ *    Events when hovering over or out of tools with tip
+ * */
+function onTip(event) {
+    refreshTip(event.type=="mouseout" || event.target.id!=action);
+}
+
+/**
+ *    Refresh tip / toolbar options
+ * */
+function refreshTip(hide) {
+    document.getElementById("movetip").style.display = !hide && action=="hand"?"":"none";
+    document.getElementById("zoomtip").style.display = !hide && action=="zoom"?"":"none";
+    document.getElementById("drawtip").style.display = !hide && action=="pencil"?"":"none";    
+}
+
+/**
+ *    Refresh a toolbar item to reflect the selected tool
+ * */
+function updateToolbarItem(element,selected) {
+    var padding = 11;
+    element.style.borderColor = selected?"blue":"silver";
+    element.style.width = element.style.height = selected ? "50px":(50-padding*2)+"px";
+    element.style.padding = selected ? "0px" : padding+"px";
 }
 
 /**
@@ -295,7 +383,7 @@ function onColorPalette(event) {
     
     if(action=="palette") {
         var image = document.getElementById("colorpalette");
-        pendingPenColor = getPixel(image,event.pageX-image.x,event.pageY-image.y,true);
+        var pendingPenColor = getPixel(image,event.pageX-image.x,event.pageY-image.y,true);
         if(ispen) {
             penColor = pendingPenColor;
         }
@@ -308,8 +396,19 @@ function onColorPalette(event) {
  *    Event when we move over the color palette
  * */
 function leavePalette(event) {
-    pendingPenColor = null;
     changeColor(document.getElementById("pencil"),penColor);
+    if(event.type=="mouseup") {
+        closePalette();
+    }
+   event.preventDefault();
+}
+
+/**
+ *    Close palette
+ * */
+function closePalette() {
+    setAction("pencil");
+    updateToolbar();
 }
 
 /**
@@ -324,6 +423,12 @@ function ddHex(num) {
  * */
 function hexRGBA(array) {
     return "#"+ddHex(array[0])+ddHex(array[1])+ddHex(array[2])+ddHex(array[3]);
+}
+/**
+ *    Turn an array of RGBA into hex
+ * */
+function hexRGB(array) {
+    return "#"+ddHex(array[0])+ddHex(array[1])+ddHex(array[2]);
 }
 
 /**
