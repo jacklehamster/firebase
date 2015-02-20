@@ -9,7 +9,6 @@ var paletteColorURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAM
 
 var zoomScale =1;
 
-var firebase = new Firebase('https://art-depot.firebaseio.com/firedraw/');
 var CELLSIZE = 200;  // The size of a cell in the canvas grid
 var preState = {};
 
@@ -19,10 +18,10 @@ var updater = {}, updateInterval = setInterval(keepUpdating,10);
 
 var cursorPoint =null;
 var action="pencil";
-var penColor = null;
+var penColor = [0,0,0,255];
 var pendingPenColor = null;
-var paletteCanvas = null;
 
+var firebase = new Firebase('https://art-depot.firebaseio.com/firedraw/');
 
 
 /**
@@ -42,6 +41,7 @@ function init(event) {
    document.getElementById("palette").addEventListener("mousedown",onToolbar);
     
    document.getElementById("colorpalette").addEventListener("mousemove",onColorPalette);
+   document.getElementById("colorpalette").addEventListener("mousedown",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mouseout",leavePalette);
 }
 /**
@@ -162,9 +162,9 @@ function mousePen(x,y,ispen) {
  * */
 function processPen(cell,fromState,toState,doPre) {
    if(doPre) {
-       firebase.child(cell.id).push({x:fromState.x,y:fromState.y,pen:fromState.pen});
+       firebase.child(cell.id).push({x:fromState.x,y:fromState.y,pen:fromState.pen,penColor:hexRGBA(penColor)});
    }
-   firebase.child(cell.id).push({x:toState.x,y:toState.y,pen:toState.pen});
+   firebase.child(cell.id).push({x:toState.x,y:toState.y,pen:toState.pen,penColor:hexRGBA(penColor)});
 }
 
 /**
@@ -233,9 +233,16 @@ function performUpdate(cellid,cellX,cellY) {
    var commands = map[cellid];
    ctx.beginPath();
    ctx.lineWidth=2;
-    ctx.moveTo(commands[0].x*2-cellX*CELLSIZE*2,commands[0].y*2-cellY*CELLSIZE*2);
+   ctx.moveTo(commands[0].x*2-cellX*CELLSIZE*2,commands[0].y*2-cellY*CELLSIZE*2);
+   if(commands[0].penColor) {
+       ctx.strokeStyle = commands[0].penColor;
+   }
    for(var i=1;i<commands.length;i++) {
       var command = commands[i];
+      if(ctx.strokeStyle != command.penColor) {
+          ctx.stroke();
+          ctx.strokeStyle = command.penColor;
+      }
       if(commands[i-1].pen) {
         ctx.lineTo(command.x*2-cellX*CELLSIZE*2,command.y*2-cellY*CELLSIZE*2);
       }
@@ -244,7 +251,6 @@ function performUpdate(cellid,cellX,cellY) {
       }  
    }
    ctx.stroke();
-   console.log(cellid,commands.length);
 }
 
 /**
@@ -289,16 +295,21 @@ function onColorPalette(event) {
     
     if(action=="palette") {
         var image = document.getElementById("colorpalette");
-        pendingPenColor = getPixel(image,event.pageX-image.x,event.pageY-image.y);
-        console.log(pendingPenColor);
+        pendingPenColor = getPixel(image,event.pageX-image.x,event.pageY-image.y,true);
+        if(ispen) {
+            penColor = pendingPenColor;
+        }
+        changeColor(document.getElementById("pencil"),pendingPenColor);
+        event.preventDefault();
     }
 }
 
 /**
  *    Event when we move over the color palette
  * */
-function leavePalette(e) {
+function leavePalette(event) {
     pendingPenColor = null;
+    changeColor(document.getElementById("pencil"),penColor);
 }
 
 /**
@@ -309,16 +320,55 @@ function ddHex(num) {
 }
 
 /**
+ *    Turn an array of RGBA into hex
+ * */
+function hexRGBA(array) {
+    return "#"+ddHex(array[0])+ddHex(array[1])+ddHex(array[2])+ddHex(array[3]);
+}
+
+/**
+ *    Get an image's canvas copy
+ * */
+function getCanvas(img,scale) {
+    if(!scale)
+        scale = 1;
+    if(!img.canvas) {
+        img.canvas = document.createElement("canvas");
+        img.canvas.width = img.clientWidth*scale;
+        img.canvas.height = img.clientHeight*scale;
+        img.canvas.getContext("2d").drawImage(img,0,0);
+    }
+    return img.canvas;
+}
+
+/**
  *    Get the pixel color of an image
  * */
-function getPixel(img,x,y) {
-    if(!paletteCanvas) {
-        paletteCanvas = document.createElement("canvas");
-        paletteCanvas.width = img.clientWidth;
-        paletteCanvas.height = img.clientHeight;
-        paletteCanvas.getContext("2d").drawImage(img,0,0);
-    }
-    var pixelArray = paletteCanvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1).data;
-    return "#"+ddHex(pixelArray[0])+ddHex(pixelArray[1])+ddHex(pixelArray[2]);
+function getPixel(img,x,y,arrayFormat) {
+    var canvas = getCanvas(img);
+    var pixelArray = canvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1).data;
+    return arrayFormat?pixelArray:"#"+ddHex(pixelArray[0])+ddHex(pixelArray[1])+ddHex(pixelArray[2]);
     //ctx.strokeStyle="#FF0000";
+}
+
+/**
+ *    Change an image's colors
+ * */
+function changeColor(img,rgbArray) {
+    if(rgbArray[3]!=0) {
+        var canvas = getCanvas(img,2);
+        var imageData = canvas.getContext("2d").getImageData(0,0,canvas.width,canvas.height);
+        var data = imageData.data;
+
+        for(var i=0;i<data.length;i+=4) {
+            if(data[i+3]!=0) {
+                data[i] = rgbArray[0];
+                data[i+1] = rgbArray[1];
+                data[i+2] = rgbArray[2];
+                data[i+3] = rgbArray[3];
+            }
+        }
+        canvas.getContext("2d").putImageData(imageData,0,0);
+        img.src = canvas.toDataURL();
+    }
 }
