@@ -1,5 +1,5 @@
 # firebase repo
-Demos using Firebase
+Demos built in JavaScript using Firebase
 
 https://github.com/jacklehamster/firebase/
 
