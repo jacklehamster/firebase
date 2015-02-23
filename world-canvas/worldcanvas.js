@@ -552,7 +552,7 @@ function getCanvas(img,scale) {
  * */
 function getPixel(img,x,y,arrayFormat) {
     var canvas = getCanvas(img);
-    var pixelArray = canvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1).data;
+    var pixelArray = canvas.getContext("2d").getImageData(x, y, 1, 1).data;
     return arrayFormat?pixelArray:"#"+ddHex(pixelArray[0])+ddHex(pixelArray[1])+ddHex(pixelArray[2]);
     //ctx.strokeStyle="#FF0000";
 }
