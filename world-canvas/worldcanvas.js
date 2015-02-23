@@ -19,6 +19,7 @@ var updater = {}, updateInterval = setInterval(keepUpdating,50);
 var cursorPoint =null;
 var action="pencil";
 var penColor = [0,0,0,255];
+var brushSize = 2;
 
 var firebase = new Firebase('https://art-depot.firebaseio.com/firedraw/');
 
@@ -30,6 +31,7 @@ function init(event) {
    updateView();
    updateToolbar();
    refreshTip(true);
+   changeBrushSize(2);
 
    document.getElementById("zoom").src = zoomDataURI;
    document.getElementById("hand").src = handDataURI;
@@ -43,15 +45,19 @@ function init(event) {
     
    document.getElementById("zoom").addEventListener("mouseover",onTip);
    document.getElementById("hand").addEventListener("mouseover",onTip);
-   document.getElementById("pencil").addEventListener("mouseover",onTip);
    document.getElementById("zoom").addEventListener("mouseout",onTip);
    document.getElementById("hand").addEventListener("mouseout",onTip);
-   document.getElementById("pencil").addEventListener("mouseout",onTip);
     
    document.getElementById("colorpalette").addEventListener("mousemove",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mousedown",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mouseout",leavePalette);
    document.getElementById("colorpalette").addEventListener("mouseup",leavePalette);
+    
+   document.getElementById("brushsizemeter").addEventListener("mousemove",onBrushsizeMeter);
+   document.getElementById("brushsizemeter").addEventListener("mousedown",onBrushsizeMeter);
+   document.getElementById("knob").addEventListener("mousemove",onBrushsizeMeter);
+   document.getElementById("knob").addEventListener("mousedown",onBrushsizeMeter);
+    
 }
 /**
  *    Perform a zoom. zoomValue is the scale
@@ -101,6 +107,9 @@ window.addEventListener("resize",updateView);
  *    Callback function for drawing.
  * */
 function mouseDraw(event) {
+  if(event.target.id=="brushsizemeter") {
+      return;
+  }
   var ispen = event.type!="mouseout" && event.type!="mouseup" && (event.buttons!==undefined?event.buttons:event.which);
   var x = event.pageX;
   var y = event.pageY;
@@ -171,9 +180,21 @@ function mousePen(x,y,ispen) {
  * */
 function processPen(cell,fromState,toState,doPre) {
    if(doPre) {
-       firebase.child(cell.id).push({x:fromState.x,y:fromState.y,pen:fromState.pen,penColor:hexRGB(penColor)});
+       firebase.child(cell.id).push({
+           x:fromState.x,
+           y:fromState.y,
+           pen:fromState.pen,
+           penColor:hexRGB(penColor), 
+           brushSize:brushSize
+       });
    }
-   firebase.child(cell.id).push({x:toState.x,y:toState.y,pen:toState.pen,penColor:hexRGB(penColor)});
+   firebase.child(cell.id).push({
+       x:toState.x,
+       y:toState.y,
+       pen:toState.pen,
+       penColor:hexRGB(penColor),
+       brushSize:brushSize
+   });
 }
 
 /**
@@ -241,7 +262,7 @@ function performUpdate(cellid,cellX,cellY) {
    ctx.clearRect(0,0,CELLSIZE*2,CELLSIZE*2);
    var commands = map[cellid];
    ctx.beginPath();
-   ctx.lineWidth=2;
+   ctx.lineWidth=commands[0].brushSize ? commands[0].brushSize:2;
    ctx.strokeStyle = "#000000";
    ctx.moveTo(commands[0].x*2-cellX*CELLSIZE*2,commands[0].y*2-cellY*CELLSIZE*2);
    if(commands[0].penColor) {
@@ -249,10 +270,11 @@ function performUpdate(cellid,cellX,cellY) {
    }
    for(var i=1;i<commands.length;i++) {
       var command = commands[i];
-      if(command.penColor && ctx.strokeStyle != command.penColor) {
+      if(command.penColor && ctx.strokeStyle != command.penColor
+        || command.brushSize && ctx.lineWidth != command.brushSize) {
           ctx.stroke();
           ctx.beginPath();
-          ctx.lineWidth=2;
+          ctx.lineWidth=command.brushSize;
           ctx.strokeStyle = command.penColor;
       }
       if(commands[i-1].pen) {
@@ -362,7 +384,7 @@ function onTip(event) {
 function refreshTip(hide) {
     document.getElementById("movetip").style.display = !hide && action=="hand"?"":"none";
     document.getElementById("zoomtip").style.display = !hide && action=="zoom"?"":"none";
-    document.getElementById("drawtip").style.display = !hide && action=="pencil"?"":"none";    
+    document.getElementById("drawtip").style.display = action=="pencil"?"":"none";    
 }
 
 /**
@@ -409,6 +431,34 @@ function leavePalette(event) {
 function closePalette() {
     setAction("pencil");
     updateToolbar();
+}
+
+/**
+ *    Event when we click or drag the brushsize meter
+ * */
+function onBrushsizeMeter(event) {
+  var brushSizeMeter = document.getElementById("brushsizemeter");
+  var ispen = (event.buttons!==undefined?event.buttons:event.which);
+  if(ispen) {   
+      changeBrushSize(Math.round(30*(event.pageX-brushSizeMeter.x)/brushSizeMeter.offsetWidth));
+  }
+  event.preventDefault();
+}
+
+/**
+ *    Change the brushsize
+ * */
+function changeBrushSize(value) {
+    value = Math.max(1,Math.min(30,value));
+    brushSize = value;
+    var brushSizeCircle = document.getElementById("brushsize");
+    brushSizeCircle.width = value/2;
+    brushSizeCircle.height = value/2;
+    brushSizeCircle.style.padding = (15-value/2)/2+"px";
+    var brushSizeMeter = document.getElementById("brushsizemeter");
+    var knob = document.getElementById("knob");
+    knob.style.left = (knob.style.posLeft = brushSizeMeter.offsetLeft + (value/2/15) * brushSizeMeter.offsetWidth)+"px";
+    
 }
 
 /**
