@@ -24,10 +24,13 @@ var brushSize = 2;
 var firebase = new Firebase('https://art-depot.firebaseio.com/firedraw/');
 
 
+        
 /**
  *    First called on load
  * */
 function init(event) {
+    
+   retrieveLastPosition();
    updateView();
    updateToolbar();
    refreshTip(true);
@@ -59,6 +62,43 @@ function init(event) {
    document.getElementById("knob").addEventListener("mousedown",onBrushsizeMeter);
     
 }
+
+
+/**
+ *    Retrieves the last position, either from the cache or from Firebase
+ *    The priority is to return your last position from the cookie
+ *    If that doesn't work, return the location where the last user scrolled to
+ * */
+function retrieveLastPosition() {
+    shiftX = 0;
+    shiftY = 0;
+    var posCookie = getCookie("lastPosition");
+    if(posCookie) {
+        shiftX = parseInt(posCookie.split(",")[0]);
+        shiftY = parseInt(posCookie.split(",")[1]);
+    }
+    else {
+        firebase.child("lastPosition").once("value",
+            function(snapshot) {
+                var o = snapshot.val();
+                if(o) {
+                    shiftX = parseInt(o.split(",")[0]);
+                    shiftY = parseInt(o.split(",")[1]);
+                    updateView(null,true);
+                }
+        });
+    }
+}
+
+/**
+ *    Retrieve a cookie
+ * */        
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}        
+
 /**
  *    Perform a zoom. zoomValue is the scale
  * */
@@ -159,6 +199,7 @@ function mousePen(x,y,ispen) {
            var dy = y - preState.stageY;
            shiftX -= dx/globalZoom;
            shiftY -= dy/globalZoom;
+           positionChanged();
            updateView(null,true);
        }
        break;
@@ -174,6 +215,13 @@ function mousePen(x,y,ispen) {
   preState = state;
 }
 
+/**
+ *    When the position changes, send an update to Firebase
+ * */
+function positionChanged() {
+    firebase.child("lastPosition").set(shiftX+","+shiftY);
+    document.cookie="lastPosition="+shiftX+","+shiftY;
+}
 
 /**
  *    Send the drawing actions to firebase so that it can be replicated
