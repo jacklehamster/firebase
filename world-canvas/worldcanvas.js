@@ -21,6 +21,8 @@ var action="pencil";
 var penColor = [0,0,0,255];
 var brushSize = 2;
 
+var attendeeList = [];
+
 var firebase = new Firebase('https://art-depot.firebaseio.com/firedraw/');
 
 
@@ -35,6 +37,7 @@ function init(event) {
    updateToolbar();
    refreshTip(true);
    changeBrushSize(2);
+//   startAttendeeList("jacklehamster");
 
    document.getElementById("zoom").src = zoomDataURI;
    document.getElementById("hand").src = handDataURI;
@@ -574,4 +577,53 @@ function changeColor(img,rgbArray) {
         canvas.getContext("2d").putImageData(imageData,0,0);
         img.src = canvas.toDataURL();
     }
+}
+
+/**
+ *    Start code for handling attendee list
+ * */
+function startAttendeeList(username) {
+    firebase.child("attendees").on("value",
+        function(snapshot) {
+            var o = snapshot.val();
+            var attendees = document.getElementById("attendees");
+            if(!attendees) {
+                attendees = document.createElement("div");
+                attendees.id = "attendees";
+                document.body.appendChild(attendees);
+                attendees.style.position = "absolute";
+            }
+            attendeeList = [];
+            for(var u in o) {
+                attendeeList.push(u);
+            }
+            updateAttendees();
+        }
+    );
+    setInterval(userJoin,10000,username);
+    setInterval(cleanAttendees,10000);
+}
+
+/**
+ *    Update attendee list
+ * */
+function updateAttendees() {
+    var attendees = document.getElementById("attendees");
+    attendees.style.left = attendees.style.posLeft = (window.innerWidth-attendees.offsetWidth)+"px";
+    attendees.style.top = attendees.style.posTop = (window.innerHeight-attendees.offsetHeight)+"px";
+    attendees.innerHTML = attendeeList.join("<br>\n");
+}
+
+/**
+ *    Make a user join
+ * */
+function userJoin(username) {
+    var id = Math.random()+"";
+    firebase.child("attendees").child(username).set(new Date().getTime());
+}
+
+/**
+ *    Remove attendees that didn't respond for 10 sec
+ * */
+function cleanAttendees() {
 }
