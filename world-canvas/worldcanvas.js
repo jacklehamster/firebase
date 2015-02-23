@@ -236,7 +236,7 @@ function processPen(cell,fromState,toState,doPre) {
            y:fromState.y,
            pen:fromState.pen,
            penColor:hexRGB(penColor), 
-           brushSize:brushSize
+           brushSize:Math.max(1,Math.round(brushSize/globalZoom))
        });
    }
    firebase.child(cell.id).push({
@@ -244,7 +244,7 @@ function processPen(cell,fromState,toState,doPre) {
        y:toState.y,
        pen:toState.pen,
        penColor:hexRGB(penColor),
-       brushSize:brushSize
+       brushSize:Math.max(1,Math.round(brushSize/globalZoom))
    });
 }
 
