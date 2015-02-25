@@ -19,7 +19,7 @@ window.addEventListener("load",
        var img = imgs[i];
        var locationAttribute = img.attributes['firebase-src'];
        if(locationAttribute)
-          attachFirebase(img,locationAttribute.src);
+          attachFirebase(img,locationAttribute.value);
       }
    }
 );
