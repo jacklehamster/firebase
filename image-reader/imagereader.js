@@ -12,12 +12,13 @@ function attachFirebase(image,firebaseLocation) {
    );
 }
 
-
-
-$( document ).ready(function() {
-      for(var img in $$('.firebase-src')) {
+window.addEventListener("load",
+   function(e) {
+      var imgs = document.getElementsByClassName("firebase-img");
+      for(var img in imgs) {
        var locationAttribute = img.attributes['firebase-src'];
        if(locationAttribute)
           attachFirebase(img,locationAttribute.src);
       }
-});
+   }
+);
