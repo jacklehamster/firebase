@@ -5,12 +5,20 @@
 function attachFirebase(image,firebaseLocation) {
    var firebase = new Firebase(firebaseLocation);
    firebase.on('value',
-      function(snapshot) {
+      image.firebasrRefresh = function(snapshot) {
          var o = snapshot.val();
          image.src = o;
       }
    );
 }
+
+function detachFirebase(image) {
+   if(image.firebasrRefresh) {
+    
+   }
+}
+
+
 
 window.addEventListener("load",
    function(e) {
