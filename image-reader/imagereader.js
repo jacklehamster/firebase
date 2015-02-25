@@ -12,7 +12,7 @@ function attachFirebase(firebaseLocation,image) {
    );
 }
 
-window.addEventListener(e,
+window.addEventListener("load",
    function(e) {
       e.target.removeEventListener(e.type,arguments.callee)
       console.log(e);
