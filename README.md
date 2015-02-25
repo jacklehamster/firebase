@@ -16,6 +16,13 @@ Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/dynamic-ima
 
 ____
 
+Image Reader: http://jacklehamster.github.io/firebase/dynamic-reader
+
+Simple minimal script to simply host a image that reads the URL from Firebase. In this example, the image is linked to the dynamic image in the previous example
+
+Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/image-reader
+____
+
 
 World Canvas : http://jacklehamster.github.io/firebase/world-canvas
 
