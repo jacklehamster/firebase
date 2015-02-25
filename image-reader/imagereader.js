@@ -2,7 +2,7 @@
  * IMAGE READER
  * **********************************************/
  
-function attachFirebase(firebaseLocation,image) {
+function attachFirebase(image,firebaseLocation) {
    var firebase = new Firebase(firebaseLocation);
    firebase.on('value',
       function(snapshot) {
@@ -12,9 +12,12 @@ function attachFirebase(firebaseLocation,image) {
    );
 }
 
-window.addEventListener("load",
-   function(e) {
-      e.target.removeEventListener(e.type,arguments.callee)
-      console.log(e);
-   }
-);
+
+
+$( document ).ready(function() {
+      for(var img in $$('.firebase-src')) {
+       var locationAttribute = img.attributes['firebase-src'];
+       if(locationAttribute)
+          attachFirebase(img,locationAttribute.src);
+      }
+});
