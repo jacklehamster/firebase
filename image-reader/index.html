@@ -3,15 +3,13 @@
 <head>
 <script src='https://cdn.firebase.com/js/client/2.2.0/firebase.js'></script>
 <meta charset=utf-8 />
-     <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
-     <script src="dynamicimage.js"></script>
+<script src="imagereader.js"></script>
 <title>Dynamic Image</title>
-<!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
 
 </head>
 <body style="margin:0px">
-<a href="javascript:performClick('theFile');"><img style="width:100%" border=0 id="img" alt="Upload an image" /></a><input type='file'  id="theFile" onchange="readURL(this);" style="visibility:hidden" />
+<img class="firebase-img" firebase-src="https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src">
+
+
 </body>
 </html>
