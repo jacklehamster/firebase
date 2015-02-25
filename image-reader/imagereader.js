@@ -15,7 +15,8 @@ function attachFirebase(image,firebaseLocation) {
 window.addEventListener("load",
    function(e) {
       var imgs = document.getElementsByClassName("firebase-img");
-      for(var img in imgs) {
+      for(var i=0;i<imgs.length;i++) {
+       var img = imgs[i];
        var locationAttribute = img.attributes['firebase-src'];
        if(locationAttribute)
           attachFirebase(img,locationAttribute.src);
