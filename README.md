@@ -24,6 +24,14 @@ Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/image-reade
 ____
 
 
+Firebase Cam : http://jacklehamster.github.io/firebase/firebase-cam
+
+Use a webcam through firebase.
+
+Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/firebase-cam
+____
+
+
 World Canvas : http://jacklehamster.github.io/firebase/world-canvas
 
 An infinitely large shared whiteboard that updates in real time
