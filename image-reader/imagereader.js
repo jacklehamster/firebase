@@ -7,7 +7,7 @@ function attachFirebase(image,firebaseLocation,options) {
    image.firebase.on('value',
       image.firebasrRefresh = function(snapshot) {
          var o = snapshot.val();
-         if(chrono) {
+         if(options.chrono && options.chrono.toUpperCase()!="NO") {
              var preSplit = image.src.split(";");
              var postSplit = o.split(";");
              if(preSplit.length>=3 && postSplit.length>=3) {
