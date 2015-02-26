@@ -17,8 +17,7 @@
 		
 		function Firebase() {
 			request.method = URLRequestMethod.POST;
-			request.url = firebaseURL;
-			request.requestHeaders = [new URLRequestHeader("X-HTTP-Method-Override", "PUT")];
+			request.url = firebaseURL+"?x-http-method-override=PUT";
 
 			cam = Camera.getCamera();
 			video = new Video();
