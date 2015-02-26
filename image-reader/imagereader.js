@@ -17,6 +17,7 @@ function attachFirebase(image,firebaseLocation,options) {
                      // if preTime is after postTime by less than a second, discard postTime
                      return;
                  }
+                 o = postSpit.slice(0,2).join(";");
              }
          }
          image.src = o;
