@@ -7,9 +7,9 @@ function attachFirebase(image,firebaseLocation,options) {
    image.firebase.on('value',
       image.firebasrRefresh = function(snapshot) {
          var o = snapshot.val();
+         var postSplit = o.split(";");
          if(options.chrono && options.chrono.toUpperCase()!="NO") {
              var preSplit = image.src.split(";");
-             var postSplit = o.split(";");
              if(preSplit.length>=3 && postSplit.length>=3) {
                  var preTime = parseInt(preSplit[2]);
                  var postTime = parseInt(preSplit[2]);
@@ -17,10 +17,9 @@ function attachFirebase(image,firebaseLocation,options) {
                      // if preTime is after postTime by less than a second, discard postTime
                      return;
                  }
-                 o = postSpit.slice(0,2).join(";");
              }
          }
-         image.src = o;
+         image.src = postSpit.slice(0,2).join(";");
       }
    );
 }
