@@ -3,8 +3,8 @@
  * **********************************************/
  
 function attachFirebase(image,firebaseLocation) {
-   var firebase = new Firebase(firebaseLocation);
-   firebase.on('value',
+   image.firebase = new Firebase(firebaseLocation);
+   image.firebase.on('value',
       image.firebasrRefresh = function(snapshot) {
          var o = snapshot.val();
          image.src = o;
@@ -13,12 +13,22 @@ function attachFirebase(image,firebaseLocation) {
 }
 
 function detachFirebase(image) {
-   if(image.firebasrRefresh) {
-    
+   if(image.firebase && image.firebasrRefresh) {
+    image.firebase.off('value',image.firebasrRefresh);
+    delete image.firebase;
+    delete image.firebaseRefresh;
    }
 }
 
-
+function loadFirebase(image,firebaseLocation) {
+   var firebase = new Firebase(firebaseLocation);
+   firebase.once('value',
+      function(snapshot) {
+         var o = snapshot.val();
+         image.src = o;
+      }
+   );
+}
 
 window.addEventListener("load",
    function(e) {
