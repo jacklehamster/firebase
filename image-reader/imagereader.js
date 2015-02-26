@@ -34,10 +34,16 @@ window.addEventListener("load",
    function(e) {
       var imgs = document.getElementsByClassName("firebase-img");
       for(var i=0;i<imgs.length;i++) {
-       var img = imgs[i];
-       var locationAttribute = img.attributes['firebase-src'];
-       if(locationAttribute)
-          attachFirebase(img,locationAttribute.value);
+         var img = imgs[i];
+         var locationAttribute = img.attributes['firebase-src'];
+         if(locationAttribute) {
+            if(img.attributes['nosync']) {
+               attachFirebase(img,locationAttribute.value);
+            }
+            else {
+              loadFirebase(img,locationAttribute.value);
+            }
+         }
       }
    }
 );
