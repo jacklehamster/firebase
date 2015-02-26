@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <script src="../styling/header.js"></script>
-<script src='https://cdn.firebase.com/js/client/2.2.0/firebase.js'></script>
+    <script src="../styling/header.js"></script>
+    <script src='https://cdn.firebase.com/js/client/2.2.0/firebase.js'></script>
 <meta charset=utf-8 />
 <script src="https://jacklehamster.github.io/firebase/image-reader/imagereader.js"></script>
 <title>Firebase Cam</title>
@@ -10,7 +10,7 @@
 </head>
 <body style="margin:0px">
 <table border=0><tr><td>
-<img class="firebase-img" width="320" height="240" firebase-src="https://dynamic-image.firebaseio.com/images/545409d4b845/3589611a8d65/18c7a840/src">
+<img class="firebase-img" width="320" height="240" firebase-src="https://dynamic-image.firebaseio.com/images/545409d4b845/3589611a8d65/18c7a840/src" chrono>
 
 <br><font size=-1>&lt;img class='firebase-img' firebase-src='[firebase location]'&gt;</font>
 </td>
@@ -21,6 +21,7 @@
   data="https://jacklehamster.github.io/firebase/firebase-cam/firebase.swf" 
   width="320" height="240">
   <param name="movie" value="https://jacklehamster.github.io/firebase/firebase-cam/firebase.swf" />
+<param name=FlashVars value="firebaseLocation=https://dynamic-image.firebaseio.com/images/545409d4b845/3589611a8d65/18c7a840/src.json" />
 </object>
 <br>
 <font size="-1">Flash webcam</font>

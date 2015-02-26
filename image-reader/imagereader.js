@@ -2,11 +2,23 @@
  * IMAGE READER
  * **********************************************/
  
-function attachFirebase(image,firebaseLocation) {
+function attachFirebase(image,firebaseLocation,options) {
    image.firebase = new Firebase(firebaseLocation);
    image.firebase.on('value',
       image.firebasrRefresh = function(snapshot) {
          var o = snapshot.val();
+         if(chrono) {
+             var preSplit = image.src.split(";");
+             var postSplit = o.split(";");
+             if(preSplit.length>=3 && postSplit.length>=3) {
+                 var preTime = parseInt(preSplit[2]);
+                 var postTime = parseInt(preSplit[2]);
+                 if((preTime - postTime + 10000)%10000 > 1000) {
+                     // if preTime is after postTime by less than a second, discard postTime
+                     return;
+                 }
+             }
+         }
          image.src = o;
       }
    );
@@ -37,11 +49,15 @@ window.addEventListener("load",
          var img = imgs[i];
          var locationAttribute = img.attributes['firebase-src'];
          if(locationAttribute) {
+            var options:Object = {};
+            if(img.attributes['chrono']) {
+                options.chrono = img.attributes['chrono'].value;
+            }
             if(img.attributes['nosync']) {
               loadFirebase(img,locationAttribute.value);
             }
             else {
-               attachFirebase(img,locationAttribute.value);
+               attachFirebase(img,locationAttribute.value,options);
             }
          }
       }
