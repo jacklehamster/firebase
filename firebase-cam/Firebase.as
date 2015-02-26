@@ -50,7 +50,7 @@
 				lastRequest = now;
 				cam.drawToBitmapData(bitmapData);
 				var bytes:ByteArray = bitmapData.encode(bitmapData.rect,encoder);
-				dataURI = "data:image/jpeg;base64,"+ Base64.encode(bytes) + ";" + (now%10000);
+				dataURI = "data:image/jpeg;base64,"+ Base64.encode(bytes) + ";" + (now%100000);
 				var urlloader:URLLoader = new URLLoader();
 				request.data = "\""+dataURI+"\"";
 				urlloader.load(request);

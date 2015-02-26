@@ -12,7 +12,7 @@ Ex:
 
 - Make the image load only once, (so the image doesn't have to get synced in real time): Add attribute "nosync"
 
-- Add the chrono features, which in pair with the firebase-cam widget, discards images that arrive later but taken before the current image (avoids creating "back in time sudden jumps" effect). It uses the trick of adding some kind of timestamp after the dataURI (;3032). If the image gets updated with a new URL that is supposed to have come less than 1 sec before the current image, it means we had race condition and the new image gets discarded. To use it: Add attribute "chrono"
+- Add the chrono features, which in pair with the firebase-cam widget, discards images that arrive later but taken before the current image (avoids creating "back in time sudden jumps" effect). It uses the trick of adding some kind of timestamp after the dataURI (;3032). If the image gets updated with a new URL that is supposed to have come less than 10 sec before the current image, it means we had race condition and the new image gets discarded. To use it: Add attribute "chrono"
 
 - Sync an image with firebase using JavaScript: call attachFirebase(image, firebaseLocation).
 Ex:
