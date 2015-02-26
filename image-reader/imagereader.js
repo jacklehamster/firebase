@@ -49,7 +49,7 @@ window.addEventListener("load",
          var img = imgs[i];
          var locationAttribute = img.attributes['firebase-src'];
          if(locationAttribute) {
-            var options:Object = {};
+            var options = {};
             if(img.attributes['chrono']) {
                 options.chrono = img.attributes['chrono'].value;
             }
