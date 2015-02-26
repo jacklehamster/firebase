@@ -19,7 +19,7 @@ function attachFirebase(image,firebaseLocation,options) {
                  }
              }
          }
-         image.src = postSpit.slice(0,2).join(";");
+         image.src = postSplit.slice(0,2).join(";");
       }
    );
 }
