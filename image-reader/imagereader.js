@@ -38,10 +38,10 @@ window.addEventListener("load",
          var locationAttribute = img.attributes['firebase-src'];
          if(locationAttribute) {
             if(img.attributes['nosync']) {
-               attachFirebase(img,locationAttribute.value);
+              loadFirebase(img,locationAttribute.value);
             }
             else {
-              loadFirebase(img,locationAttribute.value);
+               attachFirebase(img,locationAttribute.value);
             }
          }
       }
