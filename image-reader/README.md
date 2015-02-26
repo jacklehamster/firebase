@@ -21,7 +21,7 @@ attachFirebase(image, "https://dynamic-image.firebaseio.com/images/0412c1fbf317/
 - Load one time a firebase location into an image: call loadFirebase(image, firebaseLocation)
 
 
-Directly include library: &lt;script src="http://jacklehamster.github.io/firebase/image-reader/imagereader.js"&gt;&lt;/script&gt;
+Directly include library: &lt;script src="http://jacklehamster.github.io/firebase/image-reader/imagereader.js" &gt; &lt;/script&gt;
 
 
 Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/image-reader
