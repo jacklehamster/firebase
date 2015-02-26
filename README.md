@@ -16,7 +16,7 @@ Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/dynamic-ima
 
 ____
 
-Image Reader: http://jacklehamster.github.io/firebase/dynamic-reader
+Image Reader: http://jacklehamster.github.io/firebase/image-reader
 
 Simple minimal script to simply host a image that reads the URL from Firebase. In this example, the image is linked to the dynamic image in the previous example
 
