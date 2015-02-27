@@ -8,17 +8,15 @@ function attachFirebase(image,firebaseLocation,options) {
       image.firebasrRefresh = function(snapshot) {
          var o = snapshot.val();
          var postSplit = o.split(";");
-         if(options.chrono && options.chrono.toUpperCase()!="NO") {
+         if(options.chrono) {
              var preSplit = image.src.split(";");
              if(preSplit.length>=3 && postSplit.length>=3) {
                  var preTime = parseInt(preSplit[2]);
                  var postTime = parseInt(postSplit[2]);
-                 console.log(preTime,postTime,preTime - postTime + 100000)%100000);
                  if((preTime - postTime + 100000)%100000 < 10000) {
                      // if preTime is after postTime by less than 10 second, discard postTime
                      return;
                  }
-                 console.log("--");
              }
          }
          image.src = postSplit.slice(0,2).join(";");
@@ -53,7 +51,7 @@ window.addEventListener("load",
          if(locationAttribute) {
             var options = {};
             if(img.attributes['chrono']) {
-                options.chrono = img.attributes['chrono'].value;
+                options.chrono = true;
             }
             if(img.attributes['nosync']) {
               loadFirebase(img,locationAttribute.value);
