@@ -14,7 +14,7 @@ if(window==top) {
             td.width = "33%";
             td.style.verticalAlign = "top";
             td.innerHTML = '[<a href="..">&lt;&lt; Back to Firebase Projects</a>]'
-            + '<br>' + 'source code: <a href="'+loc+'">'+loc+"</a>";
+            + '<br>' + 'source code: <a href="https://github.com/jacklehamster/firebase/tree/gh-pages/'+loc+'">'+loc+"</a>";
             //  Mid cell
             var td = document.createElement("td");
             tr.appendChild(td);
