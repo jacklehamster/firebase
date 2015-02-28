@@ -13,6 +13,7 @@ function attachFirebase(image,firebaseLocation,options) {
              if(postSplit.length>=3) {
                  var preTime = image.preTime ? image.preTime : 0;
                  var postTime = parseInt(postSplit[2]);
+                 console.log(postTime);
                  if((preTime - postTime + 100000)%100000 < 10000) {
                      // if preTime is after postTime by less than 10 second, discard postTime
                      return;
