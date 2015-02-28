@@ -3,7 +3,6 @@
  * **********************************************/
  
 function attachFirebase(image,firebaseLocation,options) {
-         console.log(options);
    image.firebase = new Firebase(firebaseLocation);
    image.firebase.on('value',
       image.firebasrRefresh = function(snapshot) {
@@ -11,6 +10,7 @@ function attachFirebase(image,firebaseLocation,options) {
          var postSplit = o.split(";");
          if(options.chrono) {
              var preSplit = image.src.split(";");
+             console.log(preSplit.length,postSplit.length);
              if(preSplit.length>=3 && postSplit.length>=3) {
                  var preTime = parseInt(preSplit[2]);
                  var postTime = parseInt(postSplit[2]);
