@@ -3,6 +3,8 @@
  * **********************************************/
  
 function attachFirebase(image,firebaseLocation,options) {
+   if(!options)
+       options = {};
    image.firebase = new Firebase(firebaseLocation);
    image.firebase.on('value',
       image.firebasrRefresh = function(snapshot) {
