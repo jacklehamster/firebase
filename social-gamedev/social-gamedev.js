@@ -22,6 +22,7 @@ var selectedImageTemp = createImage();
 var selectedImage;
 var mainScreen;
 var penColor = [0,0,0,255];
+var brushSize = 2;
 
 /**
  *    First called on load
@@ -283,6 +284,28 @@ function changeZoom(element,value) {
     }
 }
 
+/**
+ *    Turn a number into double digit hex
+ * */
+function ddHex(num) {
+    return (num|256).toString(16).substr(1);
+}
+
+/**
+ *    Turn an array of RGBA into hex
+ * */
+function hexRGBA(array) {
+    return "#"+ddHex(array[0])+ddHex(array[1])+ddHex(array[2])+ddHex(array[3]);
+}
+/**
+ *    Turn an array of RGBA into hex
+ * */
+function hexRGB(array) {
+    return "#"+ddHex(array[0])+ddHex(array[1])+ddHex(array[2]);
+}
+
+
+
 function createImage() {
     var img = document.createElement("img");
     img.style.position = "absolute";
@@ -290,23 +313,26 @@ function createImage() {
     img.width = 128;
     img.height = 128;
     img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+    img.addEventListener("mousedown",nop);
+    img.addEventListener("mousemove",nop);
     return img;
 }
 
+function nop(event) {
+    event.preventDefault();
+}
+
 function debugTest() {
-    var img = document.createElement("img");
-    img.style.position = "absolute";
-    img.pos = {x:0,y:0};
+    var img = createImage();
+    img.id = "dok";
     attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
     mainScreen.appendChild(img);
     window.dok = img;
     
-var img = document.createElement("img");
-    img.style.position = "absolute";
+    var img = createImage();
     img.pos = {x:1,y:1};
     attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
     mainScreen.appendChild(img);
-       //window.caca = img;
     updateScreen();
 }
 
@@ -520,6 +546,15 @@ function performDrawing(img,x,y,ispen) {
     if(canvas.parentElement!=mainScreen) {
         mainScreen.appendChild(canvas);
     }
+    
+   firebase.child(img.id).child("strokes").push({
+       x:x,
+       y:y,
+       pen:ispen,
+       penColor:hexRGB(penColor),
+       brushSize:Math.max(1,Math.round(brushSize/globalZoom))
+   });
+    
 }
 
 
@@ -532,9 +567,51 @@ function getCanvasOverlay(img) {
         img.canvas.width = 128;
         img.canvas.height = 128;
         img.canvas.style.position = "absolute";
+        img.canvas.strokes = [];
+        firebase.child(img.id).child("strokes").on("child_added",
+            function(snapshot) {
+               var o = snapshot.val();
+               var commands = img.canvas.strokes;
+               commands.push(o);
+               updateCanvas(img.canvas);
+            });
     }
     return img.canvas;
 }
+
+/**
+ *    Reset the canvas at cellid with all its drawings
+ * */
+function updateCanvas(canvas) {
+   var ctx = canvas.getContext("2d");
+   ctx.clearRect(0,0,128,128);
+   var commands = canvas.strokes;
+   ctx.beginPath();
+   ctx.lineWidth=commands[0].brushSize ? commands[0].brushSize:2;
+   ctx.strokeStyle = "#000000";
+   ctx.moveTo(commands[0].x*128,commands[0].y*128);
+   if(commands[0].penColor) {
+       ctx.strokeStyle = commands[0].penColor;
+   }
+   for(var i=1;i<commands.length;i++) {
+      var command = commands[i];
+      if(command.penColor && ctx.strokeStyle != command.penColor
+        || command.brushSize && ctx.lineWidth != command.brushSize) {
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.lineWidth=command.brushSize;
+          ctx.strokeStyle = command.penColor;
+      }
+      if(commands[i-1].pen) {
+        ctx.lineTo(command.x*128,command.y*128);
+      }
+      else {
+        ctx.moveTo(command.x*128,command.y*128);
+      }  
+   }
+   ctx.stroke();
+}
+
 
 /**
  *    Get an image's canvas copy
