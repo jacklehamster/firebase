@@ -7,12 +7,30 @@ var paletteColorURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAM
 var firebase = new Firebase('https://art-depot.firebaseio.com/artdepot/');
 
 
-var action="pencil";
+var action="select";
+var hovered = null;
+var shiftX=0,shiftY=0;
+var preState = {};
+var zoomScale =1, globalZoom = 1;
+var isMoz = false;
+var map = {};
+var screenWidth, screenHeight;
+var currentPos = {x:0,y:0};
+var currentSelection = null;
+var tempImage = createImage();
+var selectedImageTemp = createImage();
+var selectedImage;
+var mainScreen;
+var penColor = [0,0,0,255];
 
 /**
  *    First called on load
  * */
 function init(event) {
+    mainScreen = document.getElementById("screen");
+    screenWidth = (window.innerWidth);
+    screenHeight = (window.innerHeight);
+    isMoz = typeof(document.body.style.MozTransform)!='undefined';
     initToolbar();
     debugTest();
 }
@@ -20,20 +38,29 @@ function init(event) {
 function initToolbar() {
    refreshTip(true);
    updateToolbar();
+   document.getElementById("select").src = "arrow.png";
    document.getElementById("zoom").src = zoomDataURI;
    document.getElementById("hand").src = handDataURI;
    document.getElementById("pencil").src = pencilDataURI;
    document.getElementById("palette").src = paletteDataURI;
    document.getElementById("colorpalette").src = paletteColorURI;
+   document.getElementById("select").addEventListener("mousedown",onToolbar);
    document.getElementById("zoom").addEventListener("mousedown",onToolbar);
    document.getElementById("hand").addEventListener("mousedown",onToolbar);
    document.getElementById("pencil").addEventListener("mousedown",onToolbar);
    document.getElementById("palette").addEventListener("mousedown",onToolbar);
     
+   document.getElementById("select").addEventListener("mouseover",onTip);
    document.getElementById("zoom").addEventListener("mouseover",onTip);
    document.getElementById("hand").addEventListener("mouseover",onTip);
+   document.getElementById("pencil").addEventListener("mouseover",onTip);
+   document.getElementById("palette").addEventListener("mouseover",onTip);
+    
+   document.getElementById("select").addEventListener("mouseout",onTip);
    document.getElementById("zoom").addEventListener("mouseout",onTip);
    document.getElementById("hand").addEventListener("mouseout",onTip);
+   document.getElementById("pencil").addEventListener("mouseout",onTip);
+   document.getElementById("palette").addEventListener("mouseout",onTip);
     
    document.getElementById("colorpalette").addEventListener("mousemove",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mousedown",onColorPalette);
@@ -49,13 +76,15 @@ function initToolbar() {
 /**
  *    Refresh the toolbar to reflect the selected tool
  * */
-function updateToolbar() {
-    updateToolbarItem(document.getElementById("hand"),action=="hand");
-    updateToolbarItem(document.getElementById("pencil"),action=="pencil");
-    updateToolbarItem(document.getElementById("zoom"),action=="zoom");
-    updateToolbarItem(document.getElementById("palette"),action=="palette");
+function updateToolbar(hideTip) {
+    //selectedCanvas
+    updateToolbarItem(document.getElementById("select"),action=="select",hovered=="select");
+    updateToolbarItem(document.getElementById("hand"),action=="hand",hovered=="hand");
+    updateToolbarItem(document.getElementById("pencil"),action=="pencil",hovered=="pencil",currentSelection==null);
+    updateToolbarItem(document.getElementById("zoom"),action=="zoom",hovered=="zoom");
+    updateToolbarItem(document.getElementById("palette"),action=="palette",hovered=="palette",currentSelection==null);
     document.getElementById("colorpalette").style.display = action=="palette"?"":"none";
-    refreshTip(false);
+    refreshTip(hideTip);
     
     var canvases = document.getElementsByTagName("canvas");
     for(var i=0;i<canvases.length;i++) {
@@ -67,19 +96,32 @@ function updateToolbar() {
  *    Selected a tool on the toolbar
  * */
 function onToolbar(event) {
-    setAction(event.target.id);
-    event.preventDefault();
+    if(!event.target.disabled) {
+        setAction(event.target.id);
+        event.preventDefault();
+    }
 }
 
 /**
  *    Refresh a toolbar item to reflect the selected tool
  * */
-function updateToolbarItem(element,selected) {
+function updateToolbarItem(element,selected,hovered,disabled) {
     var padding = 11;
-    element.style.borderColor = selected?"blue":"silver";
+    element.style.borderColor = selected?"blue":hovered?"#CCFFFF":"silver";
     element.style.width = element.style.height = selected ? "50px":(50-padding*2)+"px";
     element.style.padding = selected ? "0px" : padding+"px";
+    setEnabled(element,!disabled);
 }
+
+function setEnabled(element,value) {
+    var alpha = value?1:.1;
+    element.style.filter       = "alpha(opacity="+(alpha*100)+");";
+    element.style.MozOpacity   = alpha;
+    element.style.opacity      = alpha;
+    element.style.KhtmlOpacity = alpha;
+    element.disabled = !value;
+}
+
 /**
  *    Selected a tool on the toolbar
  * */
@@ -103,6 +145,8 @@ function setAction(value) {
                 canvases[i].addEventListener("mousemove",pickColor);
             }
         }
+        
+        updateScreen(mainScreen);
     }
 }
 
@@ -110,13 +154,15 @@ function setAction(value) {
  *    Events when hovering over or out of tools with tip
  * */
 function onTip(event) {
-    refreshTip(event.type=="mouseout" || event.target.id!=action);
+    hovered = event.type=="mouseout" || event.target.disabled?null:event.target.id;
+    updateToolbar(event.type=="mouseout" || event.target.id!=action);
 }
 
 /**
  *    Refresh tip / toolbar options
  * */
 function refreshTip(hide) {
+    document.getElementById("selecttip").style.display = !hide && action=="select"?"":"none";
     document.getElementById("movetip").style.display = !hide && action=="hand"?"":"none";
     document.getElementById("zoomtip").style.display = !hide && action=="zoom"?"":"none";
     document.getElementById("drawtip").style.display = action=="pencil"?"":"none";    
@@ -178,7 +224,7 @@ function changeBrushSize(value) {
     var brushSizeCircle = document.getElementById("brushsize");
     brushSizeCircle.width = value/2;
     brushSizeCircle.height = value/2;
-    brushSizeCircle.style.padding = (15-value/2)/2+"px";
+    brushSizeCircle.style.padding = (15-brushSizeCircle.width)/2+"px";
     var brushSizeMeter = document.getElementById("brushsizemeter");
     var knob = document.getElementById("knob");
     knob.style.left = (knob.style.posLeft = brushSizeMeter.offsetLeft + (value/2/15) * brushSizeMeter.offsetWidth)+"px";
@@ -190,12 +236,327 @@ function displayToolbar(show) {
     document.getElementById("toolbar").style.display = show?"":"none";
 }
 
+function updateScreen() {
+    var imgs = mainScreen.children;
+    map = {};
+    var currentId = currentPos.x + "_" + currentPos.y;
+    var selectedId = currentSelection ? currentSelection.x + "_" + currentSelection.y : null;
 
-function debugTest() {
-    var screen = document.getElementById("screen");
-    var img = document.createElement("img");
-    img.style.position = "absolute";
-    attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
-    screen.appendChild(img);
+    for(var i=0;i<imgs.length;i++) {
+        var img = imgs[i];
+        var id = img.pos.x + "_" + img.pos.y;
+        var screenPos = convertToScreen(img.pos.x,img.pos.y);
+        var scale = calculateScale(screenPos.y);
+        var size = 64*scale;
+        img.style.width = size+"px";
+        img.style.height = size+"px";
+        img.style.posLeft = img.style.left = (screenPos.x-size/2) +"px";
+        img.style.posTop = img.style.top = (screenPos.y-size)+"px";
+        img.style.zIndex = Math.round(screenPos.y)*2+(img.tagName=="img"?0:1);
+        
+        var hovered = action=="select" && currentId==id;
+        var selected = selectedId==id;
+        
+        img.style.border = 
+            hovered?"1px solid "+(img==tempImage?"pink":"red"):
+            selected?"1px solid #00FF00":"";
+        img.style.margin = 
+            hovered || selected?"":"1px";
+        window.img = img;
+        map[id] = img;
+    }
 }
 
+function calculateScale(screenY) {
+    return Math.pow(screenY,.8) / 100;
+}
+
+/**
+ *    Helper function for zoom
+ * */
+function changeZoom(element,value) {
+    if(isMoz) {
+        element.style.MozTransform="scale("+value+")";
+    }
+    else {
+        element.style.zoom = Math.ceil(value*100)+"%";
+    }
+}
+
+function createImage() {
+    var img = document.createElement("img");
+    img.style.position = "absolute";
+    img.pos = {x:0,y:0};
+    img.width = 128;
+    img.height = 128;
+    img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+    return img;
+}
+
+function debugTest() {
+    var img = document.createElement("img");
+    img.style.position = "absolute";
+    img.pos = {x:0,y:0};
+    attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
+    mainScreen.appendChild(img);
+    window.dok = img;
+    
+var img = document.createElement("img");
+    img.style.position = "absolute";
+    img.pos = {x:1,y:1};
+    attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
+    mainScreen.appendChild(img);
+       //window.caca = img;
+    updateScreen();
+}
+
+/**
+ *    Register all mouse events
+ * */
+document.addEventListener("mousemove",mouseAction);
+document.addEventListener("mousedown",mouseAction);
+document.addEventListener("mouseup",mouseAction);
+document.addEventListener("mouseout",mouseAction);
+document.addEventListener("mouseover",mouseAction);
+
+
+/**
+ *    Callback function for drawing.
+ * */
+function mouseAction(event) {
+  if(event.target.id=="brushsizemeter") {
+      return;
+  }
+  var ispen = event.type!="mouseout" && event.type!="mouseup" && (event.buttons!==undefined?event.buttons:event.which);
+  var x = event.pageX;
+  var y = event.pageY;
+  mousePen(x,y,ispen,event.type,event.target,event);
+    
+  event.preventDefault();
+}
+
+function changedTarget() {
+    var currentId = currentPos.x + "_" + currentPos.y;
+    var selectedId = currentSelection ? currentSelection.x+"_"+currentSelection.y : null;
+    
+    if(selectedId && !map[selectedId]) {
+        selectedImageTemp.pos = currentSelection;
+        mainScreen.appendChild(selectedImageTemp);
+    }
+    else if(!selectedId && selectedImageTemp.parentElement==mainScreen) {
+        mainScreen.removeChild(selectedImageTemp);
+    }
+    
+    
+    if(!map[currentId]) {
+        tempImage.pos = currentPos;
+        mainScreen.appendChild(tempImage);
+    }
+    else if(map[currentId]!=tempImage && tempImage.parentElement==mainScreen) {
+        mainScreen.removeChild(tempImage);
+    }
+}
+
+function convertToMainScreen(x,y) {
+    return {x:(x/globalZoom-mainScreen.offsetLeft/(isMoz?globalZoom:1)),y:(y/globalZoom-mainScreen.offsetTop/(isMoz?globalZoom:1))};
+}
+
+function findClosestXY(mouseX,mouseY,offsetX,offsetY) {
+    var closest = null;
+    var minDist = 1000000;
+    for(var y=-20;y<20;y++) {
+        for(var x=-20;x<20;x++) {
+            var pos = convertToScreen(x,y);
+            var scale = calculateScale(pos.y);
+            var diffY = (pos.y+offsetY*scale - mouseY); 
+            var diffX = (pos.x+offsetX*scale - mouseX);
+            var dist = Math.sqrt(diffY*diffY + diffX*diffX);
+            if(dist<minDist) {
+                minDist = dist;
+                closest = {x:x,y:y};
+            }
+        }
+    }
+    return closest;
+}
+
+function convertToScreen(x,y) {
+    var valY = ((-shiftY + y*32) + screenHeight*3/4);
+    var scale = calculateScale(valY);
+    var valX = (((-shiftX + x*32)*scale) + screenWidth/2);
+    return {x:valX,y:valY};
+}
+
+function moveImage(img,x,y) {
+    delete map[img.pos.x+"_"+img.pos.y];
+    img.pos.x = x;
+    img.pos.y = y;
+    map[x+"_"+y] = img;
+}
+
+function mousePen(x,y,ispen,type,target,event) {
+  var mainScreenPos = convertToMainScreen(x,y);
+  state = {pen:ispen,stageX:x,stageY:y};
+  switch(action) {
+     case "select":  // draw
+        var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
+        var doUpdate = false, doUpdateToolbar;
+        if(type=="mousedown" && target!=document.getElementById("select")) {
+            
+            selectedImage = map[closest.x+"_"+closest.y];
+            
+           if(currentSelection && currentSelection.x == closest.x && currentSelection.y == closest.y) {
+                //doUpdateToolbar = currentSelection!=null;
+                //currentSelection = null;
+                //doUpdate = true;
+            }
+            else {
+                doUpdateToolbar = currentSelection==null;
+                currentSelection = {x:currentPos.x,y:currentPos.y};
+                doUpdate = true;
+            }
+        }
+        else if(type=="mouseup") {
+            selectedImage = null;
+        }
+          
+        if(currentPos.x != closest.x || currentPos.y != closest.y) {
+            
+            if(selectedImage) {
+                currentSelection = {x:closest.x,y:closest.y};
+                moveImage(selectedImage,currentSelection.x,currentSelection.y);
+            }
+            
+            currentPos = closest;
+            doUpdate = true;
+        }
+        if(doUpdate) {
+            changedTarget();
+            updateScreen();
+        }
+        if(doUpdateToolbar) {
+            updateToolbar();
+        }
+          
+        break;
+     case "pencil":  // draw
+        if(currentSelection) {
+            var drawnImage = map[currentSelection.x+"_"+currentSelection.y];
+            var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
+                localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
+            performDrawing(drawnImage,localX,localY,ispen);
+        }
+        break;
+     case "hand": // move the paper
+        if(ispen||preState.pen) {
+           var dx = x - preState.stageX;
+           var dy = y - preState.stageY;
+           shiftX -= dx/globalZoom;
+           shiftY -= dy/globalZoom;
+           updateScreen();
+       }
+       break;
+    case "zoom":  // zoom
+       if(ispen||preState.pen) {
+           var dx = x - preState.stageX;
+           var dy = y - preState.stageY;
+           doZoom(dy/100);
+           updateScreen();
+       }
+       break;
+    case "palette":  // change color
+       break;
+  }
+  preState = state;
+}
+
+/**
+ *    Perform a zoom. zoomValue is the scale
+ * */
+function doZoom(zoomvalue) {
+   var oldZoom = globalZoom;
+   globalZoom = Math.min(10,Math.max(.2,globalZoom + zoomvalue));
+   var antiZoom = 1/globalZoom;
+   changeZoom(mainScreen,globalZoom);
+   mainScreen.style.left = mainScreen.style.posLeft = (screenWidth/2)*(antiZoom - 1)*(isMoz?globalZoom:1)+"px";
+   mainScreen.style.top = mainScreen.style.posTop = (screenHeight/2)*(antiZoom - 1)*(isMoz?globalZoom:1)+"px";
+}
+
+/**
+ *    Get the pixel color of an image
+ * */
+function getPixel(img,x,y,arrayFormat) {
+    var canvas = getCanvas(img);
+    var pixelArray = canvas.getContext("2d").getImageData(x, y, 1, 1).data;
+    return arrayFormat?pixelArray:"#"+ddHex(pixelArray[0])+ddHex(pixelArray[1])+ddHex(pixelArray[2]);
+    //ctx.strokeStyle="#FF0000";
+}
+
+/**
+ *    Change an image's colors
+ * */
+function changeColor(img,rgbArray) {
+    if(rgbArray[3]!=0) {
+        var canvas = getCanvas(img,2);
+        var imageData = canvas.getContext("2d").getImageData(0,0,canvas.width,canvas.height);
+        var data = imageData.data;
+
+        for(var i=0;i<data.length;i+=4) {
+            if(data[i+3]!=0) {
+                data[i] = rgbArray[0];
+                data[i+1] = rgbArray[1];
+                data[i+2] = rgbArray[2];
+                data[i+3] = rgbArray[3];
+            }
+        }
+        canvas.getContext("2d").putImageData(imageData,0,0);
+        img.src = canvas.toDataURL();
+    }
+}
+
+function performDrawing(img,x,y,ispen) {
+    var canvas = getCanvasOverlay(img);
+    canvas.pos = img.pos;
+    if(canvas.parentElement!=mainScreen) {
+        mainScreen.appendChild(canvas);
+    }
+}
+
+
+/**
+ *    Get an image's canvas copy
+ * */
+function getCanvasOverlay(img) {
+    if(!img.canvas) {
+        img.canvas = document.createElement("canvas");
+        img.canvas.width = 128;
+        img.canvas.height = 128;
+        img.canvas.style.position = "absolute";
+    }
+    return img.canvas;
+}
+
+/**
+ *    Get an image's canvas copy
+ * */
+function getCanvas(img,scale) {
+    if(!scale)
+        scale = 1;
+    if(!img.canvas) {
+        img.canvas = document.createElement("canvas");
+        img.canvas.width = img.clientWidth*scale;
+        img.canvas.height = img.clientHeight*scale;
+        img.canvas.style.position = "absolute";
+        img.canvas.style.backgroundColor = "silver";
+        img.canvas.getContext("2d").drawImage(img,0,0);
+    }
+    return img.canvas;
+}
+
+
+window.addEventListener("resize",
+    function(event) {
+        screenWidth = (window.innerWidth);
+        screenHeight = (window.innerHeight);
+        updateScreen();
+    });
