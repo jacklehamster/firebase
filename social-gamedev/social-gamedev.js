@@ -32,6 +32,16 @@ function init(event) {
     screenWidth = (window.innerWidth);
     screenHeight = (window.innerHeight);
     isMoz = typeof(document.body.style.MozTransform)!='undefined';
+    
+    /**
+     *    Register all mouse events
+     * */
+    document.addEventListener("mousemove",mouseAction);
+    document.addEventListener("mousedown",mouseAction);
+    document.addEventListener("mouseup",mouseAction);
+    document.addEventListener("mouseout",mouseAction);
+    document.addEventListener("mouseover",mouseAction);
+    
     initToolbar();
     debugTest();
 }
@@ -354,14 +364,6 @@ function debugTest() {
     updateScreen();
 }
 
-/**
- *    Register all mouse events
- * */
-document.addEventListener("",mouseAction);
-document.addEventListener("mousedown",mouseAction);
-document.addEventListener("mouseup",mouseAction);
-document.addEventListener("mouseout",mouseAction);
-document.addEventListener("mouseover",mouseAction);
 
 
 /**
