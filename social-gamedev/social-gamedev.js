@@ -263,8 +263,8 @@ function updateScreen() {
             selected?"1px solid #00FF00":"";
         img.style.margin = 
             hovered || selected?"":"1px";
-        window.img = img;
-        map[id] = img;
+        if(img.tagName.toLowerCase()=="img")    
+            map[id] = img;
     }
 }
 
