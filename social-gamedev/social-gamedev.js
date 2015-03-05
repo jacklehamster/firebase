@@ -606,8 +606,8 @@ function getCanvasOverlay(img) {
         img.canvas = document.createElement("canvas");
         img.canvas.img = img;
         img.canvas.id = img.id + "_overlay";
-        img.canvas.width = 128;
-        img.canvas.height = 128;
+        img.canvas.width = img.naturalWidth;
+        img.canvas.height = img.naturalHeight;
         img.canvas.style.position = "absolute";
         img.canvas.strokes = [];
         img.style.visibility="hidden";
