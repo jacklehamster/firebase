@@ -601,8 +601,8 @@ function destroyCanvas(img) {
     firebase.child(img.id).remove();
     firebase.child(img.id).child("strokes").off("child_added",img.canvas.updateFunction);
     img.style.visibility = "hidden";
-    delete img.canvas;
     mainScreen.removeChild(img.canvas);
+    delete img.canvas;
 }
 
 function prepareCommit(img) {
