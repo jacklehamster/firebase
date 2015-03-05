@@ -147,7 +147,7 @@ function setAction(value) {
             }
         }
         
-        updateScreen(mainScreen);
+        updateScreen();
     }
 }
 
@@ -245,6 +245,7 @@ function updateScreen() {
 
     for(var i=0;i<imgs.length;i++) {
         var img = imgs[i];
+        var tag = img.tagName.toLowerCase();
         var id = img.pos.x + "_" + img.pos.y;
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(screenPos.y);
@@ -263,8 +264,12 @@ function updateScreen() {
             selected?"1px solid #00FF00":"";
         img.style.margin = 
             hovered || selected?"":"1px";
-        if(img.tagName.toLowerCase()=="img")    
+        if(tag=="img")    
             map[id] = img;
+        if(tag=="canvas" && img.dirty) {
+            delete img.dirty;
+            updateCanvas(img);
+        }
     }
 }
 
@@ -583,10 +588,22 @@ function getCanvasOverlay(img) {
                var o = snapshot.val();
                var commands = img.canvas.strokes;
                commands.push(o);
-               updateCanvas(img.canvas);
+               img.canvas.dirty = true;
             });
     }
     return img.canvas;
+}
+
+function startUpdate() {
+    if(!startUpdate.timeout) {
+        startUpdate.timeout = setTimeout(
+            function() {
+                clearTimeout(startUpdate.timeout);
+                startUpdate.timeout = 0;
+                updateScreen();
+            },100
+        );
+    }
 }
 
 /**
