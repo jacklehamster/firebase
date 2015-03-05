@@ -72,6 +72,15 @@ function initToolbar() {
    document.getElementById("brushsizemeter").addEventListener("mousedown",onBrushsizeMeter);
    document.getElementById("knob").addEventListener("mousemove",onBrushsizeMeter);
    document.getElementById("knob").addEventListener("mousedown",onBrushsizeMeter);
+   
+   document.addEventListener("mouseleave",leaveScene);
+}
+
+/**
+ *    Hide the hovering hilight when leaving the window
+ * */
+function leaveScene() {
+    updateScreen({leaveScene:true});
 }
 
 /**
@@ -237,11 +246,12 @@ function displayToolbar(show) {
     document.getElementById("toolbar").style.display = show?"":"none";
 }
 
-function updateScreen() {
+function updateScreen(options) {
     var imgs = mainScreen.children;
     map = {};
     var currentId = currentPos.x + "_" + currentPos.y;
     var selectedId = currentSelection ? currentSelection.x + "_" + currentSelection.y : null;
+    if(!options) options = {};
 
     for(var i=0;i<imgs.length;i++) {
         var img = imgs[i];
@@ -260,7 +270,7 @@ function updateScreen() {
         var selected = selectedId==id;
         
         img.style.border = 
-            hovered?"1px solid "+(img==tempImage?"pink":"red"):
+            hovered && !options.leaveScene?"1px solid "+(img==tempImage?"pink":"red"):
             selected?"1px solid #00FF00":"";
         img.style.margin = 
             hovered || selected?"":"1px";
