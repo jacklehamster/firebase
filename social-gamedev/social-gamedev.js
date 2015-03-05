@@ -324,16 +324,16 @@ function nop(event) {
 }
 
 function debugTest() {
-    var div = createImage();
-    div.id = "dok";
-    attachFirebase (div.img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
-    mainScreen.appendChild(div);
-    window.dok = div;
+    var img = createImage();
+    img.id = "dok";
+    attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
+    mainScreen.appendChild(img);
+    window.dok = img;
     
-    var div = createImage();
-    div.pos = {x:1,y:1};
-    attachFirebase (div.img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
-    mainScreen.appendChild(div);
+    var img = createImage();
+    img.pos = {x:1,y:1};
+    attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
+    mainScreen.appendChild(img);
     updateScreen();
 }
 
@@ -622,6 +622,7 @@ function getCanvas(img,scale) {
         scale = 1;
     if(!img.canvas) {
         img.canvas = document.createElement("canvas");
+        img.canvas.id = img.id + "_canvas";
         img.canvas.width = img.clientWidth*scale;
         img.canvas.height = img.clientHeight*scale;
         img.canvas.style.position = "absolute";
