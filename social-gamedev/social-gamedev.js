@@ -609,18 +609,18 @@ function clearCanvas(img) {
 }
 
 function prepareCommit(img) {
-    if(img.timeout)
-        clearTimeout(img.timeout);
-    img.timeout = setTimeout(
-        function() {
-            clearTimeout(img.timeout);
-            img.timeout = null;
-            //  update image using canvas
-            var dataURI = img.canvas.toDataURL();
-            img.firebase.set(dataURI);
-            clearCanvas(img);
-        },500
-    );
+    if(!img.timeout) {
+        img.timeout = setTimeout(
+            function() {
+                clearTimeout(img.timeout);
+                img.timeout = null;
+                //  update image using canvas
+                var dataURI = img.canvas.toDataURL();
+                img.firebase.set(dataURI);
+                clearCanvas(img);
+            },500
+        );
+    }
 }
 
 function startUpdate() {
