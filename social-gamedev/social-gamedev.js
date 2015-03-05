@@ -32,6 +32,7 @@ function init(event) {
     screenWidth = (window.innerWidth);
     screenHeight = (window.innerHeight);
     isMoz = typeof(document.body.style.MozTransform)!='undefined';
+    changeBrushSize(brushSize);
     
     /**
      *    Register all mouse events
