@@ -589,6 +589,7 @@ function getCanvasOverlay(img) {
                var commands = img.canvas.strokes;
                commands.push(o);
                img.canvas.dirty = true;
+               startUpdate();
             });
     }
     return img.canvas;
