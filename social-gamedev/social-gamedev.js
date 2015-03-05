@@ -307,17 +307,15 @@ function hexRGB(array) {
 
 
 function createImage() {
-    var div = document.createElement("div");
     var img = document.createElement("img");
-    div.style.position = "absolute";
-    div.pos = {x:0,y:0};
-    div.img = img;
+    img.style.position = "absolute";
+    img.pos = {x:0,y:0};
+    img.img = img;
     img.width = 128;
     img.height = 128;
     img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
     img.addEventListener("mousedown",nop);
     img.addEventListener("mousemove",nop);
-    div.appendChild(img);
     return div;
 }
 
