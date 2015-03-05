@@ -600,7 +600,7 @@ function getCanvasOverlay(img) {
 function destroyCanvas(img) {
     firebase.child(img.id).remove();
     firebase.child(img.id).child("strokes").off("child_added",img.canvas.updateFunction);
-    img.style.visibility = "hidden";
+    img.style.visibility = "";
     mainScreen.removeChild(img.canvas);
     delete img.canvas;
 }
