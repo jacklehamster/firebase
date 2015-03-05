@@ -597,6 +597,8 @@ function updateCanvas(canvas) {
    ctx.clearRect(0,0,128,128);
    ctx.drawImage(canvas.img,0,0);
    var commands = canvas.strokes;
+   if(!commands.length)
+        return;
    ctx.beginPath();
    ctx.lineWidth=commands[0].brushSize ? commands[0].brushSize:2;
    ctx.strokeStyle = "#000000";
