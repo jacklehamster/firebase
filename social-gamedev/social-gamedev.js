@@ -649,7 +649,9 @@ function getCanvas(img,scale) {
  * */
 function pickColor(event) {
     var canvas = event.target;
-    var pendingPenColor = canvas.getContext("2d").getImageData(event.layerX, event.layerY, 1, 1).data;
+    var pendingPenColor = canvas.getContext("2d").getImageData(
+        event.layerX + parseInt(canvas.style.borderLeftWidth), 
+        event.layerY + parseInt(canvas.style.borderTopWidth), 1, 1).data;
     if(event.type=="mousemove") {
         if(pendingPenColor[3]==0)
             pendingPenColor = penColor;
