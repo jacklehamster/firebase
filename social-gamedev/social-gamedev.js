@@ -106,6 +106,10 @@ function updateToolbar(hideTip) {
  *    Selected a tool on the toolbar
  * */
 function onToolbar(event) {
+    if(onToolbar.mouseOn != (event.type!="mouseleave")) {
+        onToolbar.mouseOn = (event.type!="mouseleave");
+        updateScreen({leaveScene:onToolbar.mouseOn});
+    }
     if(!event.target.disabled) {
         setAction(event.target.id);
         event.preventDefault();
