@@ -273,10 +273,14 @@ function updateScreen(options) {
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(screenPos.y);
         var size = 64*scale;
-        img.style.width = size+"px";
-        img.style.height = size+"px";
-        img.style.posLeft = img.style.left = (screenPos.x-size/2) +"px";
-        img.style.posTop = img.style.top = (screenPos.y-size)+"px";
+        if(img.style.width!=size+"px" || img.style.height!=size+"px") {
+           img.style.width = size+"px";
+           img.style.height = size+"px";
+        }
+        if(img.style.left!=(screenPos.x-size/2) +"px" || img.style.top!=(screenPos.y-size)+"px") {
+            img.style.posLeft = img.style.left = (screenPos.x-size/2) +"px";
+            img.style.posTop = img.style.top = (screenPos.y-size)+"px";
+        }
         var zIndex = Math.round(screenPos.y)*2+(img.tagName=="img"?0:1);
         if(zIndex!=img.style.zIndex) {
             img.style.zIndex = zIndex;
@@ -284,11 +288,14 @@ function updateScreen(options) {
         var hovered = action=="select" && currentId==id;
         var selected = selectedId==id;
         
-        img.style.border = 
+        var imgBorder = 
             hovered && !options.leaveScene?"1px solid "+(img==tempImage && !selected?"pink":"red"):
             selected?"1px solid #00FF00":"";
-        img.style.margin = 
-            hovered || selected?"":"1px";
+        if(img.style.border!=imgBorder) {
+            img.style.border = imgBorder;
+            img.style.margin = 
+                hovered || selected?"":"1px";
+        }
         if(tag=="img")    
             map[id] = img;
         if(tag=="canvas" && img.dirty) {
