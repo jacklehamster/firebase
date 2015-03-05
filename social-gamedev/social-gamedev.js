@@ -584,15 +584,40 @@ function getCanvasOverlay(img) {
         img.style.visibility="hidden";
         updateCanvas(img.canvas);
         firebase.child(img.id).child("strokes").on("child_added",
-            function(snapshot) {
+            img.canvas.updateFunction = function(snapshot) {
                var o = snapshot.val();
                var commands = img.canvas.strokes;
                commands.push(o);
+               img.pendingStrokes = true;
                img.canvas.dirty = true;
+               prepareCommit(img);
                startUpdate();
             });
     }
     return img.canvas;
+}
+
+function destroyCanvas(img) {
+    firebase.child(img.id).remove();
+    firebase.child(img.id).child("strokes").off("child_added",img.canvas.updateFunction);
+    img.style.visibility = "hidden";
+    delete img.canvas;
+    mainScreen.removeChild(img.canvas);
+}
+
+function prepareCommit(img) {
+    if(img.timeout)
+        clearTimeout(img.timeout);
+    img.timeout = setTimeout(
+        function() {
+            clearTimeout(img.timeout);
+            img.timeout = null;
+            //  update image using canvas
+            var dataURI = img.canvas.toDataURL();
+            img.firebase.set(dataURI);
+            destroyCanvas(img);
+        },1000
+    );
 }
 
 function startUpdate() {
