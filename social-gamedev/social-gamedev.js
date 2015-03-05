@@ -570,11 +570,14 @@ function performDrawing(img,x,y,ispen) {
 function getCanvasOverlay(img) {
     if(!img.canvas) {
         img.canvas = document.createElement("canvas");
+        img.canvas.img = img;
         img.canvas.id = img.id + "_overlay";
         img.canvas.width = 128;
         img.canvas.height = 128;
         img.canvas.style.position = "absolute";
         img.canvas.strokes = [];
+        img.style.visibility="hidden";
+        updateCanvas(img.canvas);
         firebase.child(img.id).child("strokes").on("child_added",
             function(snapshot) {
                var o = snapshot.val();
@@ -592,6 +595,7 @@ function getCanvasOverlay(img) {
 function updateCanvas(canvas) {
    var ctx = canvas.getContext("2d");
    ctx.clearRect(0,0,128,128);
+   ctx.drawImage(canvas.img,0,0);
    var commands = canvas.strokes;
    ctx.beginPath();
    ctx.lineWidth=commands[0].brushSize ? commands[0].brushSize:2;
