@@ -440,6 +440,7 @@ function moveImage(img,x,y) {
 }
 
 function mousePen(x,y,ispen,type,target,event) {
+  console.log(x,y,ispen,type,target,event);
   var mainScreenPos = convertToMainScreen(x,y);
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
