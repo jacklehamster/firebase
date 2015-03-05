@@ -605,7 +605,7 @@ function getCanvasOverlay(img) {
 function clearCanvas(img) {
     img.canvas.strokes = [];
     firebase.child(img.id).child("strokes").remove();
-    firebase.child(img.id).child("strokes").off("child_added",img.canvas.updateFunction);
+//    firebase.child(img.id).child("strokes").off("child_added",img.canvas.updateFunction);
 }
 
 function prepareCommit(img) {
