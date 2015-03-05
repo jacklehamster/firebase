@@ -489,7 +489,6 @@ function mousePen(x,y,ispen,type,target,event) {
      case "pencil":  // draw
         if(currentSelection) {
             var drawnImage = map[currentSelection.x+"_"+currentSelection.y];
-            console.log(currentSelection,drawnImage,event.target);
             if(event.target==drawnImage || event.target==drawnImage.canvas) {
                var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
                    localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
@@ -565,14 +564,14 @@ function changeColor(img,rgbArray) {
 }
 
 function performDrawing(img,x,y,ispen) {
-    if(x<0 || y<0 || x>1 || y>1 || !img.id) return;
+    if(x<0 || y<0 || x>1 || y>1) return;
     var canvas = getCanvasOverlay(img);
     canvas.pos = img.pos;
     if(canvas.parentElement!=mainScreen) {
         mainScreen.appendChild(canvas);
         updateScreen();
     }
-
+    
     firebase.child(img.firebase.path.toString()).child("strokes").push({
        x:x,
        y:y,
