@@ -573,6 +573,10 @@ function performDrawing(img,x,y,ispen) {
         updateScreen();
     }
     
+    if(!img.firebase) {
+        
+    }
+    
     firebase.child(img.firebase.path.toString()).child("strokes").push({
        x:x,
        y:y,
@@ -725,6 +729,15 @@ function pickColor(event) {
     
     event.preventDefault();
     
+}
+
+function MD5_path(value) {
+   var hash = CryptoJS.MD5(value)+"";
+   //  the Firebase location uses MD5 to get a unique path, which depends on the value
+   var loc = [hash.slice(0,12),
+              hash.slice(12,24),
+              hash.slice(24,36)].join("/");
+    return loc;
 }
 
 
