@@ -470,7 +470,6 @@ function mousePen(x,y,ispen,type,target,event) {
      case "pencil":  // draw
         if(currentSelection) {
             var drawnImage = map[currentSelection.x+"_"+currentSelection.y];
-            console.log(drawnImage);
             var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
                 localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
             performDrawing(drawnImage,localX,localY,ispen);
@@ -544,20 +543,21 @@ function changeColor(img,rgbArray) {
 }
 
 function performDrawing(img,x,y,ispen) {
+    if(x<0 || y<0 || x>1 || y>1 || !img.id) return;
     var canvas = getCanvasOverlay(img);
     canvas.pos = img.pos;
     if(canvas.parentElement!=mainScreen) {
         mainScreen.appendChild(canvas);
         updateScreen();
     }
-    
-   firebase.child(img.id).child("strokes").push({
+
+    firebase.child(img.id).child("strokes").push({
        x:x,
        y:y,
        pen:ispen,
        penColor:hexRGB(penColor),
        brushSize:Math.max(1,Math.round(brushSize/globalZoom))
-   });
+    });
     
 }
 
@@ -568,6 +568,7 @@ function performDrawing(img,x,y,ispen) {
 function getCanvasOverlay(img) {
     if(!img.canvas) {
         img.canvas = document.createElement("canvas");
+        img.canvas.id = img.id + "_overlay";
         img.canvas.width = 128;
         img.canvas.height = 128;
         img.canvas.style.position = "absolute";
