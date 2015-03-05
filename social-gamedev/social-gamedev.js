@@ -558,7 +558,7 @@ function performDrawing(img,x,y,ispen) {
         updateScreen();
     }
 
-    firebase.child(img.id).child("strokes").push({
+    firebase.child(img.firebase.path.toString()).child("strokes").push({
        x:x,
        y:y,
        pen:ispen,
