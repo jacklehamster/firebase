@@ -272,13 +272,15 @@ function updateScreen(options) {
         var id = img.pos.x + "_" + img.pos.y;
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(screenPos.y);
-        img.style.width = (scale*img.naturalWidth)+"px";
-        img.style.height = (scale*img.naturalHeight)+"px";
         
-        if(img.style.left!=(screenPos.x-size/2) +"px" || img.style.top!=(screenPos.y-size)+"px") {
-            img.style.posLeft = img.style.left = (screenPos.x-size/2) +"px";
-            img.style.posTop = img.style.top = (screenPos.y-size)+"px";
-        }
+        var imgWidth = scale*img.naturalWidth;
+        var imgHeight = scale*img.naturalHeight;
+        img.style.width = imgWidth+"px";
+        img.style.height = imgHeight+"px";
+        
+        img.style.posLeft = img.style.left = (screenPos.x-imgWidth/2) +"px";
+        img.style.posTop = img.style.top = (screenPos.y-imgHeight)+"px";
+        
         var zIndex = Math.round(screenPos.y)*2+(img.tagName=="img"?0:1);
         if(zIndex!=img.style.zIndex) {
             img.style.zIndex = zIndex;
