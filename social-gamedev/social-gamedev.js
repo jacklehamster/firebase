@@ -602,7 +602,7 @@ function startUpdate() {
                 clearTimeout(startUpdate.timeout);
                 startUpdate.timeout = 0;
                 updateScreen();
-            },100
+            },20
         );
     }
 }
