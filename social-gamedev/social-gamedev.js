@@ -583,6 +583,11 @@ function getCanvasOverlay(img) {
         img.canvas.strokes = [];
         img.style.visibility="hidden";
         updateCanvas(img.canvas);
+        img.firebase.on("value",
+            img.canvas.onImageFunction = function(snapshot) {
+                updateCanvas(img.canvas);
+            }
+        );
         firebase.child(img.id).child("strokes").on("child_added",
             img.canvas.updateFunction = function(snapshot) {
                var o = snapshot.val();
