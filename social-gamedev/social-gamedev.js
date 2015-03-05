@@ -74,6 +74,7 @@ function initToolbar() {
    document.getElementById("knob").addEventListener("mousedown",onBrushsizeMeter);
    
    document.addEventListener("mouseleave",leaveScene);
+   document.addEventListener("mouseout",leaveScene);
 }
 
 /**
@@ -106,10 +107,6 @@ function updateToolbar(hideTip) {
  *    Selected a tool on the toolbar
  * */
 function onToolbar(event) {
-    if(onToolbar.mouseOn != (event.type!="mouseleave")) {
-        onToolbar.mouseOn = (event.type!="mouseleave");
-        updateScreen({leaveScene:onToolbar.mouseOn});
-    }
     if(!event.target.disabled) {
         setAction(event.target.id);
         event.preventDefault();
@@ -170,6 +167,7 @@ function setAction(value) {
 function onTip(event) {
     hovered = event.type=="mouseout" || event.target.disabled?null:event.target.id;
     updateToolbar(event.type=="mouseout" || event.target.id!=action);
+    updateScreen({leaveScene:hovered});
 }
 
 /**
