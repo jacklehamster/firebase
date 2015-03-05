@@ -644,6 +644,28 @@ function getCanvas(img,scale) {
     return img.canvas;
 }
 
+/**
+ *    Pick a color using eyedrop tool on canvas
+ * */
+function pickColor(event) {
+    var canvas = event.target;
+    var pendingPenColor = canvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1).data;
+    if(event.type=="mousemove") {
+        if(pendingPenColor[3]==0)
+            pendingPenColor = penColor;
+    }
+    else if(event.type=="mouseup") {
+        if(pendingPenColor[3]!=0)
+            penColor = pendingPenColor;
+        closePalette();
+    }
+    changeColor(document.getElementById("pencil"),pendingPenColor);    
+    
+    event.preventDefault();
+    
+}
+
+
 
 window.addEventListener("resize",
     function(event) {
