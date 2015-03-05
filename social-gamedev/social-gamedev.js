@@ -277,8 +277,10 @@ function updateScreen(options) {
         img.style.height = size+"px";
         img.style.posLeft = img.style.left = (screenPos.x-size/2) +"px";
         img.style.posTop = img.style.top = (screenPos.y-size)+"px";
-        img.style.zIndex = Math.round(screenPos.y)*2+(img.tagName=="img"?0:1);
-        
+        var zIndex = Math.round(screenPos.y)*2+(img.tagName=="img"?0:1);
+        if(zIndex!=img.style.zIndex) {
+            img.style.zIndex = zIndex;
+        }
         var hovered = action=="select" && currentId==id;
         var selected = selectedId==id;
         
