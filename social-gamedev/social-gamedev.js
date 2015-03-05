@@ -668,7 +668,7 @@ function startUpdate() {
 function updateCanvas(canvas) {
    var ctx = canvas.getContext("2d");
    ctx.clearRect(0,0,128,128);
-   ctx.drawImage(canvas.img,0,0,canvas.img.naturalWidth,canvas.img.naturalHeight,0,0);
+   ctx.drawImage(canvas.img,0,0,canvas.img.naturalWidth,canvas.img.naturalHeight,0,0,canvas.width,canvas.height);
    var commands = canvas.strokes;
    if(!commands.length)
         return;
