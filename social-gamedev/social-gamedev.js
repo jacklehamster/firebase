@@ -307,15 +307,18 @@ function hexRGB(array) {
 
 
 function createImage() {
+    var div = document.createElement("div");
     var img = document.createElement("img");
-    img.style.position = "absolute";
-    img.pos = {x:0,y:0};
+    div.style.position = "absolute";
+    div.pos = {x:0,y:0};
+    div.img = img;
     img.width = 128;
     img.height = 128;
     img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
     img.addEventListener("mousedown",nop);
     img.addEventListener("mousemove",nop);
-    return img;
+    div.appendChild(img);
+    return div;
 }
 
 function nop(event) {
@@ -323,16 +326,16 @@ function nop(event) {
 }
 
 function debugTest() {
-    var img = createImage();
-    img.id = "dok";
-    attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
-    mainScreen.appendChild(img);
-    window.dok = img;
+    var div = createImage();
+    div.id = "dok";
+    attachFirebase (div.img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
+    mainScreen.appendChild(div);
+    window.dok = div;
     
-    var img = createImage();
-    img.pos = {x:1,y:1};
-    attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
-    mainScreen.appendChild(img);
+    var div = createImage();
+    div.pos = {x:1,y:1};
+    attachFirebase (div.img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
+    mainScreen.appendChild(div);
     updateScreen();
 }
 
