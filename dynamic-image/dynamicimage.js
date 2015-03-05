@@ -24,6 +24,7 @@ function init() {
    node.on('value', valueChanged);  // refresh whenever its value changes
    var img = document.getElementById("img");
    img.title = img.alt = "Upload an image @ " + href;
+   img.setAttribute("firebase-path",firebase.path.toString())
    document.title = "Dynamic image @ " + href;
 }
 
