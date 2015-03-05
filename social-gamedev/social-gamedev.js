@@ -272,7 +272,7 @@ function updateScreen(options) {
         var selected = selectedId==id;
         
         img.style.border = 
-            hovered && !options.leaveScene?"1px solid "+(img==tempImage?"pink":"red"):
+            hovered && !options.leaveScene?"1px solid "+(img==tempImage && !selected?"pink":"red"):
             selected?"1px solid #00FF00":"";
         img.style.margin = 
             hovered || selected?"":"1px";
@@ -443,7 +443,7 @@ function mousePen(x,y,ispen,type,target,event) {
   var mainScreenPos = convertToMainScreen(x,y);
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
-     case "select":  // draw
+     case "select":  // select a sprite
         var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
         var doUpdate = false, doUpdateToolbar;
         if(type=="mousedown" && target!=document.getElementById("select")) {
