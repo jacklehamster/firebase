@@ -470,6 +470,7 @@ function mousePen(x,y,ispen,type,target,event) {
      case "pencil":  // draw
         if(currentSelection) {
             var drawnImage = map[currentSelection.x+"_"+currentSelection.y];
+            console.log(drawnImage);
             var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
                 localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
             performDrawing(drawnImage,localX,localY,ispen);
