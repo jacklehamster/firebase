@@ -419,6 +419,7 @@ function moveImage(img,x,y) {
     img.pos.x = x;
     img.pos.y = y;
     map[x+"_"+y] = img;
+    img.dispatchEvent(new CustomEvent('move',{x:x,y:y}));
 }
 
 function mousePen(x,y,ispen,type,target,event) {
