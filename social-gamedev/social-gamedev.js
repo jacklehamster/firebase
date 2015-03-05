@@ -348,8 +348,8 @@ function createImage() {
     img.style.position = "absolute";
     img.pos = {x:0,y:0};
     img.img = img;
-    img.width = 128;
-    img.height = 128;
+//    img.width = 128;
+//    img.height = 128;
     img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
     img.addEventListener("mousedown",nop);
     img.addEventListener("mousemove",nop);
