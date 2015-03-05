@@ -547,6 +547,7 @@ function performDrawing(img,x,y,ispen) {
     canvas.pos = img.pos;
     if(canvas.parentElement!=mainScreen) {
         mainScreen.appendChild(canvas);
+        updateScreen();
     }
     
    firebase.child(img.id).child("strokes").push({
