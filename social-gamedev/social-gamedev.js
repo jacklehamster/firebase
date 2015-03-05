@@ -357,7 +357,7 @@ function debugTest() {
 /**
  *    Register all mouse events
  * */
-document.addEventListener("mousemove",mouseAction);
+document.addEventListener("",mouseAction);
 document.addEventListener("mousedown",mouseAction);
 document.addEventListener("mouseup",mouseAction);
 document.addEventListener("mouseout",mouseAction);
@@ -440,7 +440,6 @@ function moveImage(img,x,y) {
 }
 
 function mousePen(x,y,ispen,type,target,event) {
-  console.log(x,y,ispen,type,target,event);
   var mainScreenPos = convertToMainScreen(x,y);
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
@@ -488,6 +487,7 @@ function mousePen(x,y,ispen,type,target,event) {
      case "pencil":  // draw
         if(currentSelection) {
             var drawnImage = map[currentSelection.x+"_"+currentSelection.y];
+            console.log(currentSelection,drawnImage,event.target);
             if(event.target==drawnImage || event.target==drawnImage.canvas) {
                var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
                    localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
