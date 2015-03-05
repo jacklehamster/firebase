@@ -619,7 +619,7 @@ function prepareCommit(img) {
             var dataURI = img.canvas.toDataURL();
             img.firebase.set(dataURI);
             clearCanvas(img);
-        },1000
+        },500
     );
 }
 
