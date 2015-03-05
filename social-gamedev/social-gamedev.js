@@ -588,7 +588,7 @@ function getCanvasOverlay(img) {
                 updateCanvas(img.canvas);
             }
         );
-        firebase.child(img.id).child("strokes").on("child_added",
+        firebase.child(img.firebase.path.toString()).child("strokes").on("child_added",
             img.canvas.updateFunction = function(snapshot) {
                var o = snapshot.val();
                var commands = img.canvas.strokes;
@@ -604,8 +604,7 @@ function getCanvasOverlay(img) {
 
 function clearCanvas(img) {
     img.canvas.strokes = [];
-    firebase.child(img.id).child("strokes").remove();
-//    firebase.child(img.id).child("strokes").off("child_added",img.canvas.updateFunction);
+    firebase.child(img.firebase.path.toString()).child("strokes").remove();
 }
 
 function prepareCommit(img) {
