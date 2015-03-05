@@ -272,11 +272,9 @@ function updateScreen(options) {
         var id = img.pos.x + "_" + img.pos.y;
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(screenPos.y);
-        var size = 64*scale;
-        if(img.style.width!=size+"px" || img.style.height!=size+"px") {
-           img.style.width = size+"px";
-           img.style.height = size+"px";
-        }
+        img.style.width = (scale*img.naturalWidth)+"px";
+        img.style.height = (scale*img.naturalHeight)+"px";
+        
         if(img.style.left!=(screenPos.x-size/2) +"px" || img.style.top!=(screenPos.y-size)+"px") {
             img.style.posLeft = img.style.left = (screenPos.x-size/2) +"px";
             img.style.posTop = img.style.top = (screenPos.y-size)+"px";
