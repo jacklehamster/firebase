@@ -167,7 +167,7 @@ function setAction(value) {
 function onTip(event) {
     hovered = event.type=="mouseout" || event.target.disabled?null:event.target.id;
     updateToolbar(event.type=="mouseout" || event.target.id!=action);
-    updateScreen({leaveScene:hovered});
+    updateScreen({leaveScene:event.type!="mouseout" });
 }
 
 /**
