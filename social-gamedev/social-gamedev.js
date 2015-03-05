@@ -668,15 +668,17 @@ function startUpdate() {
  * */
 function updateCanvas(canvas) {
    var ctx = canvas.getContext("2d");
-   ctx.clearRect(0,0,128,128);
-   ctx.drawImage(canvas.img,0,0,canvas.img.naturalWidth,canvas.img.naturalHeight,0,0,canvas.width,canvas.height);
+   var width = canvas.img.naturalWidth;
+   var height = canvas.img.naturalHeight;
+   ctx.clearRect(0,0,width,height);
+   ctx.drawImage(canvas.img,0,0,width,height,0,0,canvas.width,canvas.height);
    var commands = canvas.strokes;
    if(!commands.length)
         return;
    ctx.beginPath();
    ctx.lineWidth=commands[0].brushSize ? commands[0].brushSize:2;
    ctx.strokeStyle = "#000000";
-   ctx.moveTo(commands[0].x*128,commands[0].y*128);
+   ctx.moveTo(commands[0].x*width,commands[0].y*height);
    if(commands[0].penColor) {
        ctx.strokeStyle = commands[0].penColor;
    }
@@ -690,10 +692,10 @@ function updateCanvas(canvas) {
           ctx.strokeStyle = command.penColor;
       }
       if(commands[i-1].pen) {
-        ctx.lineTo(command.x*128,command.y*128);
+        ctx.lineTo(command.x*width,command.y*height);
       }
       else {
-        ctx.moveTo(command.x*128,command.y*128);
+        ctx.moveTo(command.x*width,command.y*height);
       }  
    }
    ctx.stroke();
