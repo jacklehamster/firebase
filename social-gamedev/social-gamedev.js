@@ -263,7 +263,7 @@ function updateScreen() {
             hovered?"1px solid "+(img==tempImage?"pink":"red"):
             selected?"1px solid #00FF00":"";
         img.style.margin = 
-            hovered || selected?"":"1px";
+            hovered || selected?"":(isMoz?1:1/globalZoom)+"px";
         if(tag=="img")    
             map[id] = img;
         if(tag=="canvas" && img.dirty) {
