@@ -307,7 +307,7 @@ function updateScreen(options) {
 }
 
 function calculateScale(screenY) {
-    return Math.pow(screenY,.8) / 100;
+    return Math.pow(screenY,.8) / 200;
 }
 
 /**
