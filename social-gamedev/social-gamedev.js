@@ -597,12 +597,9 @@ function getCanvasOverlay(img) {
     return img.canvas;
 }
 
-function destroyCanvas(img) {
-    firebase.child(img.id).remove();
+function clearCanvas(img) {
+    firebase.child(img.id).child("strokes").remove();
     firebase.child(img.id).child("strokes").off("child_added",img.canvas.updateFunction);
-    img.style.visibility = "";
-    mainScreen.removeChild(img.canvas);
-    delete img.canvas;
 }
 
 function prepareCommit(img) {
@@ -615,7 +612,7 @@ function prepareCommit(img) {
             //  update image using canvas
             var dataURI = img.canvas.toDataURL();
             img.firebase.set(dataURI);
-            destroyCanvas(img);
+            clearCanvas(img);
         },1000
     );
 }
