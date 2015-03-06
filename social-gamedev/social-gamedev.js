@@ -48,7 +48,7 @@ function init(event) {
     initToolbar();
     debugTest();
     
-    firebaseMap.on("child_added"
+    firebaseMap.on("child_added",
         function(snapshot) {
             console.log(snapshot.ref().toString(),"\n",snapshot.val());
         }
