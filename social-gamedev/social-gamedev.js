@@ -494,9 +494,9 @@ function addImageToFirebase(img,x,y) {
 }
 
 function moveImage(img,x,y) {
-    removeImageFromFirebase(x,y);
     var from = {x:img.pos.x,y:img.pos.y};
     delete map[img.pos.x+"_"+img.pos.y];
+    removeImageFromFirebase(from.x,from.y);
     img.pos.x = x;
     img.pos.y = y;
     map[x+"_"+y] = img;
