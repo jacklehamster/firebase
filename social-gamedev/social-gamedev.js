@@ -53,8 +53,8 @@ function init(event) {
         function(snapshot) {
             var o = snapshot.val();
             var keySplit = snapshot.key().split("_");
-            console.log(o);
-            console.log(keySplit);
+//            console.log(o);
+//            console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
             var img = createImage();
             img.pos = {x:x,y:y};
@@ -481,7 +481,7 @@ function ensureImage(img) {
     }
     if(!img.firebase) {
         var firebaseSrc = firebaseImg.child(img.id).child("src");
-        console.log(img.src);
+//        console.log(img.src);
         firebaseSrc.set(img.src);
         attachFirebase (img,firebaseSrc);
         addImageToFirebase(img,img.pos.x,img.pos.y);
@@ -700,6 +700,7 @@ function prepareCommit(img) {
                 img.timeout = null;
                 //  update image using canvas
                 var dataURI = img.canvas.toDataURL();
+                console.log(img.canvas);
                 img.firebase.set(dataURI);
                 clearCanvas(img);
             },500
