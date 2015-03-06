@@ -47,6 +47,12 @@ function init(event) {
     
     initToolbar();
     debugTest();
+    
+    firebaseMap.on("child_added"
+        function(snapshot) {
+            console.log(snapshot.ref().toString(),"\n",snapshot.val());
+        }
+    );
 }
 
 function initToolbar() {
@@ -780,8 +786,6 @@ function MD5_path(value) {
               hash.slice(24,36)].join("/");
     return loc;
 }
-
-
 
 window.addEventListener("resize",
     function(event) {
