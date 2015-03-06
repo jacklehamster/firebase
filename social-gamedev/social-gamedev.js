@@ -6,7 +6,7 @@ var paletteColorURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAM
 var blankDataURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAABFUlEQVR4nO3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAMBPAABPO1TCQAAAABJRU5ErkJggg==";
 
 var firebase = new Firebase('https://art-depot.firebaseio.com/artdepot/');
-
+var firebaseMap = new Firebase("https://art-depot.firebaseio.com/map")
 
 var action="select";
 var hovered = null;
@@ -447,11 +447,12 @@ function convertToScreen(x,y) {
 }
 
 function moveImage(img,x,y) {
+    var from = {x:img.pos.x,y:img.pos.y};
     delete map[img.pos.x+"_"+img.pos.y];
     img.pos.x = x;
     img.pos.y = y;
     map[x+"_"+y] = img;
-//    img.dispatchEvent(new CustomEvent('move',{detail:{x:x,y:y}}));
+    img.dispatchEvent(new CustomEvent('move',{detail:{from:from,to:{x:x,y:y}}}));
 }
 
 function mousePen(x,y,ispen,type,target,event) {
@@ -484,7 +485,10 @@ function mousePen(x,y,ispen,type,target,event) {
             
             if(selectedImage) {
                 currentSelection = {x:closest.x,y:closest.y};
-                moveImage(selectedImage,currentSelection.x,currentSelection.y);
+                if(!map[closest.x+"_"+closest.y]) {
+                    moveImage(selectedImage,currentSelection.x,currentSelection.y);
+                    //firebaseMap
+                }
             }
             
             currentPos = closest;
