@@ -469,6 +469,9 @@ function convertToScreen(x,y) {
  *  Ensure that the image was properly recorded in Firebase
  */
 function ensureImage(img) {
+    if(img==selectedImageTemp) {
+        selectedImageTemp = createImage();
+    }
     if(!img.id) {
         img.id = MD5_path(new Date()+""+Math.random());
     }
