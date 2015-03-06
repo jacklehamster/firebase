@@ -6,7 +6,8 @@ var paletteColorURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAM
 var blankDataURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAABFUlEQVR4nO3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAMBPAABPO1TCQAAAABJRU5ErkJggg==";
 
 var firebase = new Firebase('https://art-depot.firebaseio.com/artdepot/');
-var firebaseMap = new Firebase("https://art-depot.firebaseio.com/map")
+var firebaseMap = new Firebase("https://art-depot.firebaseio.com/map");
+var firebaseImg = new Firebase("https://art-depot.firebaseio.com/images");
 
 var action="select";
 var hovered = null;
@@ -348,7 +349,7 @@ function createImage() {
     var img = document.createElement("img");
     img.style.position = "absolute";
     img.pos = {x:0,y:0};
-    img.img = img;
+//    img.img = img;
 //    img.width = 128;
 //    img.height = 128;
     img.src = blankDataURI;
@@ -446,6 +447,26 @@ function convertToScreen(x,y) {
     return {x:valX,y:valY};
 }
 
+/*
+ *  Ensure that the image was properly recorded in Firebase
+ */
+function ensureImage(img) {
+    if(!img.id) {
+        img.id = MD5_hash(new Date()+""+Math.random());
+        var firebaseSrc = firebaseImg.child(img.id).child("src");
+        firebaseSrc.set(img.src);
+        attachFirebase (img,firebaseSrc);
+    }
+}
+
+function removeImageFromFirebase(x,y) {
+//    firebaseMap.child(x+"_"+y).
+}
+
+function addImageToFirebase(img,x,y) {
+    
+}
+
 function moveImage(img,x,y) {
     var from = {x:img.pos.x,y:img.pos.y};
     delete map[img.pos.x+"_"+img.pos.y];
@@ -487,7 +508,6 @@ function mousePen(x,y,ispen,type,target,event) {
                 currentSelection = {x:closest.x,y:closest.y};
                 if(!map[closest.x+"_"+closest.y]) {
                     moveImage(selectedImage,currentSelection.x,currentSelection.y);
-                    //firebaseMap
                 }
             }
             
@@ -590,7 +610,7 @@ function performDrawing(img,x,y,ispen) {
     }
     
     if(!img.firebase && ispen) {
-//        img.firebase = 
+        ensureImage(img);
     }
     
     if(img.firebase) {
