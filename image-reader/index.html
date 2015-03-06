@@ -24,8 +24,12 @@ function updateTextBox() {
 }
 
 function init() {
-        changeButton.style.display = "";
-        tf.style.display = "";
+        if(window==top) {
+                var changeButton = document.getElementById("change");
+                var tf = document.getElementById("path");
+                changeButton.style.display = "";
+                tf.style.display = "";
+        }
 }
         
 </script>
