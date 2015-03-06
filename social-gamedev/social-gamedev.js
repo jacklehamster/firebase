@@ -479,6 +479,7 @@ function ensureImage(img) {
     }
     if(!img.firebase) {
         var firebaseSrc = firebaseImg.child(img.id).child("src");
+        console.log(img.src);
         firebaseSrc.set(img.src);
         attachFirebase (img,firebaseSrc);
         addImageToFirebase(img,img.pos.x,img.pos.y);
