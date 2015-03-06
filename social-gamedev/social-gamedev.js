@@ -50,6 +50,7 @@ function init(event) {
     
     firebaseMap.on("child_added",
         function(snapshot) {
+            return;
             var o = snapshot.val();
             var keySplit = snapshot.key().split("_");
             var x = keySplit[0], y = keySplit[1];
