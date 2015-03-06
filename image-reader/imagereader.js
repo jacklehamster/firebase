@@ -7,7 +7,7 @@ function attachFirebase(image,firebaseLocation,options) {
        options = {};
    image.firebase = typeof(firebaseLocation)=="string"?new Firebase(firebaseLocation):firebaseLocation;
    image.firebase.on('value',
-      image.firebasrRefresh = function(snapshot) {
+      image.firebaseRefresh = function(snapshot) {
          var o = snapshot.val();
          var postSplit = o.split(";");
          if(options.chrono) {
@@ -23,13 +23,14 @@ function attachFirebase(image,firebaseLocation,options) {
              }
          }
          image.src = postSplit.slice(0,2).join(";");
+         img.dispatchEvent(new Event('change'));
       }
    );
 }
 
 function detachFirebase(image) {
-   if(image.firebase && image.firebasrRefresh) {
-    image.firebase.off('value',image.firebasrRefresh);
+   if(image.firebase && image.firebaseRefresh) {
+    image.firebase.off('value',image.firebaseRefresh);
     delete image.firebase;
     delete image.firebaseRefresh;
    }
