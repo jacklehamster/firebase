@@ -7,9 +7,15 @@
 <script src="imagereader.js"></script>
 <script>
 function updateTextBox() {
+   var changeButton = document.getElementById("change");
    var tf = document.getElementById("path");
    var img = document.getElementById('img');
    tf.value = img.firebase.ref().toString();
+   tf.addEventListener("change",
+        function(e){
+            changeButton.disabled = false;
+            e.currentTarget.removeEventListener(e.type,arguments.callee);
+        });
 }
         
 </script>
@@ -17,7 +23,7 @@ function updateTextBox() {
 
 </head>
 <body style="margin:0px">
-<input type="button" value="change">
+<input id="change" type="button" value="change" disabled="disabled">
 <input id="path" type="text" style="width:80%"><br>
 <img id="img" onLoad="updateTextBox()" class="firebase-img" width="100%" firebase-src="https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src">
 
