@@ -471,6 +471,7 @@ function convertToScreen(x,y) {
  *  Ensure that the image was properly recorded in Firebase
  */
 function ensureImage(img) {
+    return;
     if(img==selectedImageTemp) {
         selectedImageTemp = createImage();
     }
