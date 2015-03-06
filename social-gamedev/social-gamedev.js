@@ -457,6 +457,7 @@ function ensureImage(img) {
         console.log(firebaseSrc.path+"")
         firebaseSrc.set(img.src);
         attachFirebase (img,firebaseSrc);
+        addImageToFirebase(img,img.pos.x,img.pos.y);
     }
 }
 
