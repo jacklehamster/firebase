@@ -16,6 +16,11 @@ function updateTextBox() {
             changeButton.disabled = false;
             e.currentTarget.removeEventListener(e.type,arguments.callee);
         });
+  changeButton.addEventListener("click",
+        function(e) {
+            detachFirebase(img);
+            attachFirebase(img,tf.value);
+        });
 }
         
 </script>
