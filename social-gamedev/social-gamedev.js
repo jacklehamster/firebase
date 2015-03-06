@@ -423,7 +423,7 @@ function findClosestXY(mouseX,mouseY,offsetX,offsetY) {
     var minDist = 1000000;
     for(var y=-20;y<20;y++) {
         for(var x=-20;x<20;x++) {
-            var pos = convertToScreen(x,y);
+            var pos = convertToScreen(x+shiftX,y+shiftY);
             var scale = calculateScale(pos.y);
             var diffY = (pos.y+offsetY*scale - mouseY); 
             var diffX = (pos.x+offsetX*scale - mouseX);
