@@ -25,10 +25,7 @@ function updateTextBox() {
 
 function init() {
         if(window==top) {
-                var changeButton = document.getElementById("change");
-                var tf = document.getElementById("path");
-                changeButton.style.display = "";
-                tf.style.display = "";
+                document.getElementById("location").style.display = "";
         }
 }
         
@@ -37,8 +34,9 @@ function init() {
 
 </head>
 <body style="margin:0px" onLoad="init()">
-<input id="change" type="button" value="change" disabled="disabled" style="display:none">
-<input id="path" type="text" style="width:80%;display:none"><br>
+<span id="location" style="display:none">
+<input id="change" type="button" value="change" disabled="disabled">
+<input id="path" type="text" style="width:80%;"><br></span>
 <img id="img" onLoad="updateTextBox()" class="firebase-img" width="100%" firebase-src="https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src">
 
 
