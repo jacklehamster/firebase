@@ -461,19 +461,22 @@ function ensureImage(img) {
 }
 
 function removeImageFromFirebase(x,y) {
-//    firebaseMap.child(x+"_"+y).
+    firebaseMap.child(x+"_"+y).remove();
 }
 
 function addImageToFirebase(img,x,y) {
-    
+    if(img.id)
+        firebaseMap.child(x+"_"+y+"/id").set(img.id);
 }
 
 function moveImage(img,x,y) {
+    removeImageFromFirebase(x,y);
     var from = {x:img.pos.x,y:img.pos.y};
     delete map[img.pos.x+"_"+img.pos.y];
     img.pos.x = x;
     img.pos.y = y;
     map[x+"_"+y] = img;
+    addImageToFirebase(img,x,y);
     img.dispatchEvent(new CustomEvent('move',{detail:{from:from,to:{x:x,y:y}}}));
 }
 
