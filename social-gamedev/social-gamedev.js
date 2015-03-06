@@ -54,6 +54,7 @@ function init(event) {
             var keySplit = snapshot.key().split("_");
             var x = keySplit[0], y = keySplit[1];
             var img = createImage();
+            img.pos = {x:x,y:y};
             img.id = o.id;
             ensureImage(img);
             mainScreen.appendChild(img);
