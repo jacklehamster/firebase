@@ -290,7 +290,7 @@ function updateScreen(options) {
         var selected = selectedId==id;
         
         var imgBorder = 
-            hovered && !options.leaveScene?"1px solid "+(img==tempImage && !selected?"pink":"red"):
+            hovered && !options.leaveScene?"2px solid "+(img==tempImage && !selected?"pink":"red"):
             selected?"1px solid #00FF00":"";
         if(img.style.border!=imgBorder) {
             img.style.border = imgBorder;
