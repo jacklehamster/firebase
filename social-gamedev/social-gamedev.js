@@ -452,7 +452,7 @@ function convertToScreen(x,y) {
  */
 function ensureImage(img) {
     if(!img.id) {
-        img.id = MD5_hash(new Date()+""+Math.random());
+        img.id = CryptoJS.MD5(new Date()+""+Math.random())+"";
         var firebaseSrc = firebaseImg.child(img.id).child("src");
         firebaseSrc.set(img.src);
         attachFirebase (img,firebaseSrc);
@@ -526,7 +526,7 @@ function mousePen(x,y,ispen,type,target,event) {
      case "pencil":  // draw
         if(currentSelection) {
             var drawnImage = map[currentSelection.x+"_"+currentSelection.y];
-            if(event.target==drawnImage || event.target==drawnImage.canvas) {
+            if(event.target==drawnImage || drawnImage && event.target==drawnImage.canvas) {
                var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
                    localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
                performDrawing(drawnImage,localX,localY,ispen);
