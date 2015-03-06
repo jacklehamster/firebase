@@ -25,7 +25,7 @@ function attachFirebase(image,firebaseLocation,options) {
              }
          }
          image.src = postSplit.slice(0,2).join(";");
-         img.dispatchEvent(new Event('change'));
+         image.dispatchEvent(new Event('change'));
       }
    );
 }
