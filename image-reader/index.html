@@ -36,7 +36,7 @@ function init() {
 <body style="margin:0px" onLoad="init()">
 <span id="location" style="display:none">
 <input id="change" type="button" value="change" disabled="disabled">
-<input id="path" type="text" style="width:80%;"><br></span>
+<input id="path" type="text" onfocus="this.select();" onmouseup="return false;"  style="width:80%;"><br></span>
 <img id="img" onLoad="updateTextBox()" class="firebase-img" width="100%" firebase-src="https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src">
 
 
