@@ -511,8 +511,8 @@ function mousePen(x,y,ispen,type,target,event) {
         if(ispen||preState.pen) {
            var dx = x - preState.stageX;
            var dy = y - preState.stageY;
-           shiftX -= dx/globalZoom;
-           shiftY -= dy/globalZoom;
+           shiftX -= dx/globalZoom/10;
+           shiftY -= dy/globalZoom/10;
            updateScreen();
        }
        break;
