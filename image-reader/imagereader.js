@@ -6,6 +6,8 @@ function attachFirebase(image,firebaseLocation,options) {
    if(!options)
        options = {};
    image.firebase = typeof(firebaseLocation)=="string"?new Firebase(firebaseLocation):firebaseLocation;
+   image.setAttribute("firebase-src",image.firebase.ref().toString());
+   
    image.firebase.on('value',
       image.firebaseRefresh = function(snapshot) {
          var o = snapshot.val();
