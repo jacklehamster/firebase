@@ -699,6 +699,7 @@ function prepareCommit(img) {
                 //  update image using canvas
                 var dataURI = img.canvas.toDataURL();
                 img.firebase.set(dataURI);
+                console.log("here");
                 clearCanvas(img);
             },500
         );
