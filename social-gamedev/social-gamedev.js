@@ -52,6 +52,8 @@ function init(event) {
         function(snapshot) {
             var o = snapshot.val();
             var keySplit = snapshot.key().split("_");
+            console.log(o);
+            console.log(keySplit);
             var x = keySplit[0], y = keySplit[1];
             var img = createImage();
             img.pos = {x:x,y:y};
