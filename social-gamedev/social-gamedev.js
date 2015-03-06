@@ -452,7 +452,7 @@ function convertToScreen(x,y) {
  */
 function ensureImage(img) {
     if(!img.id) {
-        img.id = CryptoJS.MD5(new Date()+""+Math.random())+"";
+        img.id = MD5_path(new Date()+""+Math.random())[0];
         var firebaseSrc = firebaseImg.child(img.id).child("src");
         firebaseSrc.set(img.src);
         attachFirebase (img,firebaseSrc);
