@@ -5,13 +5,21 @@
 <script src='https://cdn.firebase.com/js/client/2.2.0/firebase.js'></script>
 <meta charset=utf-8 />
 <script src="imagereader.js"></script>
+<script>
+function updateTextBox() {
+   var tf = document.getElementById("path");
+   var img = document.getElementById('img');
+   tf.value = img.firebase.root + img.firebase.path.toString();
+}
+        
+</script>
 <title>Image Reader</title>
 
 </head>
 <body style="margin:0px">
 <input type="button" value="change">
-<input type="text" style="width:80%"><br>
-<img class="firebase-img" width="100%" firebase-src="https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src">
+<input id="path" type="text" style="width:80%"><br>
+<img id="img" onLoad="updateTextBox()" class="firebase-img" width="100%" firebase-src="https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src">
 
 
 </body>
