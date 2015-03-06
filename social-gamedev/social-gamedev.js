@@ -471,7 +471,6 @@ function convertToScreen(x,y) {
  *  Ensure that the image was properly recorded in Firebase
  */
 function ensureImage(img) {
-    return;
     if(img==selectedImageTemp) {
         selectedImageTemp = createImage();
     }
@@ -699,7 +698,6 @@ function prepareCommit(img) {
                 //  update image using canvas
                 var dataURI = img.canvas.toDataURL();
                 img.firebase.set(dataURI);
-                console.log("here");
                 clearCanvas(img);
             },500
         );
