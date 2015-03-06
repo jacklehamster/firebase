@@ -22,6 +22,7 @@ var currentSelection = null;
 var tempImage = createImage();
 var selectedImageTemp = createImage();
 var selectedImage;
+var lastSelectedImage;
 var mainScreen;
 var penColor = [0,0,0,255];
 var brushSize = 2;
@@ -420,7 +421,7 @@ function changedTarget() {
     if(selectedId && !map[selectedId]) {
         selectedImageTemp.pos = currentSelection;
         mainScreen.appendChild(selectedImageTemp);
-        selectedImage = selectedImageTemp;
+        lastSelectedImage = selectedImage = selectedImageTemp;
     }
     else if(!selectedId && selectedImageTemp.parentElement==mainScreen) {
         mainScreen.removeChild(selectedImageTemp);
@@ -516,7 +517,7 @@ function mousePen(x,y,ispen,type,target,event) {
         var doUpdate = false, doUpdateToolbar;
         if(type=="mousedown" && target!=document.getElementById("select")) {
             
-            selectedImage = map[closest.x+"_"+closest.y];
+            lastSelectedImage = selectedImage = map[closest.x+"_"+closest.y];
             
            if(currentSelection && currentSelection.x == closest.x && currentSelection.y == closest.y) {
                 //doUpdateToolbar = currentSelection!=null;
