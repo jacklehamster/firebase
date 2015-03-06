@@ -430,7 +430,7 @@ function findClosestXY(mouseX,mouseY,offsetX,offsetY) {
             var dist = Math.sqrt(diffY*diffY + diffX*diffX);
             if(dist<minDist) {
                 minDist = dist;
-                closest = {x:x,y:y};
+                closest = {x:x-shiftX,y:y-shiftY};
             }
         }
     }
