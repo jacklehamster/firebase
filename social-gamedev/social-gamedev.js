@@ -585,18 +585,19 @@ function performDrawing(img,x,y,ispen) {
         updateScreen();
     }
     
-    if(!img.firebase) {
-        
+    if(!img.firebase && ispen) {
+//        img.firebase = 
     }
     
-    firebase.child(img.firebase.path.toString()).child("strokes").push({
-       x:x,
-       y:y,
-       pen:ispen,
-       penColor:hexRGB(penColor),
-       brushSize:Math.max(1,Math.round(brushSize/globalZoom))
-    });
-    
+    if(img.firebase) {
+        firebase.child("overlay").child(img.firebase.path.toString()).child("strokes").push({
+           x:x,
+           y:y,
+           pen:ispen,
+           penColor:hexRGB(penColor),
+           brushSize:Math.max(1,Math.round(brushSize/globalZoom))
+        });
+    }    
 }
 
 
@@ -619,7 +620,7 @@ function getCanvasOverlay(img) {
                 updateCanvas(img.canvas);
             }
         );
-        firebase.child(img.firebase.path.toString()).child("strokes").on("child_added",
+        firebase.child("overlay").child(img.firebase.path.toString()).child("strokes").on("child_added",
             img.canvas.updateFunction = function(snapshot) {
                var o = snapshot.val();
                var commands = img.canvas.strokes;
