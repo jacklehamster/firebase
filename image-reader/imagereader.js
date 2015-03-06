@@ -37,7 +37,7 @@ function detachFirebase(image) {
 }
 
 function loadFirebase(image,firebaseLocation) {
-   var firebase = new Firebase(firebaseLocation);
+   var firebase = typeof(firebaseLocation)=="string"?new Firebase(firebaseLocation):firebaseLocation;
    firebase.once('value',
       function(snapshot) {
          var o = snapshot.val();
