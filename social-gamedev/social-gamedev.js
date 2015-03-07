@@ -57,7 +57,7 @@ function init(event) {
 //            console.log(o);
  //           console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
-            var img = null;// document.getElementById(o.id);
+            var img = document.getElementById(o.id);
             if(!img) {
                 var img = createImage();
                 img.id = o.id;
@@ -503,6 +503,9 @@ function ensureImage(img,ignoreSrc,ignoreAdd) {
     if(img==selectedImageTemp) {
         selectedImageTemp = createImage();
     }
+    if(img==tempImage) {
+        tempImage = createImage();
+    }
     if(!img.id) {
         img.id = MD5_path(new Date()+""+Math.random());
     }
@@ -556,7 +559,7 @@ function mousePen(x,y,ispen,type,target,event) {
             doUpdate = true;
         }
         if(type=="mousedown") {
-            addImageToFirebase(lastSelectedImage,currentSelection.x,currentSelection.y);
+            ensureImage(tempImage);
         }
         if(doUpdate) {
             changedTarget();
