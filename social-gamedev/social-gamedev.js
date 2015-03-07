@@ -184,6 +184,7 @@ function readURL(input) {
        var reader = new FileReader();
        reader.onload = function (e) {
          var src = e.target.result; // src id a data-uri
+         console.log(src,lastSelectedImage);
          if(lastSelectedImage) {
              if(lastSelectedImage.id) {
                 var firebaseSrc = firebaseImg.child(img.id).child("src");
