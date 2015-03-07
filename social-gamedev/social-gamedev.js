@@ -428,7 +428,7 @@ function changedTarget() {
         mainScreen.appendChild(selectedImageTemp);
         lastSelectedImage = selectedImage = selectedImageTemp;
     }
-    else if(!selectedId && selectedImageTemp.parentElement==mainScreen) {
+    else if((!selectedId || map[selectedId] && map[selectedId]!=selectedImageTemp) && selectedImageTemp.parentElement==mainScreen) {
         mainScreen.removeChild(selectedImageTemp);
     }
     
