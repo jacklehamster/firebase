@@ -787,7 +787,8 @@ function performDrawing(img,x,y,ispen) {
            x:x,
            y:y,
            pen:ispen,
-           penColor:action=="eraser"?0:hexRGB(penColor),
+           globalCompositeOperation:action=="eraser"?"destination-out":"source-over",
+           penColor:hexRGB(penColor),
            brushSize:Math.max(1,Math.round(brushSize/globalZoom))
         });
     }    
@@ -869,6 +870,7 @@ function updateCanvas(canvas) {
    ctx.beginPath();
    ctx.lineWidth=commands[0].brushSize ? commands[0].brushSize:2;
    ctx.strokeStyle = "#000000";
+   ctx.globalCompositeOperation = commands[0].globalCompositeOperation?commands[0].globalCompositeOperation:"source-over";
    ctx.moveTo(commands[0].x*width,commands[0].y*height);
    if(commands[0].penColor) {
        ctx.strokeStyle = commands[0].penColor;
@@ -876,11 +878,13 @@ function updateCanvas(canvas) {
    for(var i=1;i<commands.length;i++) {
       var command = commands[i];
       if(command.penColor && ctx.strokeStyle != command.penColor
-        || command.brushSize && ctx.lineWidth != command.brushSize) {
+        || command.brushSize && ctx.lineWidth != command.brushSize
+        || command.globalCompositeOperation && command.globalCompositeOperation != ctx.globalCompositeOperation) {
           ctx.stroke();
           ctx.beginPath();
           ctx.lineWidth=command.brushSize;
           ctx.strokeStyle = command.penColor;
+          ctx.globalCompositeOperation = command.globalCompositeOperation;
       }
       if(commands[i-1].pen) {
         ctx.lineTo(command.x*width,command.y*height);
