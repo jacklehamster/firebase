@@ -201,7 +201,7 @@ function setAction(value) {
             mainScreen.removeChild(tempImage);
         }
         if(action=="select") {
-            tempImage.src = blankImageURI;
+            tempImage.src = blankDataURI;
         }
         else if(action=="copy") {
             tempImage.src = lastSelectedImage.src;
