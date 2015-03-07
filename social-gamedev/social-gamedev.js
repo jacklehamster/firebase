@@ -181,6 +181,10 @@ function setAction(value) {
             }
         }
         
+        if(action=="select" && tempImage.parentElement==mainScreen) {
+            mainScreen.removeChild(tempImage);
+        }
+        
         action = value;
         updateToolbar();
         
