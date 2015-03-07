@@ -56,11 +56,14 @@ function init(event) {
             console.log(o);
             console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
-            var img = createImage();
+            var img = document.getElementById(o.id);
+            if(!img) {
+                var img = createImage();
+                img.id = o.id;
+                ensureImage(img,true,true);
+                mainScreen.appendChild(img);
+            }
             img.pos = {x:x,y:y};
-            img.id = o.id;
-            ensureImage(img,true,true);
-            mainScreen.appendChild(img);
             updateScreen();
 //            attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
 //    mainScreen.appendChild(img);
@@ -425,11 +428,10 @@ function changedTarget() {
     
     if(selectedId && !map[selectedId]) {
         selectedImageTemp.pos = currentSelection;
-        console.log("HERE");
         mainScreen.appendChild(selectedImageTemp);
         lastSelectedImage = selectedImage = selectedImageTemp;
     }
-    else if(!selectedId && selectedImageTemp.parentElement==mainScreen) {
+    else if((!selectedId || map[selectedId]!=selectedImageTemp) && selectedImageTemp.parentElement==mainScreen) {
         mainScreen.removeChild(selectedImageTemp);
     }
     
