@@ -53,8 +53,8 @@ function init(event) {
         function(snapshot) {
             var o = snapshot.val();
             var keySplit = snapshot.key().split("_");
-            console.log(o);
-            console.log(keySplit);
+//            console.log(o);
+ //           console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
             var img = document.getElementById(o.id);
             if(!img) {
@@ -571,7 +571,7 @@ function mousePen(x,y,ispen,type,target,event) {
             if(event.target==drawnImage || drawnImage && event.target==drawnImage.canvas) {
                var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
                    localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
-               console.log(drawnImage,localX,localY,ispen);
+               //console.log(drawnImage,localX,localY,ispen);
                performDrawing(drawnImage,localX,localY,ispen);
             }
         }
@@ -712,7 +712,7 @@ function prepareCommit(img) {
                 img.timeout = null;
                 //  update image using canvas
                 var dataURI = img.canvas.toDataURL();
-                console.log(img.canvas);
+                //console.log(img.canvas);
                 img.firebase.set(dataURI);
                 clearCanvas(img);
             },500
