@@ -536,6 +536,25 @@ function mousePen(x,y,ispen,type,target,event) {
   var mainScreenPos = convertToMainScreen(x,y);
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
+     case "copy":   //  clone a sprite
+         var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
+        if(currentPos.x != closest.x || currentPos.y != closest.y) {
+            
+            if(selectedImage) {
+                currentSelection = {x:closest.x,y:closest.y};
+                if(!map[closest.x+"_"+closest.y]) {
+                    moveImage(selectedImage,currentSelection.x,currentSelection.y);
+                }
+            }
+            
+            currentPos = closest;
+            doUpdate = true;
+        }
+        if(doUpdate) {
+            changedTarget();
+            updateScreen();
+        }
+         break;
      case "select":  // select a sprite
         var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
         var doUpdate = false, doUpdateToolbar;
