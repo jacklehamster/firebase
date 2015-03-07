@@ -565,7 +565,7 @@ function mousePen(x,y,ispen,type,target,event) {
          break;
      case "select":  // select a sprite
         var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
-        var doUpdate = false, doUpdateToolbar;
+        var doUpdate = false, doUpdateToolbar = false;
         if(type=="mousedown" && target!=document.getElementById("select")) {
             
             lastSelectedImage = selectedImage = map[closest.x+"_"+closest.y];
@@ -576,7 +576,7 @@ function mousePen(x,y,ispen,type,target,event) {
                 //doUpdate = true;
             }
             else {
-                doUpdateToolbar = currentSelection==null;
+                doUpdateToolbar = true;
                 currentSelection = {x:currentPos.x,y:currentPos.y};
                 doUpdate = true;
             }
