@@ -141,13 +141,14 @@ function leaveScene() {
  * */
 function updateToolbar(hideTip) {
     //selectedCanvas
+    var noSelection = selectedImage!=null || currentSelection==null;
     updateToolbarItem(document.getElementById("select"),action=="select",hovered=="select");
     updateToolbarItem(document.getElementById("hand"),action=="hand",hovered=="hand");
-    updateToolbarItem(document.getElementById("pencil"),action=="pencil",hovered=="pencil",selectedImage!=null);
+    updateToolbarItem(document.getElementById("pencil"),action=="pencil",hovered=="pencil",noSelection);
     updateToolbarItem(document.getElementById("zoom"),action=="zoom",hovered=="zoom");
-    updateToolbarItem(document.getElementById("palette"),action=="palette",hovered=="palette",selectedImage!=null);
-    updateToolbarItem(document.getElementById("copy"),action=="copy",hovered=="copy",!lastSelectedImage || !lastSelectedImage.id);
-    updateToolbarItem(document.getElementById("upload"),false,hovered=="upload",selectedImage!=null);
+    updateToolbarItem(document.getElementById("palette"),action=="palette",hovered=="palette",noSelection);
+    updateToolbarItem(document.getElementById("copy"),action=="copy",hovered=="copy",noSelection || !lastSelectedImage || !lastSelectedImage.id);
+    updateToolbarItem(document.getElementById("upload"),false,hovered=="upload",noSelection);
     document.getElementById("colorpalette").style.display = action=="palette"?"":"none";
     refreshTip(hideTip);
     
@@ -479,6 +480,7 @@ function changedTarget() {
     else if((map[currentId]!=tempImage) && tempImage.parentElement==mainScreen) {
         mainScreen.removeChild(tempImage);
     }
+    updateToolbar(true);
 }
 
 function convertToMainScreen(x,y) {
