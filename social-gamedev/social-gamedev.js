@@ -200,7 +200,12 @@ function setAction(value) {
         if(action!="select" && action!="copy" && tempImage.parentElement==mainScreen) {
             mainScreen.removeChild(tempImage);
         }
-        
+        if(action=="select") {
+            tempImage.src = blankImageURI;
+        }
+        else if(action=="copy") {
+            tempImage.src = lastSelectedImage.src;
+        }
         
         updateToolbar();
         
