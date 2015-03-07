@@ -105,6 +105,7 @@ function initToolbar() {
    document.getElementById("pencil").addEventListener("mouseover",onTip);
    document.getElementById("palette").addEventListener("mouseover",onTip);
    document.getElementById("copy").addEventListener("mouseover",onTip);
+   document.getElementById("upload").addEventListener("mouseover",onTip);
     
    document.getElementById("select").addEventListener("mouseout",onTip);
    document.getElementById("zoom").addEventListener("mouseout",onTip);
@@ -112,6 +113,7 @@ function initToolbar() {
    document.getElementById("pencil").addEventListener("mouseout",onTip);
    document.getElementById("palette").addEventListener("mouseout",onTip);
    document.getElementById("copy").addEventListener("mouseout",onTip);
+   document.getElementById("upload").addEventListener("mouseover",onTip);
     
    document.getElementById("colorpalette").addEventListener("mousemove",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mousedown",onColorPalette);
