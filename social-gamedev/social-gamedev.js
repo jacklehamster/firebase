@@ -599,6 +599,17 @@ function mousePen(x,y,ispen,type,target,event) {
        }
        break;
     case "palette":  // change color
+        if(event.target && event.target.tagName.toLowerCase()=="img") {
+            var img = event.target;
+            var localX = event.layerX/img.clientWidth/(isMoz?1:globalZoom),
+                localY = event.layerY/img.clientHeight/(isMoz?1:globalZoom);
+            var pendingPenColor = getPixel(img,localX,localY,true);
+            changeColor(document.getElementById("pencil"),pendingPenColor);
+            if(ispen) {
+                penColor = pendingPenColor;
+                closePalette();
+            }
+        }
        break;
   }
   preState = state;
