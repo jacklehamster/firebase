@@ -188,7 +188,7 @@ function readURL(event) {
          console.log(src,lastSelectedImage);
          if(lastSelectedImage) {
              if(lastSelectedImage.id) {
-                var firebaseSrc = firebaseImg.child(img.id).child("src");
+                var firebaseSrc = firebaseImg.child(lastSelectedImage.id).child("src");
                 firebaseSrc.child("src").set(src);
              }
              else {
