@@ -863,6 +863,7 @@ function updateCanvas(canvas) {
    var width = canvas.img.naturalWidth;
    var height = canvas.img.naturalHeight;
    ctx.clearRect(0,0,width,height);
+   ctx.globalCompositeOperation = "source-over";
    ctx.drawImage(canvas.img,0,0,width,height,0,0,canvas.width,canvas.height);
    var commands = canvas.strokes;
    if(!commands.length)
