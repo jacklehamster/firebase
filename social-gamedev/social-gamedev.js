@@ -637,6 +637,7 @@ function changeColor(img,rgbArray) {
 
 function performDrawing(img,x,y,ispen) {
     if(x<0 || y<0 || x>1 || y>1) return;
+    if(img.tagName.toLowerCase()=="canvas")img = img.img;
     ensureImage(img);
     var canvas = getCanvasOverlay(img);
     canvas.pos = img.pos;
