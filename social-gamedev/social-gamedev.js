@@ -694,11 +694,13 @@ function getCanvasOverlay(img) {
             img.canvas.updateFunction = function(snapshot) {
                var o = snapshot.val();
                var commands = img.canvas.strokes;
+               var hadPen = commands.length && commands[commands.length-1].pen;
                commands.push(o);
                img.pendingStrokes = true;
                img.canvas.dirty = true;
-               prepareCommit(img);
                startUpdate();
+               if(!o.pen && hadPen)
+                   prepareCommit(img);
             });
     }
     return img.canvas;
@@ -710,19 +712,11 @@ function clearCanvas(img) {
 }
 
 function prepareCommit(img) {
-    if(!img.timeout) {
-        img.timeout = setTimeout(
-            function() {
-                clearTimeout(img.timeout);
-                img.timeout = null;
-                //  update image using canvas
-                var dataURI = img.canvas.toDataURL();
-                //console.log(img.canvas);
-                img.firebase.set(dataURI);
-                clearCanvas(img);
-            },500
-        );
-    }
+    //  update image using canvas
+    var dataURI = img.canvas.toDataURL();
+    //console.log(img.canvas);
+    img.firebase.set(dataURI);
+    clearCanvas(img);
 }
 
 function startUpdate() {
