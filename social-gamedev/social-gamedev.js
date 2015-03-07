@@ -270,6 +270,10 @@ function setAction(value) {
             }
         }
         
+        if(action=="laser" && targeterCanvas) {
+            targeterCanvas.style.display = "none";
+        }
+        
         action = value;
         
         if(action!="select" && action!="copy" && tempImage.parentElement==mainScreen) {
@@ -625,6 +629,7 @@ function showTargeter(x,y) {
         targeterCanvas.style.position = "absolute";
         document.body.appendChild(targeterCanvas);
     }
+    targeterCanvas.style.display = "";
     var ctx = targeterCanvas.getContext("2d");
     ctx.clearRect(0,0,screenWidth,screenHeight);
     ctx.beginPath();
