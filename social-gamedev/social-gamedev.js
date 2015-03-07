@@ -47,7 +47,7 @@ function init(event) {
     document.addEventListener("mouseover",mouseAction);
     
     initToolbar();
-    debugTest();
+//    debugTest();
     
     firebaseMap.on("child_added",
         function(snapshot) {
