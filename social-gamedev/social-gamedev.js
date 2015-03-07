@@ -51,7 +51,6 @@ function init(event) {
     
     firebaseMap.on("child_added",
         function(snapshot) {
-            return;
             var o = snapshot.val();
             var keySplit = snapshot.key().split("_");
             console.log(o);
@@ -60,7 +59,7 @@ function init(event) {
             var img = createImage();
             img.pos = {x:x,y:y};
             img.id = o.id;
-            ensureImage(img);
+            ensureImage(img,true,true;
             mainScreen.appendChild(img);
             updateScreen();
 //            attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
@@ -473,7 +472,7 @@ function convertToScreen(x,y) {
 /*
  *  Ensure that the image was properly recorded in Firebase
  */
-function ensureImage(img) {
+function ensureImage(img,ignoreSrc,ignoreAdd) {
     if(img==selectedImageTemp) {
         selectedImageTemp = createImage();
     }
@@ -483,9 +482,11 @@ function ensureImage(img) {
     if(!img.firebase) {
         var firebaseSrc = firebaseImg.child(img.id).child("src");
 //        console.log(img.src);
-        firebaseSrc.set(img.src);
+        if(!ignoreSrc)
+            firebaseSrc.set(img.src);
         attachFirebase (img,firebaseSrc);
-        addImageToFirebase(img,img.pos.x,img.pos.y);
+        if(!ignoreAdd)
+            addImageToFirebase(img,img.pos.x,img.pos.y);
     }
 }
 
