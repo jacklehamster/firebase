@@ -608,7 +608,7 @@ function mousePen(x,y,ispen,type,target,event) {
             if(ispen) {
                 penColor = pendingPenColor;
             }
-            if(type=="mouseup") {
+            if(type=="mouseup" && event.target!=document.getElementById("palette")) {
                 closePalette();
             }
         }
