@@ -440,12 +440,12 @@ function changedTarget() {
         mainScreen.removeChild(selectedImageTemp);
     }
     
-    
-    if(!map[currentId]) {
+
+    if(!map[currentId] && selectedImage) {
         tempImage.pos = currentPos;
         mainScreen.appendChild(tempImage);
     }
-    else if(map[currentId]!=tempImage && tempImage.parentElement==mainScreen) {
+    else if((map[currentId]!=tempImage || !selectedImage) && tempImage.parentElement==mainScreen) {
         mainScreen.removeChild(tempImage);
     }
 }
