@@ -423,14 +423,12 @@ function changedTarget() {
     var currentId = currentPos.x + "_" + currentPos.y;
     var selectedId = currentSelection ? currentSelection.x+"_"+currentSelection.y : null;
     
-    if(selectedId && (!map[selectedId] || map[selectedId]==tempImage)) {
-        if(tempImage.parentElement==mainScreen)
-            mainScreen.removeChild(tempImage);
+    if(selectedId && !map[selectedId]) {
         selectedImageTemp.pos = currentSelection;
         mainScreen.appendChild(selectedImageTemp);
         lastSelectedImage = selectedImage = selectedImageTemp;
     }
-    else if((!selectedId || map[selectedId] && map[selectedId]!=selectedImageTemp) && selectedImageTemp.parentElement==mainScreen) {
+    else if(!selectedId && selectedImageTemp.parentElement==mainScreen) {
         mainScreen.removeChild(selectedImageTemp);
     }
     
