@@ -177,6 +177,33 @@ function performUpload() {
 }
 
 /**
+ * readURL - reads the bytes from the uploaded image, and send to Firebase
+ * */
+function readURL(input) {
+   if (input.files && input.files[0]) {
+       var reader = new FileReader();
+       reader.onload = function (e) {
+         var src = e.target.result; // src id a data-uri
+         if(lastSelectedImage) {
+             if(lastSelectedImage.id) {
+                var firebaseSrc = firebaseImg.child(img.id).child("src");
+                firebaseSrc.child("src").set(src);
+             }
+             else {
+                 lastSelectedImage.src = src;
+                 ensureImage(lastSelectedImage);
+             }
+         }
+
+//         lastSelectedImage.src = src;
+         
+         
+       };
+       reader.readAsDataURL(input.files[0]);
+   }
+}
+
+/**
  *    Selected a tool on the toolbar
  * */
 function onToolbar(event) {
