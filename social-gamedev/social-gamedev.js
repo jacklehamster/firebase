@@ -563,6 +563,7 @@ function mousePen(x,y,ispen,type,target,event) {
             if(event.target==drawnImage || drawnImage && event.target==drawnImage.canvas) {
                var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
                    localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
+               console.log(drawnImage,localX,localY,ispen);
                performDrawing(drawnImage,localX,localY,ispen);
             }
         }
