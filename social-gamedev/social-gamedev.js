@@ -628,10 +628,10 @@ function showTargeter(x,y) {
     var ctx = targeterCanvas.getContext("2d");
     ctx.clearRect(0,0,screenWidth,screenHeight);
     ctx.beginPath();
-    ctx.moveTo(x-100,y);
-    ctx.lineTo(x+100,y);
-    ctx.moveTo(x,y-100);
-    ctx.lineTo(x,y+100);
+    ctx.moveTo(x-screenWidth,y);
+    ctx.lineTo(x+screenWidth,y);
+    ctx.moveTo(x,y-screenHeight);
+    ctx.lineTo(x,y+screenHeight);
     ctx.stroke();
 }
 
