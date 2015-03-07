@@ -161,7 +161,7 @@ function updateToolbar(hideTip) {
 function performUpload() {
 //    <input type='file'  id="theFile" onchange="readURL(this);" style="visibility:hidden" />
     var uploader = document.getElementById("uploader");
-    if(uploader) {
+    if(!uploader) {
         uploader = document.createElement("input");
         uploader.type = "file";
         uploader.id = "uploader";
