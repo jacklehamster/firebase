@@ -8,6 +8,8 @@ function attachFirebase(image,firebaseLocation,options) {
    image.firebase = typeof(firebaseLocation)=="string"?new Firebase(firebaseLocation):firebaseLocation;
    image.setAttribute("firebase-src",image.firebase.ref().toString());
    
+   var bytes = 0;
+   var startTime = new Date().getTime();
    image.firebase.on('value',
       image.firebaseRefresh = function(snapshot) {
          var o = snapshot.val();
@@ -23,6 +25,15 @@ function attachFirebase(image,firebaseLocation,options) {
                      return;
                  }
                  image.preTime = postTime;
+             }
+         }
+         if(options.showbandwidth) {
+             var now = new Date().getTime();
+             var diffTime = now - startTime;
+             bytes += o.length*2;
+             if(diffTime>1000) {
+                 console.log((bytes/1000)/(diffTime/1000) + "Kb/s");
+                 bytes = 0;
              }
          }
          image.src = postSplit.slice(0,2).join(";");
@@ -57,9 +68,9 @@ window.addEventListener("load",
          var locationAttribute = img.attributes['firebase-src'];
          if(locationAttribute) {
             var options = {};
-            if(img.attributes['chrono']) {
-                options.chrono = true;
-            }
+            options.chrono = img.attributes['chrono'];
+            options.showbandwidth = img.attributes['showbandwidth'];
+            
             if(img.attributes['nosync']) {
               loadFirebase(img,locationAttribute.value);
             }
