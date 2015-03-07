@@ -141,7 +141,7 @@ function updateToolbar(hideTip) {
     updateToolbarItem(document.getElementById("pencil"),action=="pencil",hovered=="pencil",currentSelection==null);
     updateToolbarItem(document.getElementById("zoom"),action=="zoom",hovered=="zoom");
     updateToolbarItem(document.getElementById("palette"),action=="palette",hovered=="palette",currentSelection==null);
-    updateToolbarItem(document.getElementById("copy"),action=="copy",hovered=="copy",lastSelectedImage && lastSelectedImage.id);
+    updateToolbarItem(document.getElementById("copy"),action=="copy",hovered=="copy",!lastSelectedImage || !lastSelectedImage.id);
     document.getElementById("colorpalette").style.display = action=="palette"?"":"none";
     refreshTip(hideTip);
     
