@@ -30,6 +30,7 @@ var lastSelectedImage;
 var mainScreen;
 var penColor = [0,0,0,255];
 var brushSize = 2;
+var targeterCanvas;
 
 /**
  *    First called on load
@@ -616,11 +617,30 @@ function moveImage(img,x,y) {
     img.dispatchEvent(new CustomEvent('move',{detail:{from:from,to:{x:x,y:y}}}));
 }
 
+function showTargeter(x,y) {
+    if(!targeterCanvas) {
+        targeterCanvas = document.createElement("canvas");
+        targeterCanvas.width = screenWidth;
+        targeterCanvas.height = screenHeight;
+        targeterCanvas.style.position = "absolute";
+        document.body.appendChild(targeterCanvas);
+    }
+    var ctx = targeterCanvas.getContext("2d");
+    ctx.clearRect(0,0,screenWidth,screenHeight);
+    ctx.beginPath();
+    ctx.moveTo(x-100,y);
+    ctx.lineTo(x+100,y);
+    ctx.moveTo(x,y-100);
+    ctx.lineTo(x,y+100);
+    ctx.stroke();
+}
+
 function mousePen(x,y,ispen,type,target,event) {
   var mainScreenPos = convertToMainScreen(x,y);
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
      case "laser":
+         showTargeter(x,y);
          break;
      case "copy":   //  clone a sprite
         var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
