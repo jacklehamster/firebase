@@ -60,11 +60,16 @@ function init(event) {
             if(!img) {
                 var img = createImage();
                 img.id = o.id;
+                img.pos = {x:x,y:y};
                 ensureImage(img,true,true);
                 mainScreen.appendChild(img);
+                updateScreen();
             }
-            img.pos = {x:x,y:y};
-            updateScreen();
+            else if(img.pos.x!=x || img.pos.y!=y) {
+                img.pos.x = x;
+                img.pos.y = y;
+                updateScreen();
+            }
 //            attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
 //    mainScreen.appendChild(img);
 //    window.dok = img;
