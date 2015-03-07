@@ -556,7 +556,7 @@ function mousePen(x,y,ispen,type,target,event) {
             doUpdate = true;
         }
         if(type=="mousedown") {
-            addImageToFirebase(lastImageSelected,currentSelection.x,currentSelection.y);
+            addImageToFirebase(lastSelectedImage,currentSelection.x,currentSelection.y);
         }
         if(doUpdate) {
             changedTarget();
