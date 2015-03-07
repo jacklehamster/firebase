@@ -441,7 +441,7 @@ function changedTarget() {
     }
     
 
-    if(!map[currentId] && selectedImage) {
+    if(!map[currentId]) {
         tempImage.pos = currentPos;
         mainScreen.appendChild(tempImage);
     }
