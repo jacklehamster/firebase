@@ -313,11 +313,12 @@ function updateScreen(options) {
         
         var imgBorder = 
             hovered && !options.leaveScene?"2px solid "+(img==tempImage && !selected?"pink":"red"):
-            selected?"1px solid #00FF00":"";
+            selected?"2px solid #00FF00":
+            "2px solid #cccccc";
         if(img.style.border!=imgBorder) {
             img.style.border = imgBorder;
-            img.style.margin = 
-                hovered || selected?"":"1px";
+            img.style.margin = "";
+//                hovered || selected?"":"1px";
         }
         if(tag=="img")    
             map[id] = img;
