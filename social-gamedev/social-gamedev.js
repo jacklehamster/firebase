@@ -425,6 +425,7 @@ function changedTarget() {
     
     if(selectedId && !map[selectedId]) {
         selectedImageTemp.pos = currentSelection;
+        console.log("HERE");
         mainScreen.appendChild(selectedImageTemp);
         lastSelectedImage = selectedImage = selectedImageTemp;
     }
