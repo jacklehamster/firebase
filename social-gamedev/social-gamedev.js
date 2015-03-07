@@ -491,7 +491,7 @@ function debugTest() {
  *    Callback function for drawing.
  * */
 function mouseAction(event) {
-  if(event.target.id=="brushsizemeter") {
+  if(event.target.id=="brushsizemeter" || event.target.id=="upload") {
       return;
   }
   var ispen = event.type!="mouseout" && event.type!="mouseup" && (event.buttons!==undefined?event.buttons:event.which);
