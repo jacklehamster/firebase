@@ -51,10 +51,11 @@ function init(event) {
     
     firebaseMap.on("child_added",
         function(snapshot) {
+            return;
             var o = snapshot.val();
             var keySplit = snapshot.key().split("_");
-//            console.log(o);
-//            console.log(keySplit);
+            console.log(o);
+            console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
             var img = createImage();
             img.pos = {x:x,y:y};
