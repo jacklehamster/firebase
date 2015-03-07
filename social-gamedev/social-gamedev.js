@@ -545,7 +545,7 @@ function mousePen(x,y,ispen,type,target,event) {
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
      case "copy":   //  clone a sprite
-         var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
+        var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
         if(currentPos.x != closest.x || currentPos.y != closest.y) {
             
             if(selectedImage) {
@@ -558,7 +558,7 @@ function mousePen(x,y,ispen,type,target,event) {
             currentPos = closest;
             doUpdate = true;
         }
-        if(type=="mousedown") {
+        if(type=="mouseup" && event.target!=document.getElementById("copy")) {
             ensureImage(tempImage);
         }
         if(doUpdate) {
