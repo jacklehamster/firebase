@@ -59,7 +59,7 @@ function init(event) {
             var img = createImage();
             img.pos = {x:x,y:y};
             img.id = o.id;
-            ensureImage(img,true,true;
+            ensureImage(img,true,true);
             mainScreen.appendChild(img);
             updateScreen();
 //            attachFirebase (img,"https://dynamic-image.firebaseio.com/images/0412c1fbf317/83c697327b6e/3d5d0d62/src");
