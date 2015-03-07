@@ -179,7 +179,8 @@ function performUpload() {
 /**
  * readURL - reads the bytes from the uploaded image, and send to Firebase
  * */
-function readURL(input) {
+function readURL(event) {
+    var input = event.currentTarget;
    if (input.files && input.files[0]) {
        var reader = new FileReader();
        reader.onload = function (e) {
