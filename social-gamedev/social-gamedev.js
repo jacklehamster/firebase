@@ -195,11 +195,13 @@ function setAction(value) {
             }
         }
         
-        if(action=="select" && tempImage.parentElement==mainScreen) {
+        action = value;
+        
+        if(action!="select" && action!="copy" && tempImage.parentElement==mainScreen) {
             mainScreen.removeChild(tempImage);
         }
         
-        action = value;
+        
         updateToolbar();
         
         if(action=="palette") {
