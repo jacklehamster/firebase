@@ -159,7 +159,21 @@ function updateToolbar(hideTip) {
 }
 
 function performUpload() {
-    
+//    <input type='file'  id="theFile" onchange="readURL(this);" style="visibility:hidden" />
+    var uploader = document.getElementById("uploader");
+    if(uploader) {
+        uploader = document.createElement("input");
+        uploader.type = "file";
+        uploader.id = "uploader";
+        uploader.addEventListener("change",readURL);
+        uploader.style.visibility = "hidden";
+        document.body.appendChild(uploader);
+    }
+   if(uploader && document.createEvent) {
+      var evt = document.createEvent("MouseEvents");
+      evt.initEvent("click", true, false);
+      uploader.dispatchEvent(evt);
+   }    
 }
 
 /**
