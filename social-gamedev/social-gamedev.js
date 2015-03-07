@@ -57,7 +57,7 @@ function init(event) {
 //            console.log(o);
  //           console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
-            var img = document.getElementById(o.id);
+            var img = null;// document.getElementById(o.id);
             if(!img) {
                 var img = createImage();
                 img.id = o.id;
