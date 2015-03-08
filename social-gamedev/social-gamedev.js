@@ -290,9 +290,11 @@ function setAction(value) {
         }
         if(action=="select") {
             tempImage.src = blankDataURI;
+            delete tempImage.path;
         }
         else if(action=="copy") {
             tempImage.src = lastSelectedImage.src;
+            tempImage.path = lastSelectedImage.path;
         }
         
         updateToolbar();
