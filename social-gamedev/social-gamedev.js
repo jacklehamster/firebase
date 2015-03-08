@@ -592,7 +592,7 @@ function findClosestXY(mouseX,mouseY,offsetX,offsetY) {
 
 function convertToScreen(x,y) {
     var scale = calculateScale(-shiftY+y);
-    var valY = (((-shiftY + y)*32)*scale + screenHeight*3/4);
+    var valY = (((-shiftY + y)*32)*scale + screenHeight/2);
     var valX = (((-shiftX + x)*32)*scale + screenWidth/2);
     return {x:valX,y:valY};
 }
