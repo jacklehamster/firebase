@@ -126,8 +126,8 @@ function initToolbar() {
    document.getElementById("eraser").addEventListener("mouseout",onTip);
    document.getElementById("palette").addEventListener("mouseout",onTip);
    document.getElementById("copy").addEventListener("mouseout",onTip);
-   document.getElementById("upload").addEventListener("mouseover",onTip);
-   document.getElementById("laser").addEventListener("mouseover",onTip);
+   document.getElementById("upload").addEventListener("mouseout",onTip);
+   document.getElementById("laser").addEventListener("mouseout",onTip);
     
    document.getElementById("colorpalette").addEventListener("mousemove",onColorPalette);
    document.getElementById("colorpalette").addEventListener("mousedown",onColorPalette);
@@ -801,10 +801,14 @@ function mousePen(x,y,ispen,type,target,event) {
         if(currentSelection) {
             var drawnImage = map[currentSelection.x+"_"+currentSelection.y];
             if(event.target==drawnImage || drawnImage && event.target==drawnImage.canvas) {
-               var localX = event.layerX/drawnImage.clientWidth/(isMoz?1:globalZoom),
-                   localY = event.layerY/drawnImage.clientHeight/(isMoz?1:globalZoom);
+            
+                
+               var localX = event.layerX/(isMoz?1:globalZoom),
+                   localY = event.layerY/(isMoz?1:globalZoom);
+               var percentX = localX/drawnImage.clientWidth,
+                   percentY = localY/drawnImage.clientHeight;
                //console.log(drawnImage,localX,localY,ispen);
-               performDrawing(drawnImage,localX,localY,ispen);
+               performDrawing(drawnImage,percentX,percentY,ispen);
             }
         }
         break;
@@ -888,8 +892,49 @@ function changeColor(img,rgbArray) {
     }
 }
 
+function extendDrawing(img,xd,yd) {
+    if(xd!=0) {
+        //  extend horizontally
+        var canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth * 2;
+        canvas.height = img.naturalHeight;
+        canvas.getContext("2d").drawImage(img,canvas.width/2,0);
+        img.src = canvas.toDataURL();
+        updateScreen();
+    }
+    else if(yd<0) {
+        //  extend vertically
+        var canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight*2;
+        canvas.getContext("2d").drawImage(img,0,-canvas.height);
+        img.src = canvas.toDataURL();
+        updateScreen();
+    }
+}
+
 function performDrawing(img,x,y,ispen) {
-    if(x<0 || y<0 || x>1 || y>1) return;
+    if(x<0 || y<0 || x>1 || y>1) {
+        if(ispen && action=="pencil") {
+            if(x>=0 && x<=1) {
+                if(-y<.5) {
+                    extendDrawing(0,-1);
+                }
+                else if(y-1<.5) {
+                    extendDrawing(0,1);
+                }
+            }
+            else if(y>=0 && y<=1) {
+                if(0-x<.5) {
+                    extendDrawing(img,-1,0);
+                }
+                else if(x-1<.5) {
+                    extendDrawing(img,1,0);
+                }
+            }
+        }
+        return;
+    }
     if(img.tagName.toLowerCase()=="canvas")img = img.img;
     ensureImage(img);
     var canvas = getCanvasOverlay(img);
