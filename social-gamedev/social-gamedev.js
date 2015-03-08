@@ -679,10 +679,11 @@ function shootLaser(x,y,target) {
     ctx.stroke();
     
     if(!target.shot) {
+        target.shot = true;
         setAlpha(target,.2);
         var timeout2 = setTimeout(
             function() {
-                target.shot = false;
+                delete target.shot;
                 setAlpha(target,1);
                 clearTimeout(timeout2);
             },1000
