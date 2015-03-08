@@ -413,12 +413,14 @@ function updateScreen(options) {
     for(var i=0;i<imgs.length;i++) {
         var img = imgs[i];
         var tag = img.tagName.toLowerCase();
-        var id = img.pos.x + "_" + img.pos.y;
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(img.pos.y-shiftY);
         
         var imgWidth = tag=="canvas" && !img.img?img.width:scale*(tag=="img"?img.naturalWidth:tag=="canvas"?img.img.naturalWidth:128);
         var imgHeight = tag=="canvas" && !img.img?img.height:scale*(tag=="img"?img.naturalHeight:tag=="canvas"?img.img.naturalHeight:128);
+        
+        img.setAttribute("pos",img.pos.x + "_" + img.pos.y);
+        
         img.style.width = imgWidth+"px";
         img.style.height = imgHeight+"px";
         
@@ -433,13 +435,13 @@ function updateScreen(options) {
         var selected = selectedId==id;
         
         var imgBorder = 
-            !editMode?"":
+            !editMode || img.readonly?"":
             hovered && !options.leaveScene?"2px solid "+(img==tempImage && !selected?"pink":"red"):
             selected?"2px solid #00FF00":
             "2px solid #cccccc";
         if(img.style.border!=imgBorder) {
             img.style.border = imgBorder;
-            img.style.margin = !editMode?"2px":"";
+            img.style.margin = !editMode || img.readonly?"2px":"";
         }
         if(tag=="img")    
             map[id] = img;
