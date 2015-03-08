@@ -916,7 +916,7 @@ function extendDrawing(img,xd,yd) {
 
 function performDrawing(img,x,y,ispen) {
     if(x<0 || y<0 || x>1 || y>1) {
-        if(ispen && action=="pencil") {
+/*        if(ispen && action=="pencil") {
             if(x>=0 && x<=1) {
                 if(y>-.5) {
                     extendDrawing(0,-1);
@@ -933,7 +933,7 @@ function performDrawing(img,x,y,ispen) {
                     extendDrawing(img,1,0);
                 }
             }
-        }
+        }*/
         return;
     }
     if(img.tagName.toLowerCase()=="canvas")img = img.img;
