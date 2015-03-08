@@ -411,7 +411,7 @@ function updateScreen(options) {
         var tag = img.tagName.toLowerCase();
         var id = img.pos.x + "_" + img.pos.y;
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
-        var scale = calculateScale(screenPos.y);
+        var scale = calculateScale(img.pos.y-shiftY);
         
         var imgWidth = scale*(tag=="img"?img.naturalWidth:tag=="canvas"?img.img.naturalWidth:128);
         var imgHeight = scale*(tag=="img"?img.naturalHeight:tag=="canvas"?img.img.naturalHeight:128);
@@ -447,7 +447,7 @@ function updateScreen(options) {
 }
 
 function calculateScale(y) {
-    return Math.pow(y,.8) / 1000;
+    return Math.pow(y,.8) / 100;
 }
 
 /**
@@ -568,7 +568,7 @@ function findClosestXY(mouseX,mouseY,offsetX,offsetY) {
             var ix = Math.round(x+shiftX);
             var iy = Math.round(y+shiftY);
             var pos = convertToScreen(ix,iy);
-            var scale = calculateScale(pos.y);
+            var scale = calculateScale(pos.y-shiftY);
             var diffY = (pos.y+offsetY*scale - mouseY); 
             var diffX = (pos.x+offsetX*scale - mouseX);
             var dist = Math.sqrt(diffY*diffY + diffX*diffX);
