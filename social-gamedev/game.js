@@ -1,3 +1,7 @@
-var dok = createSprite(dobukiDataURI);
+window.addEventListener("load",initGame);
 
-document.body.appendChild(dok);
+var dok;
+function initGame() {
+  dok = createSprite(dobukiDataURI);
+  document.body.appendChild(dok);
+}
