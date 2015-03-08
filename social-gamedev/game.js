@@ -5,5 +5,5 @@ function initGame() {
   dok = createSprite(dobukiDataURI);
   changeZoom(dok,.5);
   dok.pos = {x:0,y:0};
-  mainScreen.appendChild(dok);
+  document.getElementById("screen").appendChild(dok);
 }
