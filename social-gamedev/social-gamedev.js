@@ -419,7 +419,8 @@ function updateScreen(options) {
         var imgWidth = tag=="canvas" && !img.img?img.width:scale*(tag=="img"?img.naturalWidth:tag=="canvas"?img.img.naturalWidth:128);
         var imgHeight = tag=="canvas" && !img.img?img.height:scale*(tag=="img"?img.naturalHeight:tag=="canvas"?img.img.naturalHeight:128);
         
-        img.setAttribute("pos",img.pos.x + "_" + img.pos.y);
+        var pos = img.pos.x + "_" + img.pos.y;
+        img.setAttribute("pos",pos);
         
         img.style.width = imgWidth+"px";
         img.style.height = imgHeight+"px";
@@ -431,8 +432,8 @@ function updateScreen(options) {
         if(zIndex!=img.style.zIndex) {
             img.style.zIndex = zIndex;
         }
-        var hovered = action=="select" && currentId==id;
-        var selected = selectedId==id;
+        var hovered = action=="select" && currentId==pos;
+        var selected = selectedId==pos;
         
         var imgBorder = 
             !editMode || img.readonly?"":
@@ -444,7 +445,7 @@ function updateScreen(options) {
             img.style.margin = !editMode || img.readonly?"2px":"";
         }
         if(tag=="img")    
-            map[id] = img;
+            map[pos] = img;
         if(tag=="canvas" && img.dirty) {
             delete img.dirty;
             updateCanvas(img);
