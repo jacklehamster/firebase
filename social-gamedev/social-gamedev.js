@@ -693,6 +693,7 @@ function shootLaser(x,y,target) {
     }    
     else {
         moveImage(target,target.pos.x+100*(Math.random()-.5),target.pos.y+100*(Math.random()-.5));
+        updateScreen();
     }
     
     var timeout = setTimeout(
