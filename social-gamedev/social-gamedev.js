@@ -2,6 +2,7 @@ var firebase = new Firebase('https://art-depot.firebaseio.com/artdepot/');
 var firebaseMap = new Firebase("https://art-depot.firebaseio.com/map");
 var firebaseImg = new Firebase("https://art-depot.firebaseio.com/images");
 
+var editMode = true;
 var action="select";
 var hovered = null;
 var shiftX=0,shiftY=0;
@@ -214,6 +215,10 @@ function readURL(event) {
    }
 }
 
+function applyOptions() {
+    document.getElementById("tools").style.visibility = editMode?"":"hidden";
+}
+
 /**
  *    Selected a tool on the toolbar
  * */
@@ -221,6 +226,10 @@ function onToolbar(event) {
     if(!event.target.disabled) {
         var newAction = event.target.id;
         switch(newAction) {
+            case "options":
+                editMode = !editMode;
+                applyOptions();
+                break;
             case "upload":
                 performUpload();
                 break;
