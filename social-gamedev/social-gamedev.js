@@ -641,12 +641,20 @@ function showTargeter(x,y) {
     ctx.stroke();
 }
 
+function shootLaser(x,y,target) {
+    console.log(target);
+
+}
+
 function mousePen(x,y,ispen,type,target,event) {
   var mainScreenPos = convertToMainScreen(x,y);
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
      case "laser":
          showTargeter(x,y);
+         if(type=="mousedown") {
+             shootLaser(x,y,target);
+         }
          break;
      case "copy":   //  clone a sprite
         var closest = findClosestXY(mainScreenPos.x,mainScreenPos.y,0,-32);
