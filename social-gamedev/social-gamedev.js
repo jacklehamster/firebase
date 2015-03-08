@@ -668,10 +668,10 @@ function shootLaser(x,y,target) {
         function() {
             var sourceRatio = (10-i)/10;
             var destRatio = i/10;
+            var sourceRatioNext = (10-(i+2))/10;
+            var destRatioNext = (i+2)/10;
             i++;
-            var sourceRatioNext = (10-i)/10;
-            var destRatioNext = i/10;
-            
+
             laserCanvas.style.display = "";
             var ctx = laserCanvas.getContext("2d");
             ctx.clearRect(0,0,screenWidth,screenHeight);
@@ -681,6 +681,7 @@ function shootLaser(x,y,target) {
             ctx.moveTo(orgPosX2*sourceRatio+x*destRatio,orgPosY*sourceRatio+y*destRatio);
             ctx.lineTo(orgPosX2*sourceRatioNext+x*destRatioNext,orgPosY*sourceRatioNext+y*destRatioNext);
             ctx.strokeStyle = "#FF0000";
+            ctx.lineWidth=3;
             ctx.stroke();
             
             
