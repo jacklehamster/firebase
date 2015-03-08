@@ -57,8 +57,9 @@ function enterFrame() {
   //  handle lasers
   for(var i in lasers) {
     var laser = lasers[i];
-    laser.pos.x += laser.direction;
-    if(globalFrame-laser.born>20) {
+    laser.pos.x += laser.direction*2;
+    if(globalFrame-laser.born>50) {
+      laser.parentElement.removeChild(laser);
       delete lasers[i];
     }
     doUpdateScreen= true;
@@ -83,7 +84,7 @@ function shootLaserBeam(x,y,direction) {
   img.src = beamDataURI;
   img.style.position = "absolute";
   img.direction = direction;
-  img.pos = {x:x,y:y};
+  img.pos = {x:x,y:y-100+50*Math.random()};
   img.readonly= true;
   lasers[img.id] = img;
   document.getElementById("screen").appendChild(img);
