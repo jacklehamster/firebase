@@ -217,6 +217,7 @@ function readURL(event) {
 
 function applyOptions() {
     document.getElementById("tools").style.visibility = editMode?"":"hidden";
+    document.getElementById("tooltips").style.visibility = editMode?"":"hidden";
 }
 
 /**
