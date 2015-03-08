@@ -663,7 +663,7 @@ function shootLaser(x,y,target) {
     ctx.beginPath();
     ctx.moveTo(orgPosX1,orgPosY);
     ctx.lineTo(x,y);
-    ctx.moveTo(orgPosX2,orgPos2);
+    ctx.moveTo(orgPosX2,orgPosY);
     ctx.lineTo(x,y);
     ctx.strokeStyle = "#FF0000";
     ctx.lineWidth=3;
