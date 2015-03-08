@@ -31,7 +31,7 @@ function attachFirebase(image,firebaseLocation,options) {
              var now = new Date().getTime();
              var diffTime = now - startTime;
              bytes += o.length*2;
-             if(diffTime>1000) {
+             if(diffTime>500) {
                  showBandwidth(image,Math.round((bytes/1000)/(diffTime/1000)*10)/10 + " Kb/s");
                  startTime = now;
                  bytes = 0;
