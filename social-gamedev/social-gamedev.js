@@ -898,8 +898,9 @@ function extendDrawing(img,xd,yd) {
         var canvas = document.createElement("canvas");
         canvas.width = img.naturalWidth * 2;
         canvas.height = img.naturalHeight;
-        canvas.getContext("2d").drawImage(img,canvas.width/2,0);
+        canvas.getContext("2d").drawImage(img,canvas.width/4,0);
         img.src = canvas.toDataURL();
+        console.log(img.src);
         updateScreen();
     }
     else if(yd<0) {
@@ -907,7 +908,7 @@ function extendDrawing(img,xd,yd) {
         var canvas = document.createElement("canvas");
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight*2;
-        canvas.getContext("2d").drawImage(img,0,-canvas.height);
+        canvas.getContext("2d").drawImage(img,0,0);
         img.src = canvas.toDataURL();
         updateScreen();
     }
@@ -917,7 +918,7 @@ function performDrawing(img,x,y,ispen) {
     if(x<0 || y<0 || x>1 || y>1) {
         if(ispen && action=="pencil") {
             if(x>=0 && x<=1) {
-                if(-y<.5) {
+                if(y>-.5) {
                     extendDrawing(0,-1);
                 }
                 else if(y-1<.5) {
@@ -925,7 +926,7 @@ function performDrawing(img,x,y,ispen) {
                 }
             }
             else if(y>=0 && y<=1) {
-                if(0-x<.5) {
+                if(x>-.5) {
                     extendDrawing(img,-1,0);
                 }
                 else if(x-1<.5) {
