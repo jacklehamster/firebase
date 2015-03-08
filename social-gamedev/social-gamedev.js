@@ -651,7 +651,8 @@ function showTargeter(x,y) {
 }
 
 function shootLaser(x,y,target) {
-    
+    if(target.tagName.toLowerCase()=="canvas")
+        target = target.img;
     if(!laserCanvas) {
         laserCanvas = document.createElement("canvas");
         laserCanvas.width = screenWidth;
@@ -677,14 +678,19 @@ function shootLaser(x,y,target) {
     ctx.lineWidth=3;
     ctx.stroke();
     
-    setAlpha(target,.3);
-    var timeout2 = setTimeout(
-        function() {
-            setAlpha(target,1);
-            clearTimeout(timeout2);
-        },1000
-    );
-    
+    if(!target.shot) {
+        setAlpha(target,.2);
+        var timeout2 = setTimeout(
+            function() {
+                target.shot = false;
+                setAlpha(target,1);
+                clearTimeout(timeout2);
+            },1000
+        );
+    }    
+    else {
+        moveImage(target,target.pos.x+100*(Math.random()-.5),target.pos.y+100*(Math.random()-.5));
+    }
     
     var timeout = setTimeout(
         function() {
