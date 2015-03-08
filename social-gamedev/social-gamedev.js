@@ -644,7 +644,40 @@ function showTargeter(x,y) {
 
 function shootLaser(x,y,target) {
     console.log(target);
-
+    var orgPosX1 = 0;
+    var orgPosX2 = screenWidth;
+    var orgPosY = screenHeight;
+    var lines = [];
+    for(var i=0;i<=10;i++) {
+        var sourceRatio = (10-i)/10;
+        var destRatio = i/10;
+        lines.push([orgPosX1,y-orgPosY]);
+    }
+    var i=0;
+    var interval = setInterval(
+        function() {
+            var sourceRatio = (10-i)/10;
+            var destRatio = i/10;
+            i++;
+            var sourceRatioNext = (10-i)/10;
+            var destRatioNext = i/10;
+            
+            var ctx = targeterCanvas.getContext("2d");
+            ctx.beginPath();
+            ctx.moveTo(orgPosX1*sourceRatio+x*destRatio,orgPosY*sourceRatio+y*destRatio);
+            ctx.lineTo(orgPosX1*sourceRatioNext+x*destRatioNext,orgPosY*sourceRatioNext+y*destRatioNext);
+            ctx.moveTo(orgPosX2*sourceRatio+x*destRatio,orgPosY*sourceRatio+y*destRatio);
+            ctx.lineTo(orgPosX2*sourceRatioNext+x*destRatioNext,orgPosY*sourceRatioNext+y*destRatioNext);
+            ctx.strokeStyle = "#FF0000";
+            ctx.stroke();
+            
+            
+            if(i==10) {
+                targeterCanvas.style.display = "none";
+                clearInterval(interval);
+            }
+        },50
+    );
 }
 
 function mousePen(x,y,ispen,type,target,event) {
