@@ -653,9 +653,6 @@ function showTargeter(x,y) {
 }
 
 function shootLaser(x,y,target) {
-    if(target.parentElement!=mainScreen) {
-        return;
-    }
     if(target.tagName.toLowerCase()=="canvas")
         target = target.img;
     if(!laserCanvas) {
@@ -683,28 +680,30 @@ function shootLaser(x,y,target) {
     ctx.lineWidth=3;
     ctx.stroke();
     
-    if(!target.shot) {
-        target.shot = true;
-        setAlpha(target,.2);
-        var timeout2 = setTimeout(
-            function() {
-                delete target.shot;
-                setAlpha(target,1);
-                clearTimeout(timeout2);
-            },1000
-        );
-    }    
-    else {
-        moveImage(target,target.pos.x+100*(Math.random()-.5),target.pos.y+100*(Math.random()-.5));
-        updateScreen();
-    }
-    
     var timeout = setTimeout(
         function() {
             laserCanvas.style.display = "none";
             clearTimeout(timeout);
         },100
     );
+    
+    if(target.parentElement==mainScreen) {
+        if(!target.shot) {
+            target.shot = true;
+            setAlpha(target,.2);
+            var timeout2 = setTimeout(
+                function() {
+                    delete target.shot;
+                    setAlpha(target,1);
+                    clearTimeout(timeout2);
+                },1000
+            );
+        }    
+        else {
+            moveImage(target,target.pos.x+100*(Math.random()-.5),target.pos.y+100*(Math.random()-.5));
+            updateScreen();
+        }
+    }
 }
 
 function mousePen(x,y,ispen,type,target,event) {
