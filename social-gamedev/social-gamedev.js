@@ -657,39 +657,23 @@ function shootLaser(x,y,target) {
     var orgPosX1 = 0;
     var orgPosX2 = screenWidth;
     var orgPosY = screenHeight;
-    var lines = [];
-    for(var i=0;i<=10;i++) {
-        var sourceRatio = (10-i)/10;
-        var destRatio = i/10;
-        lines.push([orgPosX1,y-orgPosY]);
-    }
-    var i=0;
-    var interval = setInterval(
+    
+    var ctx = laserCanvas.getContext("2d");
+    ctx.clearRect(0,0,screenWidth,screenHeight);
+    ctx.beginPath();
+    ctx.moveTo(orgPosX1,orgPosY);
+    ctx.lineTo(x,y);
+    ctx.moveTo(orgPosX2,orgPos2);
+    ctx.lineTo(x,y);
+    ctx.strokeStyle = "#FF0000";
+    ctx.lineWidth=3;
+    ctx.stroke();
+    
+    var timeout = setTimeout(
         function() {
-            var sourceRatio = (10-i)/10;
-            var destRatio = i/10;
-            var sourceRatioNext = (10-(i+2))/10;
-            var destRatioNext = (i+2)/10;
-            i++;
-
-            laserCanvas.style.display = "";
-            var ctx = laserCanvas.getContext("2d");
-            ctx.clearRect(0,0,screenWidth,screenHeight);
-            ctx.beginPath();
-            ctx.moveTo(orgPosX1*sourceRatio+x*destRatio,orgPosY*sourceRatio+y*destRatio);
-            ctx.lineTo(orgPosX1*sourceRatioNext+x*destRatioNext,orgPosY*sourceRatioNext+y*destRatioNext);
-            ctx.moveTo(orgPosX2*sourceRatio+x*destRatio,orgPosY*sourceRatio+y*destRatio);
-            ctx.lineTo(orgPosX2*sourceRatioNext+x*destRatioNext,orgPosY*sourceRatioNext+y*destRatioNext);
-            ctx.strokeStyle = "#FF0000";
-            ctx.lineWidth=3;
-            ctx.stroke();
-            
-            
-            if(i==10) {
-                laserCanvas.style.display = "none";
-                clearInterval(interval);
-            }
-        },10
+            laserCanvas.style.display = "none";
+            clearTimeout(timeout);
+        },50
     );
 }
 
