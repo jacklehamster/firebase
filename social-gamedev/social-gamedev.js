@@ -31,6 +31,7 @@ var mainScreen;
 var penColor = [0,0,0,255];
 var brushSize = 2;
 var targeterCanvas;
+var laserCanvas;
 
 /**
  *    First called on load
@@ -643,7 +644,16 @@ function showTargeter(x,y) {
 }
 
 function shootLaser(x,y,target) {
-    console.log(target);
+    
+    if(!laserCanvas) {
+        laserCanvas = document.createElement("canvas");
+        laserCanvas.width = screenWidth;
+        laserCanvas.height = screenHeight;
+        laserCanvas.style.position = "absolute";
+        laserCanvas.style.pointerEvents = "none";
+        document.body.appendChild(laserCanvas);
+    }
+
     var orgPosX1 = 0;
     var orgPosX2 = screenWidth;
     var orgPosY = screenHeight;
@@ -662,7 +672,9 @@ function shootLaser(x,y,target) {
             var sourceRatioNext = (10-i)/10;
             var destRatioNext = i/10;
             
-            var ctx = targeterCanvas.getContext("2d");
+            laserCanvas.style.display = "";
+            var ctx = laserCanvas.getContext("2d");
+            ctx.clearRect(0,0,screenWidth,screenHeight);
             ctx.beginPath();
             ctx.moveTo(orgPosX1*sourceRatio+x*destRatio,orgPosY*sourceRatio+y*destRatio);
             ctx.lineTo(orgPosX1*sourceRatioNext+x*destRatioNext,orgPosY*sourceRatioNext+y*destRatioNext);
@@ -673,10 +685,10 @@ function shootLaser(x,y,target) {
             
             
             if(i==10) {
-                targeterCanvas.style.display = "none";
+                laserCanvas.style.display = "none";
                 clearInterval(interval);
             }
-        },50
+        },10
     );
 }
 
