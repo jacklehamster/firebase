@@ -417,8 +417,8 @@ function updateScreen(options) {
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(img.pos.y-shiftY);
         
-        var imgWidth = scale*(tag=="img"?img.naturalWidth:tag=="canvas"?img.img.naturalWidth:128);
-        var imgHeight = scale*(tag=="img"?img.naturalHeight:tag=="canvas"?img.img.naturalHeight:128);
+        var imgWidth = img==dok?dok.width:scale*(tag=="img"?img.naturalWidth:tag=="canvas"?img.img.naturalWidth:128);
+        var imgHeight = img==dok?dok.height:scale*(tag=="img"?img.naturalHeight:tag=="canvas"?img.img.naturalHeight:128);
         img.style.width = imgWidth+"px";
         img.style.height = imgHeight+"px";
         
