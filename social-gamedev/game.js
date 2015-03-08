@@ -58,6 +58,10 @@ function enterFrame() {
   for(var i in lasers) {
     var laser = lasers[i];
     laser.pos.x += laser.direction;
+    if(globalFrame-laser.born>20) {
+      delete lasers[i];
+    }
+    doUpdateScreen= true;
   }
 
   //  scroll to dok
@@ -72,6 +76,7 @@ function enterFrame() {
 }
 
 function shootLaserBeam(x,y,direction) {
+  dok.lastLaser = globalFrame;
   var img = new Image();
   img.id = ""+Math.random();
   img.born = globalFrame;
