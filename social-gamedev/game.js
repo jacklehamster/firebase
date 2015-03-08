@@ -2,12 +2,16 @@ window.addEventListener("load",initGame);
 
 var dok;
 var keys = {};
+var globalFrame = 0;
+var lasers = {};
+var laserOverlay;
 function initGame() {
   dok = createSprite(dobukiDataURI);
   dok.style.position = "absolute";
   dok.readonly = true;
   dok.pos = {x:0,y:0};
   dok.addEventListener("enterFrame",enterFrame);
+  dok.lastLaser = 0;
   document.getElementById("screen").appendChild(dok);
   document.addEventListener("keydown",onKey);
   document.addEventListener("keyup",onKey);
@@ -18,6 +22,7 @@ function onKey(event) {
 }
 
 function enterFrame() {
+  globalFrame++;
   var doUpdateScreen = false;
   var speed = .5;
   var dx = 0, dy = 0;
@@ -42,6 +47,19 @@ function enterFrame() {
       dok.gotoAndPlay("still");
   }
   
+  //  shoot laser
+  if(keys[32]) {  //  space bar
+    if(globalFrame-dok.lastLaser>5) {
+      shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction);
+    }
+  }
+  
+  //  handle lasers
+  for(var i in lasers) {
+    var laser = lasers[i];
+    laser.pos.x += laser.direction;
+  }
+
   //  scroll to dok
   if(!editMode) {
     shiftX += (dok.pos.x-shiftX)/5;
@@ -51,4 +69,16 @@ function enterFrame() {
   
   if(doUpdateScreen)
     updateScreen();
+}
+
+function shootLaserBeam(x,y,direction) {
+  var img = new Image();
+  img.id = ""+Math.random();
+  img.born = globalFrame;
+  img.src = beamDataURI;
+  img.style.position = "absolute";
+  img.pos = {x:x,y:y};
+  img.readonly= true;
+  lasers.push(img);
+  document.getElementById("screen").appendChild(img);
 }
