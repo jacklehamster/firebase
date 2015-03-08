@@ -711,9 +711,11 @@ function mousePen(x,y,ispen,type,target,event) {
   state = {pen:ispen,stageX:x,stageY:y};
   switch(action) {
      case "laser":
-         showTargeter(x,y);
-         if(ispen) {
-             shootLaser(x,y,target);
+         if(event.target!=document.getElementById("target")) {
+             showTargeter(x,y);
+             if(ispen) {
+                 shootLaser(x,y,target);
+             }
          }
          break;
      case "copy":   //  clone a sprite
