@@ -79,6 +79,6 @@ function shootLaserBeam(x,y,direction) {
   img.style.position = "absolute";
   img.pos = {x:x,y:y};
   img.readonly= true;
-  lasers.push(img);
+  lasers[img.id] = img;
   document.getElementById("screen").appendChild(img);
 }
