@@ -446,9 +446,8 @@ function updateScreen(options) {
     }
 }
 
-function calculateScale(screenY) {
-    return .5;
-//    return Math.pow(screenY,.8) / 200;
+function calculateScale(y) {
+    return Math.pow(y,.8) / 200;
 }
 
 /**
@@ -583,8 +582,8 @@ function findClosestXY(mouseX,mouseY,offsetX,offsetY) {
 }
 
 function convertToScreen(x,y) {
-    var valY = (((-shiftY + y)*32)*.5 + screenHeight*3/4);
-    var scale = calculateScale(valY);
+    var scale = calculateScale(-shiftY+y);
+    var valY = (((-shiftY + y)*32)*scale + screenHeight*3/4);
     var valX = ((((-shiftX + x)*32)*scale) + screenWidth/2);
     return {x:valX,y:valY};
 }
