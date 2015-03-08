@@ -699,7 +699,7 @@ function mousePen(x,y,ispen,type,target,event) {
   switch(action) {
      case "laser":
          showTargeter(x,y);
-         if(type=="mousedown") {
+         if(ispen) {
              shootLaser(x,y,target);
          }
          break;
