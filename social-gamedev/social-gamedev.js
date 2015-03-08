@@ -62,16 +62,15 @@ function init(event) {
 //            console.log(o);
  //           console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
-            var img = null;//document.getElementById(o.id);
+            var img = document.getElementById(o.id);
             if(!img) {
-                if(!map[x+"_"+y] || map[x+"_"+y].id!=o.id) {
-                    var img = createImage();
-                    img.id = o.id;
-                    img.pos = {x:x,y:y};
-                    ensureImage(img,true,true);
-                    mainScreen.appendChild(img);
-                    updateScreen();
-                }
+                var img = createImage();
+                img.id = o.id;
+                img.path = o.path;
+                img.pos = {x:x,y:y};
+                ensureImage(img,true,true);
+                mainScreen.appendChild(img);
+                updateScreen();
             }
             else if(img.pos.x!=x || img.pos.y!=y) {
                 img.pos.x = x;
@@ -204,8 +203,8 @@ function readURL(event) {
          var src = e.target.result; // src id a data-uri
          console.log(src,lastSelectedImage);
          if(lastSelectedImage) {
-             if(lastSelectedImage.id) {
-                var firebaseSrc = firebaseImg.child(lastSelectedImage.id).child("src");
+             if(lastSelectedImage.path) {
+                var firebaseSrc = firebaseImg.child(lastSelectedImage.path).child("src");
                 firebaseSrc.set(src);
              }
              else {
@@ -599,10 +598,14 @@ function ensureImage(img,ignoreSrc,ignoreAdd) {
         tempImage = createImage();
     }
     if(!img.id) {
-        img.id = MD5_path(new Date()+""+Math.random());
+        img.id = CryptoJS.MD5(new Date()+""+Math.random())+"";
+    }
+    if(!img.path) {
+        img.path = MD5_path(new Date()+""+Math.random());
+        img.setAttribute("path",img.path);
     }
     if(!img.firebase) {
-        var firebaseSrc = firebaseImg.child(img.id).child("src");
+        var firebaseSrc = firebaseImg.child(img.path).child("src");
 //        console.log(img.src);
         if(!ignoreSrc)
             firebaseSrc.set(img.src);
@@ -617,8 +620,9 @@ function removeImageFromFirebase(x,y) {
 }
 
 function addImageToFirebase(img,x,y) {
-    if(img.id)
-        firebaseMap.child(x+"_"+y+"/id").set(img.id);
+    if(img.id) {
+        firebaseMap.child(x+"_"+y).set({id:img.id,path:img.path});
+    }
 }
 
 function moveImage(img,x,y) {
