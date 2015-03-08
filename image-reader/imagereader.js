@@ -32,7 +32,8 @@ function attachFirebase(image,firebaseLocation,options) {
              var diffTime = now - startTime;
              bytes += o.length*2;
              if(diffTime>1000) {
-                 console.log((bytes/1000)/(diffTime/1000) + "Kb/s");
+                 showBandwidth(image,Math.round((bytes/1000)/(diffTime/1000)*10)/10 + " Kb/s");
+                 startTime = now;
                  bytes = 0;
              }
          }
@@ -40,6 +41,17 @@ function attachFirebase(image,firebaseLocation,options) {
          image.dispatchEvent(new Event('change'));
       }
    );
+}
+
+function showBandwidth(image,bandwidth) {
+   var span = document.getElementById('bandwidth_overlay');
+   if(!span) {
+      span = document.createElement("span");
+      span.id = 'bandwidth_overlay';
+      span.position = "absolute";
+      image.parentElement.insertBefore(span,image);
+   }
+   span.innerHTML = bandwidth;
 }
 
 function detachFirebase(image) {
