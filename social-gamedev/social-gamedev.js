@@ -447,7 +447,7 @@ function updateScreen(options) {
 }
 
 function calculateScale(y) {
-    return Math.pow(1.1,y);
+    return Math.pow(1.2,y)*.5;
 }
 
 /**
