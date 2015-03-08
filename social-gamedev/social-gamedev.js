@@ -628,6 +628,7 @@ function showTargeter(x,y) {
         targeterCanvas.width = screenWidth;
         targeterCanvas.height = screenHeight;
         targeterCanvas.style.position = "absolute";
+        targeterCanvas.style.pointerEvents = "none";
         document.body.appendChild(targeterCanvas);
     }
     targeterCanvas.style.display = "";
