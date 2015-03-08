@@ -19,7 +19,7 @@ function onKey(event) {
 
 function enterFrame() {
   var doUpdateScreen = false;
-  var speed = .4;
+  var speed = .5;
   var dx = 0, dy = 0;
   if(keys[37]) dx--;  //  left
   if(keys[39]) dx++;  //  right
@@ -44,8 +44,8 @@ function enterFrame() {
   
   //  scroll to dok
   if(!editMode) {
-    shiftX += (dok.pos.x-shiftX)/10;
-    shiftY += (dok.pos.x-shiftY)/10;
+    shiftX += (dok.pos.x-shiftX)/5;
+    shiftY += (dok.pos.y-shiftY)/5;
     doUpdateScreen = true;
   }
   
