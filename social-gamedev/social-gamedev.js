@@ -653,6 +653,7 @@ function shootLaser(x,y,target) {
         laserCanvas.style.pointerEvents = "none";
         document.body.appendChild(laserCanvas);
     }
+    laserCanvas.style.display = "";
 
     var orgPosX1 = 0;
     var orgPosX2 = screenWidth;
