@@ -48,7 +48,8 @@ function showBandwidth(image,bandwidth) {
    if(!span) {
       span = document.createElement("span");
       span.id = 'bandwidth_overlay';
-      span.position = "absolute";
+      span.style.position = "absolute";
+      span.style.color = "blue";
       image.parentElement.insertBefore(span,image);
    }
    span.innerHTML = bandwidth;
