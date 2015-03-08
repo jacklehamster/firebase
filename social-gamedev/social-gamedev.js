@@ -561,8 +561,8 @@ function convertToMainScreen(x,y) {
 function findClosestXY(mouseX,mouseY,offsetX,offsetY) {
     var closest = null;
     var minDist = 1000000;
-    for(var y=-30;y<30;y++) {
-        for(var x=-30;x<30;x++) {
+    for(var y=-50;y<50;y++) {
+        for(var x=-50;x<50;x++) {
             var ix = Math.round(x+shiftX);
             var iy = Math.round(y+shiftY);
             var pos = convertToScreen(ix,iy);
