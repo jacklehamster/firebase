@@ -62,14 +62,16 @@ function init(event) {
 //            console.log(o);
  //           console.log(keySplit);
             var x = parseInt(keySplit[0]), y = parseInt(keySplit[1]);
-            var img = document.getElementById(o.id);
+            var img = null;//document.getElementById(o.id);
             if(!img) {
-                var img = createImage();
-                img.id = o.id;
-                img.pos = {x:x,y:y};
-                ensureImage(img,true,true);
-                mainScreen.appendChild(img);
-                updateScreen();
+                if(!map[x+"_"+y] || map[x+"_"+y].id!=o.id) {
+                    var img = createImage();
+                    img.id = o.id;
+                    img.pos = {x:x,y:y};
+                    ensureImage(img,true,true);
+                    mainScreen.appendChild(img);
+                    updateScreen();
+                }
             }
             else if(img.pos.x!=x || img.pos.y!=y) {
                 img.pos.x = x;
