@@ -57,7 +57,7 @@ function enterFrame() {
   //  handle lasers
   for(var i in lasers) {
     var laser = lasers[i];
-    laser.pos.x += laser.direction*2;
+    laser.pos.x += laser.direction*4;
     if(globalFrame-laser.born>50) {
       laser.parentElement.removeChild(laser);
       delete lasers[i];
