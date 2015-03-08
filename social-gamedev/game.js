@@ -18,6 +18,7 @@ function onKey(event) {
 }
 
 function enterFrame() {
+  var doUpdateScreen = false;
   var speed = .4;
   var dx = 0, dy = 0;
   if(keys[37]) dx--;  //  left
@@ -34,10 +35,20 @@ function enterFrame() {
       dok.gotoAndPlay("running")
     dok.pos.x += dx*speed;
     dok.pos.y += dy*speed;
-    updateScreen();
+    doUpdateScreen = true;
   }
   else {
     if(dok.label!="still")
       dok.gotoAndPlay("still");
   }
+  
+  //  scroll to dok
+  if(!editMode) {
+    shiftX += (dok.pos.x-shiftX)/10;
+    shiftY += (dok.pos.x-shiftY)/10;
+    doUpdateScreen = true;
+  }
+  
+  if(doUpdateScreen)
+    updateScreen();
 }
