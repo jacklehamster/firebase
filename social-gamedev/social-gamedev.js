@@ -742,8 +742,10 @@ function mousePen(x,y,ispen,type,target,event) {
         }
         if(type=="mouseup" && event.target!=document.getElementById("copy")) {
             var src = tempImage.src;
-            ensureImage(tempImage);
+            var path = tempImage.path;
+            ensureImage(tempImage); //  tempImage changed through ensureImage
             tempImage.src= src;
+            tempImage.path = path;
         }
         if(doUpdate) {
             changedTarget();
