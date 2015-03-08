@@ -1,10 +1,31 @@
 window.addEventListener("load",initGame);
 
 var dok;
+var keys = {};
 function initGame() {
   dok = createSprite(dobukiDataURI);
   dok.style.position = "absolute";
   dok.readonly = true;
   dok.pos = {x:0,y:0};
+  dok.addEventListener("enterFrame",enterFrame);
   document.getElementById("screen").appendChild(dok);
+  document.addEventListener("keydown",onKey);
+  document.addEventListener("keyup",onKey);
+}
+
+function onKey(event) {
+  keys[event.keyCode] = event.type=="keydown";
+}
+
+function enterFrame() {
+  var dx = 0, dy = 0;
+  if(keys[37]) dx--;  //  left
+  if(keys[39]) dx++;  //  right
+  if(keys[38]) dy--;  //  up
+  if(keys[40]) dy++;  //  down
+  if(dx!=0 || dy!=0) {
+    dok.pos.x += dx*.2;
+    dok.pos.y += dy*.2;
+    updateScreen();
+  }
 }
