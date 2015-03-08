@@ -77,6 +77,7 @@ function shootLaserBeam(x,y,direction) {
   img.born = globalFrame;
   img.src = beamDataURI;
   img.style.position = "absolute";
+  img.direction = direction;
   img.pos = {x:x,y:y};
   img.readonly= true;
   lasers[img.id] = img;
