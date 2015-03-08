@@ -653,6 +653,9 @@ function showTargeter(x,y) {
 }
 
 function shootLaser(x,y,target) {
+    if(target.parentElement!=mainScreen) {
+        return;
+    }
     if(target.tagName.toLowerCase()=="canvas")
         target = target.img;
     if(!laserCanvas) {
