@@ -84,7 +84,7 @@ function shootLaserBeam(x,y,direction) {
   img.src = beamDataURI2;
   img.style.position = "absolute";
   img.direction = direction;
-  img.pos = {x:x,y:y-2+Math.random()};
+  img.pos = {x:x,y:y-3+Math.random()};
   img.readonly= true;
   lasers[img.id] = img;
   document.getElementById("screen").appendChild(img);
