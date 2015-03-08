@@ -18,14 +18,26 @@ function onKey(event) {
 }
 
 function enterFrame() {
+  var speed = .4;
   var dx = 0, dy = 0;
   if(keys[37]) dx--;  //  left
   if(keys[39]) dx++;  //  right
   if(keys[38]) dy--;  //  up
   if(keys[40]) dy++;  //  down
+  
+  if(dx) {
+    dok.setDirection(dx);
+  }
+  
   if(dx!=0 || dy!=0) {
-    dok.pos.x += dx*.2;
-    dok.pos.y += dy*.2;
+    if(dok.label!="running")
+      dok.gotoAndPlay("running")
+    dok.pos.x += dx*speed;
+    dok.pos.y += dy*speed;
     updateScreen();
+  }
+  else {
+    if(dok.label!="still")
+      dok.gotoAndPlay("still");
   }
 }
