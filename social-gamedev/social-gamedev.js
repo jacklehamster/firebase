@@ -257,6 +257,13 @@ function setEnabled(element,value) {
     element.disabled = !value;
 }
 
+function setAlpha(element,value) {
+    element.style.filter       = "alpha(opacity="+(alpha*100)+");";
+    element.style.MozOpacity   = alpha;
+    element.style.opacity      = alpha;
+    element.style.KhtmlOpacity = alpha;
+}
+
 /**
  *    Selected a tool on the toolbar
  * */
@@ -670,11 +677,20 @@ function shootLaser(x,y,target) {
     ctx.lineWidth=3;
     ctx.stroke();
     
+    setAlpha(target,.3);
+    var timeout2 = setTimeout(
+        function() {
+            setAlpha(target,1);
+            clearTimeout(timeout2);
+        },1000
+    );
+    
+    
     var timeout = setTimeout(
         function() {
             laserCanvas.style.display = "none";
             clearTimeout(timeout);
-        },50
+        },100
     );
 }
 
