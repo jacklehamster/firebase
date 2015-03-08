@@ -257,7 +257,7 @@ function setEnabled(element,value) {
     element.disabled = !value;
 }
 
-function setAlpha(element,value) {
+function setAlpha(element,alpha) {
     element.style.filter       = "alpha(opacity="+(alpha*100)+");";
     element.style.MozOpacity   = alpha;
     element.style.opacity      = alpha;
