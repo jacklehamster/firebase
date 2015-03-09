@@ -57,9 +57,10 @@ function showEffects() {
 function collide(x,y,type) {
   x = Math.round(x);
   y = Math.round(y+2);
+  var dokX = Math.round(dok.pos.x), dokY = Math.round(dok.pos.y);
    for(var xx=-3;xx<=3;xx++) {
      for(var yy=-3;yy<=3;yy++) {
-        var img = map[(x+xx)+"_"+(y+yy)];
+        var img = x+xx==dokX && y+yy==dokY? dok : map[(x+xx)+"_"+(y+yy)];
         if(img) {
           if(img.img) img = img.img;
           if(img.drawn && type==2 || !img.drawn && type==1) {
