@@ -472,6 +472,7 @@ function changeZoom(element,value) {
     else {
         element.style.zoom = Math.ceil(value*100)+"%";
     }
+    element.zoomValue = value;
 }
 
 /**
