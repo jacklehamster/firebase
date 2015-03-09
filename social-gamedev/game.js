@@ -141,7 +141,7 @@ function handleAI() {
   for(var i=0;i<imgs.length;i++) {
     var img = imgs[i];
     var tag = img.tagName.toLowerCase();
-    if(img.drawn) {
+    if(img.drawn && img.firebase) {
       img.agressivity = (img.agressivity?img.agressivity+1:1);
       if(img.agressivity>10) {
         var dir = Math.random()<.5?-1:1;
