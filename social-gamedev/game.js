@@ -13,6 +13,7 @@ function initGame() {
   dok.pos = {x:0,y:0};
   dok.addEventListener("enterFrame",enterFrame);
   dok.lastLaser = 0;
+  dok.born = 0;
   document.getElementById("screen").appendChild(dok);
   document.addEventListener("keydown",onKey);
   document.addEventListener("keyup",onKey);
@@ -119,7 +120,8 @@ function enterFrame() {
   }
   
   //  handle AI agressivity
-  handleAI();
+  if(globalFrame-dok.born>30)
+    handleAI();
 
   //  scroll to dok
   if(!editMode) {
