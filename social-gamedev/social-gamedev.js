@@ -615,14 +615,20 @@ function ensureImage(img,ignoreSrc,ignoreAdd) {
         img.path = MD5_path(new Date()+""+Math.random());
         img.setAttribute("path",img.path);
     }
+    if(!ignoreSrc)
+        checkFirebaseAttachment(img);
+    if(!ignoreAdd)
+        addImageToFirebase(img,img.pos.x,img.pos.y);
+}
+
+function checkFirebaseAttachment() {
     if(!img.firebase) {
-        var firebaseSrc = firebaseImg.child(img.path).child("src");
-//        console.log(img.src);
-        if(!ignoreSrc)
+        var screenPos = convertToScreen(img.pos.x,img.pos.y);
+        if(screenPos.x>0 && screenPos.y>0 && screenPos.x<screenWidth && screenPos.y<screenHeight) {
+            var firebaseSrc = firebaseImg.child(img.path).child("src");
             firebaseSrc.set(img.src);
-        attachFirebase (img,firebaseSrc);
-        if(!ignoreAdd)
-            addImageToFirebase(img,img.pos.x,img.pos.y);
+            attachFirebase (img,firebaseSrc);
+        }
     }
 }
 
