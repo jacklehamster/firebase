@@ -97,7 +97,7 @@ function enterFrame() {
   //  shoot laser
   if(keys[32]) {  //  space bar
     if(globalFrame-dok.lastLaser>5) {
-      shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction);
+      shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction,2);
     }
   }
   
@@ -112,6 +112,9 @@ function enterFrame() {
     }
     doUpdateScreen= true;
   }
+  
+  //  handle AI agressivity
+  handleAI();
 
   //  scroll to dok
   if(!editMode) {
@@ -126,12 +129,27 @@ function enterFrame() {
     updateScreen();
 }
 
-function shootLaserBeam(x,y,direction) {
+function handleAI() {
+  var imgs = document.getElementById("screen").children;
+  for(var i=0;i<imgs.length;i++) {
+    var img = imgs[i];
+    var tag = img.tagName.toLowerCase();
+    if(img.drawn) {
+      img.agressivity = (img.agressivity?img.agressivity+1:1);
+      if(img.agressivity>10) {
+        shootLaserBeam(img.pos.x,img.pos.y,Math.random()<.5?-1:1,1);
+      }
+    }
+  }
+}
+
+function shootLaserBeam(x,y,direction,type) {
   dok.lastLaser = globalFrame;
   var img = new Image();
   img.id = ""+Math.random();
   img.born = globalFrame;
-  img.src = beamDataURI2;
+  img.type = type;
+  img.src = type==2?beamDataURI2:beamDataURI;
   img.style.position = "absolute";
   img.direction = direction;
   img.pos = {x:x,y:y-3+Math.random()};
