@@ -80,7 +80,12 @@ function hit(img) {
   if(img.hits>=100) {
     img.ko = true;
     img.hits = 0;
-    setAlpha(img,.2);
+    if(img==dok) {
+      img.gotoAndPlay("ko");
+    }
+    else {
+      setAlpha(img,.2);
+    }
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
     score++;
