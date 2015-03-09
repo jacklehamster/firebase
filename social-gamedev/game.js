@@ -25,7 +25,7 @@ function onKey(event) {
 function showSplash(x,y) {
   var screenSplash = convertToScreen(x,y);
   for(var i=0;i<20;i++)
-    particles.push([screenSplash.x,screenSplash.y,(Math.random()-.5)*20,Math.random()*-10,globalFrame]);
+    particles.push([screenSplash.x,screenSplash.y-20,(Math.random()-.5)*20,Math.random()*-10,globalFrame]);
 }
 
 function showEffects() {
