@@ -128,7 +128,7 @@ function enterFrame() {
   }
   
   //  handle AI agressivity
-  if(globalFrame-dok.born>300)
+  if(globalFrame-dok.born>100)
     handleAI();
 
   //  scroll to dok
