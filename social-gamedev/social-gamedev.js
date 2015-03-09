@@ -625,7 +625,7 @@ function ensureImage(img,ignoreSrc,ignoreAdd) {
         addImageToFirebase(img,img.pos.x,img.pos.y);
 }
 
-function checkFirebaseAttachment() {
+function checkFirebaseAttachment(img) {
     if(!img.firebase) {
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         console.log(screenPos,screenWidth,screenHeight);
