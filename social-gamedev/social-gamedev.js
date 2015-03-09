@@ -495,6 +495,7 @@ function hexRGB(array) {
 
 function createImage() {
     var img = document.createElement("img");
+    img.drawn = true;
     img.style.position = "absolute";
     img.pos = {x:0,y:0};
 //    img.img = img;
