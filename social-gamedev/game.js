@@ -65,7 +65,7 @@ function showEffects() {
     ctx.fillStyle="#FF0000";
     ctx.fillRect(screenPos.x,screenPos.y,hitImage.hits*5,5);
     ctx.fillStyle="#00FF00";
-    var life = 10-hits;
+    var life = 10-hitImage.hits;
     ctx.fillRect(screenPos.x-life*5,screenPos.y,life*5,5);
   }
 }
@@ -75,6 +75,17 @@ function hit(img) {
     hitImages.push(img);
   }
   img.hits = img.hits?img.hits+1:1;
+  img.lastHit = globalFrame;
+}
+
+function heal(img) {
+  if(img.hits && globalFrame-img.lastHit>100) {
+    img.hits--;
+    if(!img.hits) {
+      var index = hitImages.indexOf(img);
+      hitImages.splice(index,1);
+    }
+  }
 }
 
 function collide(x,y,type) {
@@ -149,6 +160,11 @@ function enterFrame() {
   if(globalFrame-dok.born>100)
     handleAI();
 
+  //  heal images
+  for(var i=hitImages.length-1;i>=0;i--) {
+    heal(hitImages[i]);
+  }
+  
   //  scroll to dok
   if(!editMode) {
     shiftX += ((dok.pos.x-shiftX)/5);
