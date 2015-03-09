@@ -78,11 +78,14 @@ function hit(img) {
   img.lastHit = globalFrame;
   if(img.hits>=100) {
     img.ko = true;
+    img.hits = 0;
     setAlpha(img,.2);
+    var index = hitImages.indexOf(img);
+    hitImages.splice(index,1);
   }
 }
 
-function heal(img) {
+function heal(img,value) {
   if(img.hits && globalFrame-img.lastHit>100) {
     img.hits--;
     if(!img.hits) {
