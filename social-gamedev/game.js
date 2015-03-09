@@ -74,8 +74,12 @@ function hit(img) {
   if(!img.hits) {
     hitImages.push(img);
   }
-  img.hits = img.hits?img.hits+10:10;
+  img.hits = Math.min(100,img.hits?img.hits+10:10);
   img.lastHit = globalFrame;
+  if(img.hits>=100) {
+    img.ko = true;
+    setAlpha(img,.2);
+  }
 }
 
 function heal(img) {
@@ -95,7 +99,7 @@ function collide(x,y,type) {
    for(var xx=-3;xx<=3;xx++) {
      for(var yy=-3;yy<=3;yy++) {
         var img = x+xx==dokX && y+yy==dokY? dok : map[(x+xx)+"_"+(y+yy)];
-        if(img) {
+        if(img && !img.ko) {
           if(img.img) img = img.img;
           if(img.drawn && type==2 || !img.drawn && type==1) {
             showSplash(x,y);
@@ -183,7 +187,7 @@ function handleAI() {
   for(var i=0;i<imgs.length;i++) {
     var img = imgs[i];
     var tag = img.tagName.toLowerCase();
-    if(img.drawn && img.firebase) {
+    if(img.drawn && img.firebase && !img.ko) {
       img.agressivity = (img.agressivity?img.agressivity+1:1);
       if(img.agressivity>10) {
         var dir = Math.random()<.5?-1:1;
