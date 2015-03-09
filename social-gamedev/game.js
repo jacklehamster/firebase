@@ -22,10 +22,12 @@ function onKey(event) {
 }
 
 function collide(x,y) {
+  x = Math.round(x);
+  y = Math.round(y);
    for(var xx=-3;xx<=3;xx++) {
      for(var yy=3;yy<=3;yy++) {
-        if(map[x+xx][y+yy]) {
-          return map[x+xx][y+yy];
+        if(map[(x+xx)+"_"+(y+yy)]) {
+          return map[(x+xx)+"_"+(y+yy)];
         }
      }
    }
