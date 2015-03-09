@@ -81,8 +81,8 @@ function enterFrame() {
 
   //  scroll to dok
   if(!editMode) {
-    shiftX += (dok.pos.x-shiftX)/5;
-    shiftY += (dok.pos.y-shiftY)/5;
+    shiftX += Math.round((dok.pos.x-shiftX)/5);
+    shiftY += Math.round((dok.pos.y-shiftY)/5);
     doUpdateScreen = true;
   }
   
