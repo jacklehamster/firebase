@@ -54,14 +54,18 @@ function showEffects() {
   }
 }
 
-function collide(x,y) {
+function collide(x,y,type) {
   x = Math.round(x);
   y = Math.round(y+2);
    for(var xx=-3;xx<=3;xx++) {
      for(var yy=-3;yy<=3;yy++) {
-        if(map[(x+xx)+"_"+(y+yy)]) {
-          showSplash(x,y);
-          return map[(x+xx)+"_"+(y+yy)];
+        var img = map[(x+xx)+"_"+(y+yy)];
+        if(img) {
+          if(img.img) img = img.img;
+          if(img.drawn && type==2 || !img.drawn && type==1) {
+            showSplash(x,y);
+            return map[(x+xx)+"_"+(y+yy)];
+          }
         }
      }
    }
@@ -106,7 +110,7 @@ function enterFrame() {
     var laser = lasers[i];
     laser.pos.x += laser.direction*4;
     
-    if(globalFrame-laser.born>50 || collide(laser.pos.x,laser.pos.y)) {
+    if(globalFrame-laser.born>50 || collide(laser.pos.x,laser.pos.y,laser.type)) {
       laser.parentElement.removeChild(laser);
       delete lasers[i];
     }
@@ -136,6 +140,7 @@ function handleAI() {
     var tag = img.tagName.toLowerCase();
     if(img.drawn) {
       img.agressivity = (img.agressivity?img.agressivity+1:1);
+      console.log(img.agressivity);
       if(img.agressivity>10) {
         shootLaserBeam(img.pos.x,img.pos.y,Math.random()<.5?-1:1,1);
       }
