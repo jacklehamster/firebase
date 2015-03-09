@@ -40,7 +40,7 @@ function showEffects() {
   var canvas = effectsOverlay;
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="#FF"+(Math.random()*256).toString(16)+"00";
+  ctx.fillStyle="#FF"+Math.floor(Math.random()*16).toString(16)+Math.floor(Math.random()*16).toString(16)+"00";
   for(var i=particles.length-1;i>=0;i--) {
     var particle = particles[i];
     ctx.fillRect(particle[0],particle[1],5,5);
