@@ -1,5 +1,8 @@
+var fireDoks = new Firebase('https://art-depot.firebaseio.com/dobuki/');
+
 window.addEventListener("load",initGame);
 
+var session = CryptoJS.MD5(new Date().getTime()+""+Math.random());
 var dok;
 var keys = {};
 var globalFrame = 0;
@@ -9,6 +12,9 @@ var particles = [];
 var recycleLasers = [];
 var hitImages = [];
 var score = 0;
+var doks = {};
+var doksData = {};
+var dokspeed = 1;
 
 function initGame() {
   dok = createSprite(dobukiDataURI);
@@ -18,6 +24,7 @@ function initGame() {
   dok.addEventListener("enterFrame",enterFrame);
   dok.lastLaser = 0;
   dok.born = 0;
+  document.getElementById("screen").appendChild(dok);
   
   effectsOverlay = document.createElement("canvas");
   effectsOverlay.width = window.innerWidth;
@@ -26,9 +33,10 @@ function initGame() {
   effectsOverlay.style.pointerEvents = "none";
   document.body.appendChild(effectsOverlay);
   
-  document.getElementById("screen").appendChild(dok);
   document.addEventListener("keydown",onKey);
   document.addEventListener("keyup",onKey);
+  
+  fireDoks.on('value',fireDoksChanged);
   
   resetGame();
 }
@@ -146,6 +154,48 @@ function collide(x,y,type) {
    return false;
 }
 
+function fireDoksChanged(snapshot) {
+  var o = snapshot.val();
+  doksData = o;
+}
+
+function updateDoks() {
+  //  update synchronized doks from Firebase
+  for(var ses in doksData) {
+    if(ses!=session) {
+      var data = doksData[ses];
+      var oDok = doks[ses];
+      if(!oDok) {
+        oDok = createSprite(dobukiDataURI);
+        doks[ses] = oDok;
+        oDok.session = ses;
+        oDok.style.position = "absolute";
+        oDok.readonly = true;
+        oDok.pos = {x:data.x,y:data.y};
+        oDok.goal = {x:data.x,y:data.y};
+        document.getElementById("screen").appendChild(oDok);
+      }
+      oDok.goal.x = data.x;
+      oDok.goal.y = data.y;
+      var dx = oDok.goal.x-oDok.pos.x;
+      var dy = oDok.goal.y-oDok.pos.y;
+      var dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist>1) {
+        oDok.pos.x += dx*dokspeed/dist;
+        oDok.pos.y += dy*dokspeed/dist;
+        if(oDok.label!="running")
+          oDok.gotoAndPlay("running");
+        if(dx*oDok.direction<1)
+          oDok.setDirection(oDok.direction);
+      }
+      else {
+        if(oDok.label!="still")
+          oDok.gotoAndPlay("still");
+      }
+    }
+  }
+}
+
 function enterFrame() {
   if(editMode)
     return;
@@ -153,7 +203,6 @@ function enterFrame() {
   var doUpdateScreen = false;
   
   if(!dok.ko) {
-    var speed = .5;
     var dx = 0, dy = 0;
     if(keys[37]) dx--;  //  left
     if(keys[39]) dx++;  //  right
@@ -167,8 +216,9 @@ function enterFrame() {
     if(dx!=0 || dy!=0) {
       if(dok.label!="running")
         dok.gotoAndPlay("running")
-      dok.pos.x += dx*speed;
-      dok.pos.y += dy*speed;
+      var dist = Math.sqrt(dx*dx+dy*dy);
+      dok.pos.x += dx/dist*dokspeed;
+      dok.pos.y += dy/dist*dokspeed;
       doUpdateScreen = true;
     }
     else {
@@ -214,6 +264,8 @@ function enterFrame() {
   }
   
   showEffects();  
+  
+  updateDoks();
   
   if(doUpdateScreen)
     updateScreen();
