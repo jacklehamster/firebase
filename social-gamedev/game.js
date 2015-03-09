@@ -24,8 +24,8 @@ function onKey(event) {
 function collide(x,y) {
   x = Math.round(x);
   y = Math.round(y);
-   for(var xx=-10;xx<=10;xx++) {
-     for(var yy=10;yy<=10;yy++) {
+   for(var xx=-7;xx<=7;xx++) {
+     for(var yy=-7;yy<=7;yy++) {
         if(map[(x+xx)+"_"+(y+yy)]) {
           return map[(x+xx)+"_"+(y+yy)];
         }
