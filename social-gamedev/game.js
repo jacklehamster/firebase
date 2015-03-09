@@ -69,7 +69,7 @@ function showEffects() {
 
 function hit(img) {
   if(!img.hits) {
-    hitImage.push(img);
+    hitImages.push(img);
   }
   img.hits = img.hits?img.hits+1:1;
 }
