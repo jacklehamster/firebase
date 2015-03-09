@@ -138,11 +138,12 @@ function handleAI() {
   for(var i=0;i<imgs.length;i++) {
     var img = imgs[i];
     var tag = img.tagName.toLowerCase();
+      console.log(img.drawn);
     if(img.drawn) {
       img.agressivity = (img.agressivity?img.agressivity+1:1);
-      console.log(img.agressivity);
       if(img.agressivity>10) {
         shootLaserBeam(img.pos.x,img.pos.y,Math.random()<.5?-1:1,1);
+        img.agressivity = 0;
       }
     }
   }
