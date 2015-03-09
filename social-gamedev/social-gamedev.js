@@ -218,7 +218,7 @@ function applyOptions() {
     document.getElementById("tools").style.visibility = editMode?"":"hidden";
     document.getElementById("tooltips").style.visibility = editMode?"":"hidden";
     if(!editMode)
-        doZoom(.5);
+        doZoom(1-globalZoom);
     updateScreen();
 }
 
