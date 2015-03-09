@@ -24,7 +24,8 @@ function onKey(event) {
 
 function showSplash(x,y) {
   var screenSplash = convertToScreen(x,y);
-  particles.push([x,y,(Math.random()-.5)*10,Math.random()*-5,globalFrame]);
+  for(var i=0;i<20;i++)
+    particles.push([screenSplash.x,screenSplash.y,(Math.random()-.5)*10,Math.random()*-5,globalFrame]);
 }
 
 function showEffects() {
@@ -45,7 +46,7 @@ function showEffects() {
     ctx.fillRect(particle[0],particle[1],5,5);
     particle[0] += particle[2];
     particle[1] += particle[3];
-    particle[3]++;
+    particle[3]+=2;
     if(globalFrame-particles[4]>20) {
       particles.splice(i,1);
     }
