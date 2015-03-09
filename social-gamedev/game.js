@@ -6,6 +6,8 @@ var globalFrame = 0;
 var lasers = {};
 var effectsOverlay;
 var particles = [];
+var recycleLasers = [];
+
 function initGame() {
   dok = createSprite(dobukiDataURI);
   dok.style.position = "absolute";
@@ -118,6 +120,7 @@ function enterFrame() {
     if(globalFrame-laser.born>50 || collide(laser.pos.x,laser.pos.y,laser.type)) {
       laser.parentElement.removeChild(laser);
       delete lasers[i];
+      recycleLasers.push(laser);
     }
     doUpdateScreen= true;
   }
@@ -157,7 +160,7 @@ function handleAI() {
 
 function shootLaserBeam(x,y,direction,type) {
   dok.lastLaser = globalFrame;
-  var img = new Image();
+  var img = recycleLasers.length?recycleLasers.pop():new Image();
   img.id = ""+Math.random();
   img.born = globalFrame;
   img.type = type;
