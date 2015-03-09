@@ -29,6 +29,14 @@ function initGame() {
   document.getElementById("screen").appendChild(dok);
   document.addEventListener("keydown",onKey);
   document.addEventListener("keyup",onKey);
+  
+  resetGame();
+}
+
+function resetGame() {
+  score = 0;
+  dok.born = globalFrame;
+  updateScore();
 }
 
 function onKey(event) {
@@ -89,6 +97,15 @@ function hit(img) {
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
     score++;
+    if(img!=dok) {
+      var timeout = setTimeout(
+          function() {
+            clearTimeout(timeout);
+            delete img.ko;
+            setAlpha(img,1);
+          },30000
+      );
+    }
   }
 }
 
@@ -100,6 +117,10 @@ function heal(img,value) {
       hitImages.splice(index,1);
     }
   }
+}
+
+function updateScore() {
+  document.getElementById("score").innerHTML = "<b>Score:</b> " + score;
 }
 
 function collide(x,y,type) {
