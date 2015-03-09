@@ -36,7 +36,8 @@ function showEffects() {
     effectsOverlay.style.pointerEvents = "none";
     document.body.appendChild(effectsOverlay);
   }
-  var ctx = effectsOverlay.getContext("2d");
+  var canvas = effectsOverlay;
+  var ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="#FF0000";
   for(var i=particles.length-1;i>=0;i--) {
