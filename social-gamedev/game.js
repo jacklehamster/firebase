@@ -62,11 +62,11 @@ function showEffects() {
   for(var i=0;i<hitImages.length;i++) {
     var hitImage = hitImages[i];
     var screenPos = convertToScreen(hitImage.pos.x,hitImage.pos.y);
+    var life = 100-hitImage.hits;
     ctx.fillStyle="#FF0000";
-    ctx.fillRect(screenPos.x,screenPos.y,hitImage.hits*5,5);
+    ctx.fillRect(screenPos.x,screenPos.y,hitImage.hits,5);
     ctx.fillStyle="#00FF00";
-    var life = 10-hitImage.hits;
-    ctx.fillRect(screenPos.x-life*5,screenPos.y,life*5,5);
+    ctx.fillRect(screenPos.x-life,screenPos.y,life,5);
   }
 }
 
@@ -74,7 +74,7 @@ function hit(img) {
   if(!img.hits) {
     hitImages.push(img);
   }
-  img.hits = img.hits?img.hits+1:1;
+  img.hits = img.hits?img.hits+10:10;
   img.lastHit = globalFrame;
 }
 
