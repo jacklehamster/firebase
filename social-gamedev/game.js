@@ -97,7 +97,7 @@ function hit(img) {
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
     if(img!=dok) {
-      score++;
+      score+=100;
       updateScore();
     }
     if(img!=dok) {
