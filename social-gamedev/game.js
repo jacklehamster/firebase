@@ -64,9 +64,9 @@ function showEffects() {
     var screenPos = convertToScreen(hitImage.pos.x,hitImage.pos.y);
     var life = 100-hitImage.hits;
     ctx.fillStyle="#FF0000";
-    ctx.fillRect(screenPos.x,screenPos.y,hitImage.hits,5);
+    ctx.fillRect(screenPos.x+life-50,screenPos.y,hitImage.hits,5);
     ctx.fillStyle="#00FF00";
-    ctx.fillRect(screenPos.x-life,screenPos.y,life,5);
+    ctx.fillRect(screenPos.x-50,screenPos.y,life,5);
   }
 }
 
