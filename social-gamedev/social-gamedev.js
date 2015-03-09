@@ -628,7 +628,6 @@ function ensureImage(img,ignoreSrc,ignoreAdd) {
 function checkFirebaseAttachment(img) {
     if(!img.firebase) {
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
-        console.log(screenPos,screenWidth,screenHeight);
         if(screenPos.x>0 && screenPos.y>0 && screenPos.x<screenWidth && screenPos.y<screenHeight) {
             var firebaseSrc = firebaseImg.child(img.path).child("src");
             firebaseSrc.set(img.src);
