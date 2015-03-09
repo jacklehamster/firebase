@@ -21,6 +21,17 @@ function onKey(event) {
   keys[event.keyCode] = event.type=="keydown";
 }
 
+function collide(x,y) {
+   for(var xx=-3;xx<=3;xx++) {
+     for(var yy=3;yy<=3;yy++) {
+        if(map[x+xx][y+yy]) {
+          return map[x+xx][y+yy];
+        }
+     }
+   }
+   return false;
+}
+
 function enterFrame() {
   globalFrame++;
   var doUpdateScreen = false;
@@ -58,7 +69,8 @@ function enterFrame() {
   for(var i in lasers) {
     var laser = lasers[i];
     laser.pos.x += laser.direction*4;
-    if(globalFrame-laser.born>50) {
+    
+    if(globalFrame-laser.born>50 || collide(laser.pos.x,laser.pos.y)) {
       laser.parentElement.removeChild(laser);
       delete lasers[i];
     }
