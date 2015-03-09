@@ -413,6 +413,10 @@ function updateScreen(options) {
     for(var i=0;i<imgs.length;i++) {
         var img = imgs[i];
         var tag = img.tagName.toLowerCase();
+        
+        if(tag=="img")
+            checkFirebaseAttachment(img);
+        
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(img.pos.y-shiftY);
         
