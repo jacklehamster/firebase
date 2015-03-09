@@ -46,8 +46,8 @@ function showEffects() {
   for(var i=particles.length-1;i>=0;i--) {
     var particle = particles[i];
     var zoomValue = mainScreen.zoomValue?mainScreen.zoomValue:1;
-    var xpos = particle[0]*mainScreen.zoomValue + mainScreen.offsetLeft;
-    var ypos = particle[1]*mainScreen.zoomValue + mainScreen.offsetLeft;
+    var xpos = (particle[0] - mainScreen.offsetLeft)/mainScreen.zoomValue;
+    var ypos = (particle[1] - mainScreen.offsetLeft)/mainScreen.zoomValue;
     var size = Math.round(2+Math.random()*4)*zoomValue;
     ctx.fillRect(xpos,ypos,size,size);
     particle[0] += particle[2];
