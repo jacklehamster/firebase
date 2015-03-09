@@ -108,7 +108,7 @@ function enterFrame() {
   //  handle lasers
   for(var i in lasers) {
     var laser = lasers[i];
-    laser.pos.x += laser.direction*4;
+    laser.pos.x += laser.direction*(laser.type==2?4:3);
     
     if(globalFrame-laser.born>50 || collide(laser.pos.x,laser.pos.y,laser.type)) {
       laser.parentElement.removeChild(laser);
@@ -138,7 +138,6 @@ function handleAI() {
   for(var i=0;i<imgs.length;i++) {
     var img = imgs[i];
     var tag = img.tagName.toLowerCase();
-      console.log(img.drawn);
     if(img.drawn) {
       img.agressivity = (img.agressivity?img.agressivity+1:1);
       if(img.agressivity>10) {
