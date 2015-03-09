@@ -38,6 +38,7 @@ function showEffects() {
     effectsOverlay.style.pointerEvents = "none";
     document.body.appendChild(effectsOverlay);
   }
+  var mainScreen = document.getElementById("screen");
   var canvas = effectsOverlay;
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -45,6 +46,8 @@ function showEffects() {
   for(var i=particles.length-1;i>=0;i--) {
     var particle = particles[i];
     var size = Math.round(2+Math.random()*4);
+    var xpos = particle[0]/mainScreen.zoomValue - mainScreen.offsetLeft;
+    var ypos = particle[1]/mainScreen.zoomValue - mainScreen.offsetLeft;
     ctx.fillRect(particle[0],particle[1],size,size);
     particle[0] += particle[2];
     particle[1] += particle[3];
