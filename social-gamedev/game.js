@@ -7,6 +7,7 @@ var lasers = {};
 var effectsOverlay;
 var particles = [];
 var recycleLasers = [];
+var hitImages = [];
 
 function initGame() {
   dok = createSprite(dobukiDataURI);
@@ -16,6 +17,14 @@ function initGame() {
   dok.addEventListener("enterFrame",enterFrame);
   dok.lastLaser = 0;
   dok.born = 0;
+  
+  effectsOverlay = document.createElement("canvas");
+  effectsOverlay.width = window.innerWidth;
+  effectsOverlay.height = window.innerHeight;
+  effectsOverlay.style.position = "absolute";
+  effectsOverlay.style.pointerEvents = "none";
+  document.body.appendChild(effectsOverlay);
+  
   document.getElementById("screen").appendChild(dok);
   document.addEventListener("keydown",onKey);
   document.addEventListener("keyup",onKey);
@@ -32,14 +41,6 @@ function showSplash(x,y) {
 }
 
 function showEffects() {
-  if(!effectsOverlay) {
-    effectsOverlay = document.createElement("canvas");
-    effectsOverlay.width = window.innerWidth;
-    effectsOverlay.height = window.innerHeight;
-    effectsOverlay.style.position = "absolute";
-    effectsOverlay.style.pointerEvents = "none";
-    document.body.appendChild(effectsOverlay);
-  }
   var mainScreen = document.getElementById("screen");
   var canvas = effectsOverlay;
   var ctx = canvas.getContext("2d");
@@ -58,6 +59,19 @@ function showEffects() {
       particles.splice(i,1);
     }
   }
+  for(var i=0;i<hitImages.length;i++) {
+    var hitImage = hitImages[i];
+    var screenPos = convertToScreen(hitImage.pos.x,hitImage.pos.y);
+    ctx.fillStyle="#FF0000";
+    ctx.fillRect(screenPos.x,screenPos.y,hitImage.hits*5,5);
+  }
+}
+
+function hit(img) {
+  if(!img.hits) {
+    hitImage.push(img);
+  }
+  img.hits = img.hits?img.hits+1:1;
 }
 
 function collide(x,y,type) {
@@ -71,6 +85,7 @@ function collide(x,y,type) {
           if(img.img) img = img.img;
           if(img.drawn && type==2 || !img.drawn && type==1) {
             showSplash(x,y);
+            hit(img);
             return map[(x+xx)+"_"+(y+yy)];
           }
         }
