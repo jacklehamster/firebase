@@ -4,7 +4,8 @@ var dok;
 var keys = {};
 var globalFrame = 0;
 var lasers = {};
-var laserOverlay;
+var effectsOverlay;
+var particles = [];
 function initGame() {
   dok = createSprite(dobukiDataURI);
   dok.style.position = "absolute";
@@ -21,12 +22,42 @@ function onKey(event) {
   keys[event.keyCode] = event.type=="keydown";
 }
 
+function showSplash(x,y) {
+  var screenSplash = convertToScreen(x,y);
+  particles.push([x,y,(Math.random()-.5)*10,Math.random()*-5,globalFrame]);
+}
+
+function showEffects() {
+  if(!effectsOverlay) {
+    effectsOverlay = document.createElement("canvas");
+    effectsOverlay.width = window.innerWidth;
+    effectsOverlay.height = window.innerHeight;
+    effectsOverlay.style.position = "absolute";
+    effectsOverlay.style.pointerEvents = "none";
+    document.body.appendChild(effectsOverlay);
+  }
+  var ctx = effectsOverlay.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#FF0000";
+  for(var i=particles.length-1;i>=0;i--) {
+    var particle = particles[i];
+    ctx.fillRect(particle[0],particle[1],5,5);
+    particle[0] += particle[2];
+    particle[1] += particle[3];
+    particle[3]++;
+    if(globalFrame-particles[4]>20) {
+      particles.splice(i,1);
+    }
+  }
+}
+
 function collide(x,y) {
   x = Math.round(x);
   y = Math.round(y+2);
    for(var xx=-3;xx<=3;xx++) {
      for(var yy=-3;yy<=3;yy++) {
         if(map[(x+xx)+"_"+(y+yy)]) {
+          showSplash(x,y);
           return map[(x+xx)+"_"+(y+yy)];
         }
      }
@@ -85,6 +116,8 @@ function enterFrame() {
     shiftY += ((dok.pos.y-shiftY)/5);
     doUpdateScreen = true;
   }
+  
+  showEffects();  
   
   if(doUpdateScreen)
     updateScreen();
