@@ -8,6 +8,7 @@ var effectsOverlay;
 var particles = [];
 var recycleLasers = [];
 var hitImages = [];
+var score = 0;
 
 function initGame() {
   dok = createSprite(dobukiDataURI);
@@ -82,6 +83,7 @@ function hit(img) {
     setAlpha(img,.2);
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
+    score++;
   }
 }
 
