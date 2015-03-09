@@ -80,6 +80,8 @@ function collide(x,y,type) {
 }
 
 function enterFrame() {
+  if(editMode)
+    return;
   globalFrame++;
   var doUpdateScreen = false;
   var speed = .5;
