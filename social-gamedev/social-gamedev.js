@@ -195,7 +195,6 @@ function readURL(event) {
        var reader = new FileReader();
        reader.onload = function (e) {
          var src = e.target.result; // src id a data-uri
-         console.log(src,lastSelectedImage);
          if(lastSelectedImage) {
              if(lastSelectedImage.path) {
                 var firebaseSrc = firebaseImg.child(lastSelectedImage.path).child("src");
@@ -415,7 +414,7 @@ function updateScreen(options) {
         var tag = img.tagName.toLowerCase();
         
         if(tag=="img")
-            checkFirebaseAttachment(img);
+            checkFirebaseAttachment(img,true);
         
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
         var scale = calculateScale(img.pos.y-shiftY);
@@ -619,19 +618,18 @@ function ensureImage(img,ignoreSrc,ignoreAdd) {
         img.path = MD5_path(new Date()+""+Math.random());
         img.setAttribute("path",img.path);
     }
-    if(!ignoreSrc)
-        checkFirebaseAttachment(img);
+    checkFirebaseAttachment(img,ignoreSrc);
     if(!ignoreAdd)
         addImageToFirebase(img,img.pos.x,img.pos.y);
 }
 
-function checkFirebaseAttachment(img) {
+function checkFirebaseAttachment(img,ignoreSrc) {
     if(!img.firebase && img.path) {
         var screenPos = convertToScreen(img.pos.x,img.pos.y);
-        console.log(screenPos,screenWidth,screenHeight)
         if(screenPos.x>0 && screenPos.y>0 && screenPos.x<screenWidth && screenPos.y<screenHeight) {
             var firebaseSrc = firebaseImg.child(img.path).child("src");
-            firebaseSrc.set(img.src);
+            if(!ignoreSrc)
+                firebaseSrc.set(img.src);
             attachFirebase (img,firebaseSrc);
         }
     }
