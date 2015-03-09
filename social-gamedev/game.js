@@ -142,7 +142,8 @@ function handleAI() {
     if(img.drawn) {
       img.agressivity = (img.agressivity?img.agressivity+1:1);
       if(img.agressivity>10) {
-        shootLaserBeam(img.pos.x,img.pos.y,Math.random()<.5?-1:1,1);
+        var dir = Math.random()<.5?-1:1;
+        shootLaserBeam(img.pos.x+dir*2,img.pos.y,dir,1);
         img.agressivity = 0;
       }
     }
