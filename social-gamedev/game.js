@@ -43,7 +43,8 @@ function showEffects() {
   ctx.fillStyle="#FF"+Math.floor(Math.random()*16).toString(16)+Math.floor(Math.random()*16).toString(16)+"00";
   for(var i=particles.length-1;i>=0;i--) {
     var particle = particles[i];
-    ctx.fillRect(particle[0],particle[1],4,4);
+    var size = Math.round(2+Math.random()*4);
+    ctx.fillRect(particle[0],particle[1],size,size);
     particle[0] += particle[2];
     particle[1] += particle[3];
     particle[3]+=3;
