@@ -194,7 +194,7 @@ function handleAI() {
     var tag = img.tagName.toLowerCase();
     if(img.drawn && img.firebase && !img.ko) {
       img.agressivity = (img.agressivity?img.agressivity+1:1);
-      if(img.agressivity>Math.max(5,20-score)) {
+      if(img.agressivity>Math.max(5,30-score)) {
         var dir = Math.random()<.5?-1:1;
         shootLaserBeam(img.pos.x+dir*2,img.pos.y,dir,1);
         img.agressivity = 0;
