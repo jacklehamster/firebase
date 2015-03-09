@@ -25,7 +25,7 @@ function onKey(event) {
 function showSplash(x,y) {
   var screenSplash = convertToScreen(x,y);
   for(var i=0;i<20;i++)
-    particles.push([screenSplash.x,screenSplash.y-20,(Math.random()-.5)*20,Math.random()*-10,globalFrame]);
+    particles.push([screenSplash.x,screenSplash.y-30,(Math.random()-.5)*20,Math.random()*-15,globalFrame]);
 }
 
 function showEffects() {
@@ -40,7 +40,7 @@ function showEffects() {
   var canvas = effectsOverlay;
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="#FF0000";
+  ctx.fillStyle="#FF"+(Math.random()*256).toString(16)+"00";
   for(var i=particles.length-1;i>=0;i--) {
     var particle = particles[i];
     ctx.fillRect(particle[0],particle[1],5,5);
