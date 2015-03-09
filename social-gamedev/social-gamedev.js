@@ -217,6 +217,8 @@ function readURL(event) {
 function applyOptions() {
     document.getElementById("tools").style.visibility = editMode?"":"hidden";
     document.getElementById("tooltips").style.visibility = editMode?"":"hidden";
+    if(!editMode)
+        doZoom(1);
     updateScreen();
 }
 
