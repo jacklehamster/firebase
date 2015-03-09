@@ -96,7 +96,10 @@ function hit(img) {
     }
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
-    score++;
+    if(img!=dok) {
+      score++;
+      updateScore();
+    }
     if(img!=dok) {
       var timeout = setTimeout(
           function() {
