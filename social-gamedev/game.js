@@ -156,7 +156,8 @@ function showIntro() {
   "<br>"+
   "<br>"+
   "<center>Arrow keys to move.<br>Space to shoot.<br>ESC to end the game.<center/>"+
-  "</h4>"
+  "</h4><br><br>"+
+  "<div align='right'><i>Dobuki's Social Gamedev was built using <a href='http://www.firebase.com'><b><img src='https://pbs.twimg.com/profile_images/1974595305/firebase_branding_r4_FINAL_03.png' height=30 width=30> Firebase</b></a></i></div>"
 
   var button = document.createElement("input");
   button.type="button";
