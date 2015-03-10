@@ -197,12 +197,11 @@ function showGameOver() {
   var td = document.createElement("td");
   tr.appendChild(td);
   
+  var tweet = document.createElement("center");
+  
   var scoreTable = td;
   scoreTable.style.backgroundColor="white";
   setAlpha(scoreTable,.7);
-  
-  var tweet = document.createElement("center");
-  scoreTable.appendChild(tweet);
   
   var recordedScore = false;
   var fireScore = firebaseRoot.child("highscore");
@@ -236,6 +235,7 @@ function showGameOver() {
           html += "<li>" + scoreArray[i].name + " - " + scoreArray[i].score + "</li>";
       }
       scoreTable.innerHTML = html+"</ol>";
+      scoreTable.appendChild(tweet);
 
       if(score && (scoreArray.length<10 || score>scoreArray[9]) && !recordedScore) {
         recordedScore = true;
@@ -301,7 +301,6 @@ function showGameOver() {
       count: "none",
       text: "Check out #Dobuki's Social Gamedev, a game that you create as you play it!"
     }).then(function (el) {
-      console.log("Button created.")
     }
   );
   
