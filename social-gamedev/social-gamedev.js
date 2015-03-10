@@ -215,8 +215,8 @@ function readURL(event) {
 }
 
 function applyOptions() {
-    document.getElementById("tools").style.visibility = editMode?"":"hidden";
-    document.getElementById("tooltips").style.visibility = editMode?"":"hidden";
+    document.getElementById("tools").style.display = editMode?"":"none";
+    document.getElementById("tooltips").style.display = editMode?"":"none";
     document.getElementById("score").style.display = editMode?"none":"";
     if(!editMode)
         doZoom(1-globalZoom);
