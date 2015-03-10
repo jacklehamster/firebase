@@ -460,6 +460,7 @@ function enterFrame() {
       if(keys[40]) dy++;  //  down
       if(keys[27]) {
         dok.hits = 100;
+        hit(dok);
       }
 
       
