@@ -501,7 +501,7 @@ function enterFrame() {
       
       //  shoot laser
       if(keys[32]) {  //  space bar
-        if(globalFrame-dok.lastLaser>10) {
+        if(globalFrame-dok.lastLaser>5) {
           shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction,2);
         }
       }
