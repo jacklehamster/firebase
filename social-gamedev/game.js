@@ -109,6 +109,8 @@ function showGameOver() {
   fireScore.on('value',
     function(snapshot) {
       var scores = snapshot.val();
+      if(!scores)
+        scores = {};
       var scoreArray = [];
       
       for(var ses in scores) {
