@@ -294,6 +294,7 @@ function showGameOver() {
     top.location.href,
     tweet,
     {
+      count: "none",
       text: "Check out #Dobuki's Social Gamedev, a game that you create as you play it!"
     }).then(function (el) {
       console.log("Button created.")
