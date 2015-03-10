@@ -260,13 +260,16 @@ function showGameOver() {
         else {
           var name = prompt("You ranked in the leaderboard! Enter your name:");
           if(name) {
-            fireScore.child(session).set(
-              {
-                session:session,
-                name:name,
-                score:score
-              }
-            );
+            name = name.trim();
+            if(name.length) {
+              fireScore.child(session).set(
+                {
+                  session:session,
+                  name:name,
+                  score:score
+                }
+              );
+            }
           }
         }
       }
