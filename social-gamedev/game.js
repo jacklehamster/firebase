@@ -220,8 +220,9 @@ function showGameOver() {
   
   var recordedScore = false;
   var fireScore = firebaseRoot.child("highscore");
+  var fireScoreFunction;
   fireScore.on('value',
-    function(snapshot) {
+    fireScoreFunction = function(snapshot) {
       var scores = snapshot.val();
       if(!scores)
         scores = {};
@@ -285,6 +286,7 @@ function showGameOver() {
       var div = document.getElementById("gameover");
       div.parentElement.removeChild(div);
       resetGame();
+      fireScore.off('value',fireScoreFunction);
     }
   );
   div.appendChild(button);
