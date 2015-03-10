@@ -56,7 +56,7 @@ function initGame() {
 
 function addComment(o) {
   var span = document.createElement('span');
-  span.innerHTML = "<center>"+o.date+"<br>"+ o.comment+"</center>";
+  span.innerHTML = "<center style='color:#666666'><span size=-2>"+o.date+"</span><br>"+ o.comment+"</center>";
   span.style.position = "absolute";
   span.readonly = true;
   span.pos = {x:o.x,y:o.y};
