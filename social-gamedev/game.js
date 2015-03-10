@@ -147,6 +147,9 @@ function showIntro() {
   "The changes you made are reflected in real time and affect all players in the game."+
   "<br>"+
   "Essentially, you are building the game live as it is being played."+
+  "<br>"+
+  "<br>"+
+  "Arrow keys to move. Space to shoot. ESC to end the game."+
   "</h4>"
 
   var button = document.createElement("input");
@@ -448,13 +451,17 @@ function enterFrame() {
     globalFrame++;
     
     dok.style.visibility = invincible(dok) && Math.floor(globalFrame/5)%2==0 ? "hidden" : "";
-
+    
     if(!dok.ko) {
       var dx = 0, dy = 0;
       if(keys[37]) dx--;  //  left
       if(keys[39]) dx++;  //  right
       if(keys[38]) dy--;  //  up
       if(keys[40]) dy++;  //  down
+      if(keys[27]) {
+        dok.hits = 100;
+      }
+
       
       if(dx && dx*dok.direction<0) {
         dok.setDirection(dx);
