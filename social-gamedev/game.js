@@ -152,10 +152,10 @@ function showIntro() {
   "I hope you enjoy this experiment, and good luck!"+
   "<br>"+
   "<br>"+
-  "<i align='right'>Jack Le Hamster</i>"+
+  "<div align='right'><i>Jack Le Hamster</i></div>"+
   "<br>"+
   "<br>"+
-  "</center>Arrow keys to move.<br>Space to shoot.<br>ESC to end the game.<center>"+
+  "<center>Arrow keys to move.<br>Space to shoot.<br>ESC to end the game.<center/>"+
   "</h4>"
 
   var button = document.createElement("input");
