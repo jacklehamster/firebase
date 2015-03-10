@@ -15,8 +15,12 @@ var score = 0;
 var doks = {};
 var doksData = {};
 var dokspeed = 1;
+var myFire;
 
 function initGame() {
+  myFire = fireDoks.child(session);
+  myFire.onDisconnect().remove();
+  
   dok = createSprite(dobukiDataURI);
   dok.style.position = "absolute";
   dok.readonly = true;
@@ -219,6 +223,13 @@ function enterFrame() {
       var dist = Math.sqrt(dx*dx+dy*dy);
       dok.pos.x += dx/dist*dokspeed;
       dok.pos.y += dy/dist*dokspeed;
+      myFire.set(
+        {
+          session:session,
+          x:dok.pos.x,
+          y:dok.pos.y
+        }
+      );
       doUpdateScreen = true;
     }
     else {
