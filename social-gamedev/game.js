@@ -132,7 +132,7 @@ function showIntro() {
   
   td.innerHTML = 
   "<center style=\"font-family: Georgia, 'Times New Roman', Times, serif\">"+
-  "<h2>Dobuki's</h2><h1 style='color:blue'>SOCIAL GAMEDEV</h1><font size='2'>social gamdev experiment #1</font></center>"+
+  "<h2>Dobuki's</h2><h1 style='color:blue'>SOCIAL GAMEDEV<font size='2'>v.1</font></h1><font size='2'>a social game development experiment</font></center>"+
   "<h4>"+
   "Welcome to Dobuki's Social Gamedev experiment. At first glance, this looks like a"+
   "<br>"+
