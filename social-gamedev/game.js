@@ -184,7 +184,7 @@ function updateDoks() {
       oDok.goal.y = data.y;
       var dx = oDok.goal.x-oDok.pos.x;
       var dy = oDok.goal.y-oDok.pos.y;
-      var dist = Math.sqrt(dx*dx+dy*dy
+      var dist = Math.sqrt(dx*dx+dy*dy);
       if(oDok.label!=data.label) {
         oDok.gotoAndPlay(data.label);
       }
