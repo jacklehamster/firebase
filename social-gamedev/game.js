@@ -48,6 +48,7 @@ function initGame() {
 function resetGame() {
   score = 0;
   dok.born = globalFrame;
+  dok.ko = false;
   updateScore();
 }
 
