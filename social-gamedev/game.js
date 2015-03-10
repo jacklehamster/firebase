@@ -101,6 +101,53 @@ function showGameOver() {
   div.style.width = "100%";
   div.style.top = div.style.posTop  = window.innerHeight/2 + "px";
   
+  var recordedScore = false;
+  var fireScore = new Firebase('https://art-depot.firebaseio.com/highscore/');
+  fireScore.on('value',
+    function(snapshot) {
+      var scores = snapshot.val();
+      var scoreArray = [];
+      
+      for(var ses in scores) {
+        scoreArray.push(
+          session:ses,
+          score:scores[ses].score,
+          name:scores[ses].name
+        );
+      }
+      
+      scoreArray.sort(
+          function(a,b) {
+            return a.score<b.score?-1:a.score>b.score?1:0;
+          }
+      );
+      
+      for(var i=10;i<scoreArray.length;i++) {
+        fireScore.child(scoreArray[i].session).remove();
+      }
+
+      if((scoreArray.length<10 || score>scoreArray[9]) && !recordedScore) {
+        recordedScore = true;
+        if(scores[session]) {
+          fireScore.child(session).child('score').set(score);
+        }
+        else {
+          var name = prompt("You ranked in the leaderboard! Enter your name:");
+          if(name) {
+            fireScore.child(session).set(
+              {
+                session:session,
+                name:name,
+                score:score
+              }
+            );
+          }
+        }
+      }
+      
+    }
+  );
+  
   var button = document.createElement("input");
   button.type="button";
   button.value = "CONTINUE GAME";
