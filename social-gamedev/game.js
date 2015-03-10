@@ -58,7 +58,7 @@ function addComment(o) {
   var span = document.createElement('span');
   span.innerHTML = o.date+" - "+ o.comment;
   span.readonly = true;
-  span.pos = {o.x,o.y};
+  span.pos = {x:o.x,y:o.y};
   document.getElementById("screen").appendChild(span);
 }
 
