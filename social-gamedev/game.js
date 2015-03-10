@@ -43,9 +43,22 @@ function initGame() {
   document.addEventListener("keyup",onKey);
   
   fireDoks.on('value',fireDoksChanged);
+  commentsBase.on('child_added',
+    function(snapshot) {
+      var o = snapshot.val();
+      addComment(o);
+    }
+  );
   
   resetGame();
   showIntro();
+}
+
+function addComment(o) {
+  var span = document.createElement('span');
+  span.innerHTML = o.date+" - "+ o.comment;
+  span.pos = {o.x,o.y};
+  document.getElementById("screen").appendChild(span);
 }
 
 function resetGame() {
@@ -254,7 +267,7 @@ function showGameOver() {
   button.value = "LEAVE US A COMMENT";
   button.addEventListener("click",
     function(event) {
-      var button = e.currentTarget;
+      var button = event.currentTarget;
       var comment = prompt("Enter a short comment");
       if(comment) {
         commentsBase.push(
