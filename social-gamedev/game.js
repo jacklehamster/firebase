@@ -99,7 +99,10 @@ function showGameOver() {
   div.id = "gameover";
   div.innerHTML = "<h1 style='color:red'>GAME OVER</h1><br>";
   div.style.width = "100%";
-  div.style.top = div.style.posTop  = window.innerHeight/2 + "px";
+  div.style.top = div.style.posTop  = window.innerHeight/3 + "px";
+  
+  var scoreTable = document.createElement("ol");
+  div.appendChild(scoreTable);
   
   var recordedScore = false;
   var fireScore = new Firebase('https://art-depot.firebaseio.com/highscore/');
@@ -125,6 +128,12 @@ function showGameOver() {
       for(var i=10;i<scoreArray.length;i++) {
         fireScore.child(scoreArray[i].session).remove();
       }
+
+      var html = "";
+      for(var i=0;i<Math.min(scoreArray.length,10);i++) {
+          html += "<li>" + scoreArray[i].name + " - " + scoreArray[i].score + "</li>";
+      }
+      scoreTable.innerHTML = html;
 
       if((scoreArray.length<10 || score>scoreArray[9]) && !recordedScore) {
         recordedScore = true;
