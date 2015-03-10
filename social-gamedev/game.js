@@ -184,19 +184,16 @@ function updateDoks() {
       oDok.goal.y = data.y;
       var dx = oDok.goal.x-oDok.pos.x;
       var dy = oDok.goal.y-oDok.pos.y;
-      var dist = Math.sqrt(dx*dx+dy*dy);
+      var dist = Math.sqrt(dx*dx+dy*dy
+      if(oDok.label!=data.label) {
+        oDok.gotoAndPlay(data.label);
+      }
+      if(oDok.direction!=data.direction)
+        oDok.setDirection(data.direction);
       if(dist>1) {
         oDok.pos.x += dx*dokspeed/dist;
         oDok.pos.y += dy*dokspeed/dist;
-        if(oDok.label!="running")
-          oDok.gotoAndPlay("running");
-        if(Math.abs(dx)>.1 && dx*oDok.direction<1)
-          oDok.setDirection(-oDok.direction);
         changed = true;
-      }
-      else {
-        if(oDok.label!="still")
-          oDok.gotoAndPlay("still");
       }
     }
   }
@@ -233,7 +230,9 @@ function enterFrame() {
           {
             session:session,
             x:dok.pos.x,
-            y:dok.pos.y
+            y:dok.pos.y,
+            label:dok.label,
+            direction:dok.direction
           }
         );
         doUpdateScreen = true;
