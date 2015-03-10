@@ -50,15 +50,6 @@ function resetGame() {
   dok.born = globalFrame;
   dok.ko = false;
   
-  var imgs = document.getElementById("screen").children;
-  for(var i=0;i<imgs.length;i++) {
-    var img = imgs[i];
-    var tag = img.tagName.toLowerCase();
-    if(img.drawn) {
-      img.agressivity = Math.floor(Math.random()*30);
-    }
-  }
-  
   updateScore();
 }
 
