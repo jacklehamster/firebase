@@ -138,7 +138,7 @@ function showGameOver() {
         fireScore.child(scoreArray[i].session).remove();
       }
 
-      var html = "";
+      var html = "<div width='100%' height='100%' style='background-color:white'>";
       for(var i=0;i<Math.min(scoreArray.length,10);i++) {
           html += "<li>" + scoreArray[i].name + " - " + scoreArray[i].score + "</li>";
       }
