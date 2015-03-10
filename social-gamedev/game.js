@@ -217,7 +217,7 @@ function hit(img) {
             if(img.canvas) {
               setAlpha(img.canvas,1);
             }
-          },30000
+          },20000
       );
     }
   }
