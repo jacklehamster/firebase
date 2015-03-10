@@ -501,7 +501,7 @@ function enterFrame() {
       
       //  shoot laser
       if(keys[32]) {  //  space bar
-        if(globalFrame-dok.lastLaser>3) {
+        if(globalFrame-dok.lastLaser>5) {
           shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction,2);
         }
       }
@@ -572,7 +572,8 @@ function handleAI() {
 }
 
 function shootLaserBeam(x,y,direction,type) {
-  dok.lastLaser = globalFrame;
+  if(type==1)
+    dok.lastLaser = globalFrame;
   var img = recycleLasers.length?recycleLasers.pop():new Image();
   img.id = ""+Math.random();
   img.born = globalFrame;
