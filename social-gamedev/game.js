@@ -100,7 +100,7 @@ function showIntro() {
   var div = document.createElement("div");
   div.style.position = "absolute";
   div.align = "center";
-  div.id = "gameover";
+  div.id = "intro";
   div.style.width = "100%";
   div.style.top = div.style.posTop  = window.innerHeight/3 + "px";
   
