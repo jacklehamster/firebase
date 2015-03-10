@@ -341,6 +341,7 @@ function hit(img) {
       if(img.canvas) {
         setAlpha(img.canvas,.2);
       }
+      moveImage(img,img.pos.x+300*(Math.random()-.5),img.pos.y+300*(Math.random()-.5));
     }
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
