@@ -16,6 +16,7 @@ var doks = {};
 var doksData = {};
 var dokspeed = 1;
 var myFire;
+var paused = false;
 
 function initGame() {
   myFire = fireDoks.child(session);
@@ -43,13 +44,14 @@ function initGame() {
   fireDoks.on('value',fireDoksChanged);
   
   resetGame();
+  showIntro();
 }
 
 function resetGame() {
   score = 0;
   dok.born = globalFrame;
   dok.ko = false;
-  
+  paused = false;
   updateScore();
 }
 
@@ -91,6 +93,56 @@ function showEffects() {
     ctx.fillStyle="#00FF00";
     ctx.fillRect(screenPos.x-50,screenPos.y,life,5);
   }
+}
+
+function showIntro() {
+  paused = true;
+  var div = document.createElement("div");
+  div.style.position = "absolute";
+  div.align = "center";
+  div.id = "gameover";
+  div.style.width = "100%";
+  div.style.top = div.style.posTop  = window.innerHeight/3 + "px";
+  
+  var table = document.createElement("table");
+  div.appendChild(table);
+  var tr = document.createElement("tr");
+  table.appendChild(tr);
+  var td = document.createElement("td");
+  tr.appendChild(td);
+  td.style.width = "100%";
+  td.style.backgroundColor = "white";
+  setAlpha(td,.7);
+  
+  td.innerHTML = 
+  "<h1>Dobuki's SOCIAL GAMEDEV</h1>"
+
+  var button = document.createElement("input");
+  button.type="button";
+  button.value = "START GAME";
+  button.addEventListener("click",
+    function(event) {
+      var div = document.getElementById("intro");
+      div.parentElement.removeChild(div);
+      resetGame();
+    }
+  );
+  div.appendChild(button);
+  
+  var button = document.createElement("input");
+  button.type="button";
+  button.value = "EDIT GAME";
+  button.addEventListener("click",
+    function(event) {
+      var div = document.getElementById("intro");
+      div.parentElement.removeChild(div);
+      paused = false;
+      editMode = true;
+      applyOptions();
+    }
+  );
+  div.appendChild(button);
+  document.body.appendChild(div);
 }
 
 function showGameOver() {
@@ -322,7 +374,7 @@ function enterFrame() {
     doUpdateScreen = true;
   }
   
-  if(!editMode) {
+  if(!editMode && !paused) {
     globalFrame++;
     
     dok.style.visibility = invincible(dok) && Math.floor(globalFrame/5)%2==0 ? "hidden" : "";
