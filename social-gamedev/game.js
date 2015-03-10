@@ -198,6 +198,9 @@ function hit(img) {
     }
     else {
       setAlpha(img,.2);
+      if(img.canvas) {
+        setAlpha(img.canvas,.2);
+      }
     }
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
@@ -211,6 +214,9 @@ function hit(img) {
             clearTimeout(timeout);
             delete img.ko;
             setAlpha(img,1);
+            if(img.canvas) {
+              setAlpha(img.canvas,1);
+            }
           },30000
       );
     }
