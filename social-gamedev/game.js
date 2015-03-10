@@ -190,7 +190,7 @@ function updateDoks() {
         oDok.pos.y += dy*dokspeed/dist;
         if(oDok.label!="running")
           oDok.gotoAndPlay("running");
-        if(dx*oDok.direction<1)
+        if(Math.abs(dx)>.1 && dx*oDok.direction<1)
           oDok.setDirection(-oDok.direction);
         changed = true;
       }
