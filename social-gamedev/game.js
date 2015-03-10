@@ -96,9 +96,22 @@ function showGameOver() {
   div.style.position = "absolute";
   div.align = "center";
   div.id = "gameover";
-  div.innerHTML = "<h1 style='color:red'>GAME OVER</h1>";
+  div.innerHTML = "<h1 style='color:red'>GAME OVER</h1><br>";
   div.style.width = "100%";
   div.style.top = div.style.posTop  = window.innerHeight/2 + "px";
+  
+  var button = document.createElementById("input");
+  button.type="button";
+  button.value = "CONTINUE GAME";
+  button.addEventListener("click",
+    function(event) {
+      var div = document.getElementById("gameover");
+      div.parentElement.removeChild(div);
+      resetGame();
+    }
+  );
+  
+  div.appendChild(button);
   document.body.appendChild(div);
 }
 
