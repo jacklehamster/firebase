@@ -57,6 +57,7 @@ function initGame() {
 function addComment(o) {
   var span = document.createElement('span');
   span.innerHTML = o.date+" - "+ o.comment;
+  span.readonly = true;
   span.pos = {o.x,o.y};
   document.getElementById("screen").appendChild(span);
 }
