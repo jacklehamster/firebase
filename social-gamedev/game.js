@@ -286,6 +286,18 @@ function showGameOver() {
   div.appendChild(button);
   
   document.body.appendChild(div);
+  
+  twttr.widgets.createShareButton(
+    top.location.href,
+  div,
+  {
+    count: 'none',
+    text: "Check out Dobuki's Social Gamedev, a game that you create as you play it!"
+  }).then(function (el) {
+    console.log("Button created.")
+  });
+  
+  
 }
 
 function hit(img) {
