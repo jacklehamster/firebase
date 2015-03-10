@@ -91,6 +91,17 @@ function showEffects() {
   }
 }
 
+function showGameOver() {
+  var div = document.createElement("div");
+  div.style.position = "absolute";
+  div.style.align = "center";
+  div.id = "gameover";
+  div.innerHTML = "<h2 style='font-color:red'>GAME OVER</h2>";
+  div.style.width = "100%";
+  div.style.top = div.style.posTop  = window.innerHeight/2;
+  document.body.appendChild(div);
+}
+
 function hit(img) {
   if(!img.hits) {
     hitImages.push(img);
@@ -103,6 +114,7 @@ function hit(img) {
     if(img==dok) {
       img.gotoAndPlay("ko");
       updateMyDok();
+      showGameOver();
     }
     else {
       setAlpha(img,.2);
