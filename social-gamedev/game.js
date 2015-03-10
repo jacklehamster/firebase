@@ -115,13 +115,18 @@ function showIntro() {
   setAlpha(td,.7);
   
   td.innerHTML = 
-  "<center><h2>Dobuki's</h2><h1 style='color:blue'>SOCIAL GAMEDEV</h1></center>"+
+  "<center style=\"font-family: Georgia, 'Times New Roman', Times, serif\">"+
+  "<h2>Dobuki's</h2><h1 style='color:blue'>SOCIAL GAMEDEV</h1></center>"+
   "<h4>"+
   "Welcome to Dobuki's Social Gamedev experiment. At first glance, this looks like a"+
   "<br>"+
-  "standard run-and-gun. However, you can edit the game at any point of time, simply"+
+  "standard run-and-gun game, but it is different. "
   "<br>"+
-  "by clicking the option icon at the top right. Click it again to continue the game."+
+  "First of all, you can see other players currently in the game in real time."+
+  "<br>"+
+  "Secondly, you can edit the game at any point, simply by clicking the <b>option</b> icon"+
+  "<br>"+
+  "on the top right. You then click that icon again to continue playing."+
   "<br>"+
   "The changes you made are reflected in real time and affect all players in the game."+
   "<br>"+
