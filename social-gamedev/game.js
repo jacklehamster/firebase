@@ -348,7 +348,10 @@ function hit(img) {
       if(img.canvas) {
         setAlpha(img.canvas,.2);
       }
-      moveImage(img,img.pos.x+300*(Math.random()-.5),img.pos.y+300*(Math.random()-.5));
+      
+      var radius = Math.random()*2*Math.PI;
+      
+      moveImage(img,img.pos.x+100*Math.cos(radius),img.pos.y+100*Math.sin(radius));
     }
     var index = hitImages.indexOf(img);
     hitImages.splice(index,1);
