@@ -100,7 +100,7 @@ function showGameOver() {
   div.style.width = "100%";
   div.style.top = div.style.posTop  = window.innerHeight/2 + "px";
   
-  var button = document.createElementById("input");
+  var button = document.createElement("input");
   button.type="button";
   button.value = "CONTINUE GAME";
   button.addEventListener("click",
