@@ -17,6 +17,7 @@ var doksData = {};
 var dokspeed = 1;
 var myFire;
 var paused = false;
+var commentsBase = firebaseRoot.child("comments");
 
 function initGame() {
   myFire = fireDoks.child(session);
@@ -246,8 +247,29 @@ function showGameOver() {
       resetGame();
     }
   );
-  
   div.appendChild(button);
+
+  var button = document.createElement("input");
+  button.type="button";
+  button.value = "LEAVE US A COMMENT";
+  button.addEventListener("click",
+    function(event) {
+      var button = e.currentTarget;
+      var comment = prompt("Enter a short comment");
+      if(comment) {
+        commentsBase.push(
+          {
+            comment:comment,
+            x:dok.pos.x,
+            y:dok.pos.y,
+            date:new Date().toLocaleDateString()
+          }
+        );
+      }
+    }
+  );
+  div.appendChild(button);
+  
   document.body.appendChild(div);
 }
 
