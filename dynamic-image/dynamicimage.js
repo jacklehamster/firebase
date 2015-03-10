@@ -20,6 +20,7 @@ function init() {
    var loc = [hash.slice(0,12),
               hash.slice(12,24),
               hash.slice(24,36)].join("/");
+   loc = hash;
    node = firebase.child(loc);
    node.on('value', valueChanged);  // refresh whenever its value changes
    var img = document.getElementById("img");
