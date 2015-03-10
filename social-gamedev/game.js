@@ -165,6 +165,7 @@ function fireDoksChanged(snapshot) {
 
 function updateDoks() {
   //  update synchronized doks from Firebase
+  var changed = false;
   for(var ses in doksData) {
     if(ses!=session) {
       var data = doksData[ses];
@@ -191,6 +192,7 @@ function updateDoks() {
           oDok.gotoAndPlay("running");
         if(dx*oDok.direction<1)
           oDok.setDirection(-oDok.direction);
+        changed = true;
       }
       else {
         if(oDok.label!="still")
@@ -198,85 +200,88 @@ function updateDoks() {
       }
     }
   }
+  return changed;
 }
 
 function enterFrame() {
-  updateDoks();
-  
-  if(editMode)
-    return;
-  globalFrame++;
   var doUpdateScreen = false;
-  
-  if(!dok.ko) {
-    var dx = 0, dy = 0;
-    if(keys[37]) dx--;  //  left
-    if(keys[39]) dx++;  //  right
-    if(keys[38]) dy--;  //  up
-    if(keys[40]) dy++;  //  down
-    
-    if(dx) {
-      dok.setDirection(dx);
-    }
-    
-    if(dx!=0 || dy!=0) {
-      if(dok.label!="running")
-        dok.gotoAndPlay("running")
-      var dist = Math.sqrt(dx*dx+dy*dy);
-      dok.pos.x += dx/dist*dokspeed;
-      dok.pos.y += dy/dist*dokspeed;
-      myFire.set(
-        {
-          session:session,
-          x:dok.pos.x,
-          y:dok.pos.y
-        }
-      );
-      doUpdateScreen = true;
-    }
-    else {
-      if(dok.label!="still")
-        dok.gotoAndPlay("still");
-    }
-    
-    //  shoot laser
-    if(keys[32]) {  //  space bar
-      if(globalFrame-dok.lastLaser>5) {
-        shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction,2);
-      }
-    }
-  }
-  
-  //  handle lasers
-  for(var i in lasers) {
-    var laser = lasers[i];
-    laser.pos.x += laser.direction*(laser.type==2?4:3);
-    
-    if(globalFrame-laser.born>50 || collide(laser.pos.x,laser.pos.y,laser.type)) {
-      laser.parentElement.removeChild(laser);
-      delete lasers[i];
-      recycleLasers.push(laser);
-    }
-    doUpdateScreen= true;
-  }
-  
-  //  handle AI agressivity
-  if(globalFrame-dok.born>100)
-    handleAI();
-
-  //  heal images
-  for(var i=hitImages.length-1;i>=0;i--) {
-    heal(hitImages[i]);
-  }
-  
-  //  scroll to dok
-  if(!editMode) {
-    shiftX += ((dok.pos.x-shiftX)/5);
-    shiftY += ((dok.pos.y-shiftY)/5);
+  if(updateDoks()) {
     doUpdateScreen = true;
   }
   
-  showEffects();  
+  if(!editMode) {
+    globalFrame++;
+    
+    if(!dok.ko) {
+      var dx = 0, dy = 0;
+      if(keys[37]) dx--;  //  left
+      if(keys[39]) dx++;  //  right
+      if(keys[38]) dy--;  //  up
+      if(keys[40]) dy++;  //  down
+      
+      if(dx) {
+        dok.setDirection(dx);
+      }
+      
+      if(dx!=0 || dy!=0) {
+        if(dok.label!="running")
+          dok.gotoAndPlay("running")
+        var dist = Math.sqrt(dx*dx+dy*dy);
+        dok.pos.x += dx/dist*dokspeed;
+        dok.pos.y += dy/dist*dokspeed;
+        myFire.set(
+          {
+            session:session,
+            x:dok.pos.x,
+            y:dok.pos.y
+          }
+        );
+        doUpdateScreen = true;
+      }
+      else {
+        if(dok.label!="still")
+          dok.gotoAndPlay("still");
+      }
+      
+      //  shoot laser
+      if(keys[32]) {  //  space bar
+        if(globalFrame-dok.lastLaser>5) {
+          shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction,2);
+        }
+      }
+    }
+    
+    //  handle lasers
+    for(var i in lasers) {
+      var laser = lasers[i];
+      laser.pos.x += laser.direction*(laser.type==2?4:3);
+      
+      if(globalFrame-laser.born>50 || collide(laser.pos.x,laser.pos.y,laser.type)) {
+        laser.parentElement.removeChild(laser);
+        delete lasers[i];
+        recycleLasers.push(laser);
+      }
+      doUpdateScreen= true;
+    }
+    
+    //  handle AI agressivity
+    if(globalFrame-dok.born>100)
+      handleAI();
+  
+    //  heal images
+    for(var i=hitImages.length-1;i>=0;i--) {
+      heal(hitImages[i]);
+    }
+    
+    //  scroll to dok
+    if(!editMode) {
+      shiftX += ((dok.pos.x-shiftX)/5);
+      shiftY += ((dok.pos.y-shiftY)/5);
+      doUpdateScreen = true;
+    }
+    
+    showEffects();  
+  }
   
   if(doUpdateScreen)
     updateScreen();
