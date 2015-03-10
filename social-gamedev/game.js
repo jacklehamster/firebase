@@ -232,13 +232,14 @@ function showGameOver() {
         scoreArray.push({
           session:ses,
           score:scores[ses].score,
-          name:scores[ses].name
+          name:scores[ses].name,
+          timestamp:score[ses].timestamp?score[ses].timestamp:0
         });
       }
       
       scoreArray.sort(
           function(a,b) {
-            return a.score>b.score?-1:a.score<b.score?1:0;
+            return a.score>b.score?-1:a.score<b.score?1:a.timestamp<b.timestamp?-1:a.timestamp>b.timestamp?1:0;
           }
       );
       
@@ -267,7 +268,8 @@ function showGameOver() {
                 {
                   session:session,
                   name:name,
-                  score:score
+                  score:score,
+                  timestamp:new Date().getTime()
                 }
               );
             }
