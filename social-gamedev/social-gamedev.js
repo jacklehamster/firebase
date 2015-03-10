@@ -1,6 +1,7 @@
-var firebase = new Firebase('https://art-depot.firebaseio.com/artdepot/');
-var firebaseMap = new Firebase("https://art-depot.firebaseio.com/map");
-var firebaseImg = new Firebase("https://art-depot.firebaseio.com/images");
+var firebase = firebaseRoot.child("artdepot");
+var firebaseMap = firebaseRoot.child("map");
+var firebaseImg = firebaseRoot.child("images");
+
 
 var editMode = false;
 var action="select";
