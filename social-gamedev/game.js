@@ -140,7 +140,7 @@ function updateScore() {
 }
 
 function invincible(img) {
-   return globalFrame-(img.born?img.born:0)<300;
+   return globalFrame-(img.born?img.born:0)<200;
 }
 
 function collide(x,y,type) {
