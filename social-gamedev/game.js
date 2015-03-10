@@ -128,7 +128,7 @@ function showIntro() {
   tr.appendChild(td);
   td.style.width = "100%";
   td.style.backgroundColor = "white";
-  setAlpha(td,.7);
+  setAlpha(td,.9);
   
   td.innerHTML = 
   "<center style=\"font-family: Georgia, 'Times New Roman', Times, serif\">"+
