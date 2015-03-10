@@ -108,8 +108,7 @@ function showGameOver() {
   var td = document.createElement("td");
   tr.appendChild(td);
   
-  var scoreTable = document.createElement("ol");
-  td.appendChild(scoreTable);
+  var scoreTable = td;
   
   var recordedScore = false;
   var fireScore = new Firebase('https://art-depot.firebaseio.com/highscore/');
@@ -138,11 +137,11 @@ function showGameOver() {
         fireScore.child(scoreArray[i].session).remove();
       }
 
-      var html = "<div width='100%' height='100%' style='background-color:white'>";
+      var html = "<div width='100%' height='100%' style='background-color:white'></div><ol>";
       for(var i=0;i<Math.min(scoreArray.length,10);i++) {
           html += "<li>" + scoreArray[i].name + " - " + scoreArray[i].score + "</li>";
       }
-      scoreTable.innerHTML = html;
+      scoreTable.innerHTML = html+"</ol>";
 
       if(score && (scoreArray.length<10 || score>scoreArray[9]) && !recordedScore) {
         recordedScore = true;
