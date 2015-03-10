@@ -458,10 +458,6 @@ function enterFrame() {
       if(keys[39]) dx++;  //  right
       if(keys[38]) dy--;  //  up
       if(keys[40]) dy++;  //  down
-      if(keys[27]) {
-        dok.hits = 100;
-        hit(dok);
-      }
 
       
       if(dx && dx*dok.direction<0) {
@@ -491,6 +487,13 @@ function enterFrame() {
           shootLaserBeam(dok.pos.x,dok.pos.y,dok.direction,2);
         }
       }
+      
+      //  self-ko
+      if(keys[27]) {
+        dok.hits = 100;
+        hit(dok);
+      }
+      
     }
     
     //  handle lasers
