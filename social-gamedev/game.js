@@ -112,11 +112,11 @@ function showGameOver() {
       var scoreArray = [];
       
       for(var ses in scores) {
-        scoreArray.push(
+        scoreArray.push({
           session:ses,
           score:scores[ses].score,
           name:scores[ses].name
-        );
+        });
       }
       
       scoreArray.sort(
