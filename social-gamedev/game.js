@@ -187,7 +187,7 @@ function showIntro() {
   var fb = document.createElement("div");  
   fb.width = "100%";
   fb.innerHTML = 
-  "<div align='right'><font size=2><i>Dobuki's Social Gamedev was built using<br><a href='http://www.firebase.com'><b>Firebase <img src='https://pbs.twimg.com/profile_images/1974595305/firebase_branding_r4_FINAL_03.png' height=16 width=16></b></a></i>"+
+  "<div align='right'><font size=2><i>Dobuki's Social Gamedev was built using</i><br><a href='http://www.firebase.com' style='color:blank;text-decoration:none'><b>Firebase <img src='https://pbs.twimg.com/profile_images/1974595305/firebase_branding_r4_FINAL_03.png' height=16 width=16></b></a>"+
   "</font></div>";
   div.appendChild(fb);
   
