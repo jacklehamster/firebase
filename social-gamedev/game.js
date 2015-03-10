@@ -102,6 +102,7 @@ function hit(img) {
     img.hits = 0;
     if(img==dok) {
       img.gotoAndPlay("ko");
+      updateMyDok();
     }
     else {
       setAlpha(img,.2);
