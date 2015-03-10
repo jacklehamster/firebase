@@ -190,7 +190,7 @@ function updateDoks() {
         if(oDok.label!="running")
           oDok.gotoAndPlay("running");
         if(dx*oDok.direction<1)
-          oDok.setDirection(oDok.direction);
+          oDok.setDirection(-oDok.direction);
       }
       else {
         if(oDok.label!="still")
@@ -201,6 +201,8 @@ function updateDoks() {
 }
 
 function enterFrame() {
+  updateDoks();
+  
   if(editMode)
     return;
   globalFrame++;
@@ -275,8 +277,6 @@ function enterFrame() {
   }
   
   showEffects();  
-  
-  updateDoks();
   
   if(doUpdateScreen)
     updateScreen();
