@@ -118,7 +118,7 @@ function showIntro() {
   div.align = "center";
   div.id = "intro";
   div.style.width = "100%";
-  div.style.top = div.style.posTop  = window.innerHeight/5 + "px";
+  div.style.top = div.style.posTop  = window.innerHeight/8 + "px";
   
   var table = document.createElement("table");
   div.appendChild(table);
