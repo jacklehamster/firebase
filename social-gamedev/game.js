@@ -415,11 +415,15 @@ function handleAI() {
     var img = imgs[i];
     var tag = img.tagName.toLowerCase();
     if(img.drawn && img.firebase && !img.ko) {
-      img.agressivity = (img.agressivity?img.agressivity+1:1);
-      if(img.agressivity>Math.max(5,30-score/100)) {
-        var dir = Math.random()<.5?-1:1;
-        shootLaserBeam(img.pos.x+dir*2,img.pos.y,dir,1);
-        img.agressivity = 0;
+      
+      var screenPos = convertToScreen(img.pos.x,img.pos.y);
+      if(screenPos.x>0 && screenPos.y>0 && screenPos.x<window.innerWidth && screenPos.y<window.innerHeight) {
+        img.agressivity = (img.agressivity?img.agressivity+1:1);
+        if(img.agressivity>Math.max(5,30-score/100)) {
+          var dir = Math.random()<.5?-1:1;
+          shootLaserBeam(img.pos.x+dir*2,img.pos.y,dir,1);
+          img.agressivity = 0;
+        }
       }
     }
   }
