@@ -115,7 +115,18 @@ function showIntro() {
   setAlpha(td,.7);
   
   td.innerHTML = 
-  "<h1>Dobuki's SOCIAL GAMEDEV</h1>"
+  "<h2>Dobuki's</h2><br><h1 style='color:blue'>SOCIAL GAMEDEV</h1><br>"+
+  "<h4>"+
+  "Welcome to Dobuki's Social Gamedev experiment. At first glance, this looks like a"+
+  "<br>"+
+  "standard run-and-gun. However, you can edit the game at any point of time, simply"+
+  "<br>"+
+  "by clicking the option icon at the top right. Click it again to continue the game."+
+  "<br>"+
+  "The changes you made are reflected in real time and affect all players in the game."+
+  "<br>"+
+  "Essentially, you are building the game live as it is being played."+
+  "</h4>"
 
   var button = document.createElement("input");
   button.type="button";
