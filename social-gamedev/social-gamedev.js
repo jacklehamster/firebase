@@ -2,7 +2,7 @@ var firebase = new Firebase('https://art-depot.firebaseio.com/artdepot/');
 var firebaseMap = new Firebase("https://art-depot.firebaseio.com/map");
 var firebaseImg = new Firebase("https://art-depot.firebaseio.com/images");
 
-var editMode = true;
+var editMode = false;
 var action="select";
 var hovered = null;
 var shiftX=0,shiftY=0;
@@ -73,6 +73,7 @@ function init(event) {
 //            console.log(snapshot.ref().toString(),"\n",snapshot.val());
         }
     );
+    applyOptions();
 }
 
 function initToolbar() {
