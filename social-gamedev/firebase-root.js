@@ -1,1 +1,1 @@
-var root = new Firebase("https://art-depot.firebaseio.com/social-gamedev");
+var firebaseRoot = new Firebase("https://art-depot.firebaseio.com/social-gamedev");
