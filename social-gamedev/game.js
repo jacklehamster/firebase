@@ -115,7 +115,7 @@ function showIntro() {
   setAlpha(td,.7);
   
   td.innerHTML = 
-  "<h2>Dobuki's</h2><br><h1 style='color:blue'>SOCIAL GAMEDEV</h1><br>"+
+  "<center><h2>Dobuki's</h2><h1 style='color:blue'>SOCIAL GAMEDEV</h1></center>"+
   "<h4>"+
   "Welcome to Dobuki's Social Gamedev experiment. At first glance, this looks like a"+
   "<br>"+
