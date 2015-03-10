@@ -101,8 +101,15 @@ function showGameOver() {
   div.style.width = "100%";
   div.style.top = div.style.posTop  = window.innerHeight/3 + "px";
   
+  var table = document.createElement("table");
+  div.appendChild(table);
+  var tr = document.createElement("tr");
+  table.appendChild(tr);
+  var td = document.createElement("td");
+  tr.appendChild(td);
+  
   var scoreTable = document.createElement("ol");
-  div.appendChild(scoreTable);
+  td.appendChild(scoreTable);
   
   var recordedScore = false;
   var fireScore = new Firebase('https://art-depot.firebaseio.com/highscore/');
