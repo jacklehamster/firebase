@@ -130,7 +130,7 @@ function showGameOver() {
       
       scoreArray.sort(
           function(a,b) {
-            return a.score<b.score?-1:a.score>b.score?1:0;
+            return a.score>b.score?-1:a.score<b.score?1:0;
           }
       );
       
@@ -144,7 +144,7 @@ function showGameOver() {
       }
       scoreTable.innerHTML = html;
 
-      if((scoreArray.length<10 || score>scoreArray[9]) && !recordedScore) {
+      if(score && (scoreArray.length<10 || score>scoreArray[9]) && !recordedScore) {
         recordedScore = true;
         if(scores[session]) {
           fireScore.child(session).child('score').set(score);
