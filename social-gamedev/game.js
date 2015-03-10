@@ -149,7 +149,13 @@ function showIntro() {
   "Essentially, you are building the game live as it is being played."+
   "<br>"+
   "<br>"+
-  "Arrow keys to move. Space to shoot. ESC to end the game."+
+  "I hope you enjoy this experiment, and good luck!"+
+  "<br>"+
+  "<br>"+
+  "<i align='right'>Jack Le Hamster</i>"+
+  "<br>"+
+  "<br>"+
+  "</center>Arrow keys to move.<br>Space to shoot.<br>ESC to end the game.<center>"+
   "</h4>"
 
   var button = document.createElement("input");
