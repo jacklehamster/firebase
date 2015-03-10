@@ -2,7 +2,7 @@ var fireDoks = new Firebase('https://art-depot.firebaseio.com/dobuki/');
 
 window.addEventListener("load",initGame);
 
-var session = (new Date().getTime()+""+Math.random());
+var session = MD5_path(new Date().getTime()+""+Math.random()).split("/")[0];
 var dok;
 var keys = {};
 var globalFrame = 0;
