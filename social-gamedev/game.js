@@ -186,6 +186,9 @@ function showGameOver() {
   div.style.width = "100%";
   div.style.top = div.style.posTop  = window.innerHeight/3 + "px";
   
+  var tweet = document.createElement("center");
+  div.appendChild(tweet);
+  
   var table = document.createElement("table");
   div.appendChild(table);
   var tr = document.createElement("tr");
@@ -289,13 +292,13 @@ function showGameOver() {
   
   twttr.widgets.createShareButton(
     top.location.href,
-  div,
-  {
-    count: 'none',
-    text: "Check out Dobuki's Social Gamedev, a game that you create as you play it!"
-  }).then(function (el) {
-    console.log("Button created.")
-  });
+    tweet,
+    {
+      text: "Check out #Dobuki's Social Gamedev, a game that you create as you play it!"
+    }).then(function (el) {
+      console.log("Button created.")
+    }
+  );
   
   
 }
