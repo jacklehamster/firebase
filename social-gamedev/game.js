@@ -102,7 +102,7 @@ function showIntro() {
   div.align = "center";
   div.id = "intro";
   div.style.width = "100%";
-  div.style.top = div.style.posTop  = window.innerHeight/3 + "px";
+  div.style.top = div.style.posTop  = window.innerHeight/5 + "px";
   
   var table = document.createElement("table");
   div.appendChild(table);
@@ -120,7 +120,7 @@ function showIntro() {
   "<h4>"+
   "Welcome to Dobuki's Social Gamedev experiment. At first glance, this looks like a"+
   "<br>"+
-  "standard run-and-gun game, but it is different."+
+  "standard run-and-gun game, yet it is very different."+
   "<br>"+
   "First of all, you can see other players currently in the game in real time."+
   "<br>"+
