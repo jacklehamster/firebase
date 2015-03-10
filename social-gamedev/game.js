@@ -186,9 +186,7 @@ function showGameOver() {
   div.style.width = "100%";
   div.style.top = div.style.posTop  = window.innerHeight/3 + "px";
   
-  var tweet = document.createElement("center");
-  div.appendChild(tweet);
-  
+
   var table = document.createElement("table");
   div.appendChild(table);
   var tr = document.createElement("tr");
@@ -199,6 +197,9 @@ function showGameOver() {
   var scoreTable = td;
   scoreTable.style.backgroundColor="white";
   setAlpha(scoreTable,.7);
+  
+  var tweet = document.createElement("center");
+  scoreTable.appendChild(tweet);
   
   var recordedScore = false;
   var fireScore = firebaseRoot.child("highscore");
