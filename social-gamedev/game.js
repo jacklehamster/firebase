@@ -1,4 +1,4 @@
-var fireDoks = new Firebase('https://art-depot.firebaseio.com/dobuki/');
+var fireDoks = firebaseRoot.child("dobuki");
 
 window.addEventListener("load",initGame);
 
@@ -114,7 +114,7 @@ function showGameOver() {
   setAlpha(scoreTable,.7);
   
   var recordedScore = false;
-  var fireScore = new Firebase('https://art-depot.firebaseio.com/highscore/');
+  var fireScore = firebaseRoot.child("highscore");
   fireScore.on('value',
     function(snapshot) {
       var scores = snapshot.val();
