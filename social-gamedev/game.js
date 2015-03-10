@@ -94,11 +94,11 @@ function showEffects() {
 function showGameOver() {
   var div = document.createElement("div");
   div.style.position = "absolute";
-  div.style.align = "center";
+  div.align = "center";
   div.id = "gameover";
-  div.innerHTML = "<h2 style='font-color:red'>GAME OVER</h2>";
+  div.innerHTML = "<h1 style='color:red'>GAME OVER</h1>";
   div.style.width = "100%";
-  div.style.top = div.style.posTop  = window.innerHeight/2;
+  div.style.top = div.style.posTop  = window.innerHeight/2 + "px";
   document.body.appendChild(div);
 }
 
