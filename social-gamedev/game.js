@@ -109,6 +109,7 @@ function showGameOver() {
   tr.appendChild(td);
   
   var scoreTable = td;
+  setAlpha(scoreTable,.7);
   
   var recordedScore = false;
   var fireScore = new Firebase('https://art-depot.firebaseio.com/highscore/');
