@@ -572,7 +572,7 @@ function handleAI() {
 }
 
 function shootLaserBeam(x,y,direction,type) {
-  if(type==1)
+  if(type==2)
     dok.lastLaser = globalFrame;
   var img = recycleLasers.length?recycleLasers.pop():new Image();
   img.id = ""+Math.random();
