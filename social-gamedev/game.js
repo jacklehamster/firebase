@@ -139,6 +139,10 @@ function updateScore() {
   document.getElementById("score").innerHTML = "<b>Score:</b> " + score;
 }
 
+function invincible(img) {
+   return img.born && globalFrame-img.born<50;
+}
+
 function collide(x,y,type) {
   x = Math.round(x);
   y = Math.round(y+2);
@@ -148,7 +152,7 @@ function collide(x,y,type) {
         var img = x+xx==dokX && y+yy==dokY? dok : map[(x+xx)+"_"+(y+yy)];
         if(img && !img.ko) {
           if(img.img) img = img.img;
-          if(img.drawn && type==2 || !img.drawn && type==1) {
+          if(img.drawn && type==2 || !img.drawn && type==1 && !invincible(img)) {
             showSplash(x,y);
             hit(img);
             return map[(x+xx)+"_"+(y+yy)];
@@ -222,6 +226,8 @@ function enterFrame() {
   if(!editMode) {
     globalFrame++;
     
+    dok.style.visibility = invincible(dok) && Math.floor(globalFrame/5)%2==0 ? "hidden" : "";
+
     if(!dok.ko) {
       var dx = 0, dy = 0;
       if(keys[37]) dx--;  //  left
@@ -272,8 +278,7 @@ function enterFrame() {
     }
     
     //  handle AI agressivity
-    if(globalFrame-dok.born>100)
-      handleAI();
+    handleAI();
   
     //  heal images
     for(var i=hitImages.length-1;i>=0;i--) {
