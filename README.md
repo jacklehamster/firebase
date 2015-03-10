@@ -5,6 +5,14 @@ Demos built in JavaScript using Firebase
 ## http://jacklehamster.github.io/firebase/
 
 
+____
+
+Social Gamedev : http://jacklehamster.github.io/firebase/social-gamedev
+
+One of my most ambitious project. A game that you play and edit collaboratively in real-time. Does it sound crazy to you?
+
+Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/social-gamedev
+
 
 ____
 
