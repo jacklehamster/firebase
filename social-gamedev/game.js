@@ -200,8 +200,20 @@ function updateDoks() {
   return changed;
 }
 
+function updateMyDok() {
+    myFire.set(
+      {
+        session:session,
+        x:dok.pos.x,
+        y:dok.pos.y,
+        label:dok.label,
+        direction:dok.direction
+      }
+    );
+}
+
 function enterFrame() {
-  var doUpdateScreen = false;
+  var doUpdateScreen = false, doUpdateMyDok = false;
   if(updateDoks()) {
     doUpdateScreen = true;
   }
@@ -216,8 +228,9 @@ function enterFrame() {
       if(keys[38]) dy--;  //  up
       if(keys[40]) dy++;  //  down
       
-      if(dx) {
+      if(dx && dx*dok.direction<0) {
         dok.setDirection(dx);
+        doUpdateMyDok = true;
       }
       
       if(dx!=0 || dy!=0) {
@@ -226,20 +239,14 @@ function enterFrame() {
         var dist = Math.sqrt(dx*dx+dy*dy);
         dok.pos.x += dx/dist*dokspeed;
         dok.pos.y += dy/dist*dokspeed;
-        myFire.set(
-          {
-            session:session,
-            x:dok.pos.x,
-            y:dok.pos.y,
-            label:dok.label,
-            direction:dok.direction
-          }
-        );
         doUpdateScreen = true;
+        doUpdateMyDok = true;
       }
       else {
-        if(dok.label!="still")
+        if(dok.label!="still") {
           dok.gotoAndPlay("still");
+          doUpdateMyDok = true;
+        }
       }
       
       //  shoot laser
@@ -284,6 +291,8 @@ function enterFrame() {
   
   if(doUpdateScreen)
     updateScreen();
+  if(doUpdateMyDok)
+    updateMyDok();
 }
 
 function handleAI() {
