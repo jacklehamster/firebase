@@ -2,6 +2,7 @@ var fireDoks = firebaseRoot.child("dobuki");
 
 window.addEventListener("load",initGame);
 
+var gamejolt = false, newgrounds = false;
 var session = MD5_path(new Date().getTime()+""+Math.random()).split("/")[0];
 var dok;
 var keys = {};
@@ -18,8 +19,10 @@ var dokspeed = 1;
 var myFire;
 var paused = false;
 var commentsBase = firebaseRoot.child("comments");
+var playerName = null;
 
 function initGame() {
+
   myFire = fireDoks.child(session);
   myFire.onDisconnect().remove();
   
@@ -41,6 +44,7 @@ function initGame() {
   
   document.addEventListener("keydown",onKey);
   document.addEventListener("keyup",onKey);
+  window.focus();
   
   fireDoks.on('value',fireDoksChanged);
   commentsBase.on('child_added',
@@ -73,6 +77,7 @@ function resetGame() {
 
 function onKey(event) {
   keys[event.keyCode] = event.type=="keydown";
+    event.preventDefault();
 }
 
 function showSplash(x,y) {
@@ -233,7 +238,7 @@ function showGameOver() {
           session:ses,
           score:scores[ses].score,
           name:scores[ses].name,
-          timestamp:score[ses].timestamp?score[ses].timestamp:0
+          timestamp:scores[ses].timestamp?scores[ses].timestamp:0
         });
       }
       
@@ -254,16 +259,21 @@ function showGameOver() {
       scoreTable.innerHTML = html+"</ol>";
       scoreTable.appendChild(tweet);
 
-      if(score && (scoreArray.length<10 || score>scoreArray[9]) && !recordedScore) {
+            //   console.log(score);
+            //   console.log(scoreArray);
+             //  console.log(recordedScore);
+      if(score && (scoreArray.length<10 || score>scoreArray[9].score) && !recordedScore) {
         recordedScore = true;
-        if(scores[session]) {
+        if(scores[session] && playerName) {
           fireScore.child(session).child('score').set(score);
+            saveScore(playerName,score);
         }
         else {
           var name = prompt("You ranked in the leaderboard! Enter your name:");
           if(name) {
             name = name.trim();
             if(name.length) {
+               playerName = name;
               fireScore.child(session).set(
                 {
                   session:session,
@@ -272,6 +282,9 @@ function showGameOver() {
                   timestamp:new Date().getTime()
                 }
               );
+               
+               saveScore(name,score);
+               
             }
           }
         }
@@ -317,7 +330,8 @@ function showGameOver() {
   document.body.appendChild(div);
   
   twttr.widgets.createShareButton(
-    top.location.href,
+    newgrounds?"http://www.newgrounds.com/portal/view/654624":
+    gamejolt?"http://gamejolt.com/games/other/dobuki-s-social-gamedev/53710/":window.location.href,
     tweet,
     {
       count: "none",
@@ -327,6 +341,20 @@ function showGameOver() {
   );
   
   
+}
+
+function saveScore(name,score) {
+    if(true) {
+        var scoreAdd = "http://gamejolt.com/api/game/v1/scores/add/?"+
+        "game_id="+53710+"&"+
+        "score="+score+"&"+
+        "sort="+score+"&"+
+        "guest="+name;
+        scoreAdd += "&signature="+CryptoJS.MD5(scoreAdd+"e01fd04521dedcf760f781a3c2ef9321");
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", scoreAdd, false );
+        xmlHttp.send( null );
+    }
 }
 
 function hit(img) {
