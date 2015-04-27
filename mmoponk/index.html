@@ -35,7 +35,7 @@
         
         function enterRoom(e) {
             var room = (e.currentTarget.id.split("tr_")[1]);
-            location.replace("game/game.html#"+room);
+            location = ("game/game.html#"+room);
         }
         
         function createRoom(e) {
@@ -64,7 +64,7 @@
             var enabled = vs1.value.trim()!="" && vs2.value.trim()!="";
             if(enabled) {
                 var room = vs1.value.trim()+" vs "+vs2.value.trim();
-                location.replace("game/game.html#"+room);
+                location = ("game/game.html#"+room);
             }
         }
         
