@@ -16,6 +16,7 @@
             lobby = new Lobby(onLobbyUpdate);
             document.addEventListener("visibilitychange", function(e) {
             });
+            document.getElementById('input-search').focus();
             
         }
         
@@ -58,6 +59,7 @@
             document.getElementById('table').style.display = '';
             document.getElementById('roomCreator').style.display = 'none';
             onLobbyUpdate(lobby);
+            document.getElementById('input-search').focus();
         }
         
         function begin() {
@@ -150,7 +152,6 @@
             for(var i=0;i<trs.length;i++) {
                 table.appendChild(trs[i]);
             }
-            document.getElementById('input-search').focus();
         }
         
         function updateSearch(e) {
@@ -212,7 +213,7 @@
         <h4 style="color:#999999">This game is part of <a href="http://jams.gamejolt.io/multijamultra2015">#MultiJamUltra2015</a> and is also playable on <a href="http://gamejolt.com/games/arcade/politicalpong/63081/">Gamejolt</a></h4>
 
 <div class="fb-like" data-href="http://jacklehamster.github.io/firebase/mmoponk" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>        
-
+<br>
 <div class="fb-comments" data-href="https://www.facebook.com/pages/Politicalpong/476005742554825" data-numposts="5" data-colorscheme="dark"></div>
 
     </body>
