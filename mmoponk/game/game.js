@@ -134,7 +134,17 @@ function Game(leftSide,rightSide) {
                     localPlayersX[id] = x;
                 localPlayersX[id] += (x-localPlayersX[id])/4;
                 var y = pos.y*canvas.height - h/2;
+                if(id==selfID) {
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.fillStyle = "#FFFF66";
+                }
                 ctx.rect(localPlayersX[id],y,w,h);
+                if(id==selfID) {
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.fillStyle = "#FFFFFF";
+                }
             }
         }
         

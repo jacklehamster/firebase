@@ -12,8 +12,14 @@
     <script language="javascript">
         
         function resize() {
+            var canvas = document.getElementById('canvas');
             canvas.width = document.body.offsetWidth;
             canvas.height = document.body.offsetHeight;
+            var chat = document.getElementById("chat");
+            var chatbox = document.getElementById("chatbox");
+            chat.style.width = "30%";
+            chatbox.style.top = canvas.height*(1-1/20);
+            chatbox.style.left = canvas.width*(.6);
         }
         
         var game;
@@ -39,6 +45,7 @@
                     }
                 }
             );
+            window.focus();
 
         }
         
@@ -48,6 +55,10 @@
     </script>
     
     <body class="noselect" >
-        <canvas id="canvas"</canvas>
+        <canvas id="canvas"></canvas>
+        <div id='chatbox' style="position:absolute;display:none">
+            <img src='../img/chat.png' width=20 height=20>
+            &nbsp;<input type="text" style="position:absolute" id="chat">
+        </div>
     </body>
 </html>
