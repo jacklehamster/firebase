@@ -1,0 +1,25 @@
+/**
+    slimeme.css
+
+    Jack Le Hamster
+    Dobuki Studio
+*/
+
+html {
+    height:100%
+}
+body {
+    margin:0px;
+    height:100%;
+}
+canvas{
+    display:inline
+}
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

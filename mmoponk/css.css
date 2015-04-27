@@ -1,0 +1,88 @@
+/**
+    slimeme.css
+
+    Jack Le Hamster
+    Dobuki Studio
+*/
+
+html {
+    height:100%
+}
+body {
+    width:100%;
+    margin:0px;
+    height:100%;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+canvas{
+    display:inline;
+    background-color: black;
+}
+table {
+    font-family: "Press Start 2P", cursive;
+    font-size: 12px;
+    border: 0px;
+    border-spacing: 0px;
+    min-width: 350px;
+    max-width: 600px;
+}
+input {
+    min-width: 300px;
+}
+td {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    text-align: center;
+    vertical-align:middle;
+    height: 20px;
+    cursor:alias;
+}
+tr:hover {
+    background-color: #444444;
+}
+.room-creator:hover {
+    background-color: #000000;
+    border-spacing: 5px;
+}
+.td-button:hover {
+    color: #FFFFEE;
+    background-color: #444444;
+}
+.td-disabled-button {
+    cursor: auto;
+    color: #444400;
+    background-color: #000000;
+    background-color: #000000;
+}
+.td-button {
+    color: #CCCC00;
+    cursor: pointer;
+    background-color: #222222;
+    padding-top:12px; 
+    padding-bottom:12px;
+}
+.td-cancelbutton {
+    color:#cc0000;
+    padding-top:12px; 
+    padding-bottom:12px;
+    background-color: #222222;
+}
+.td-cancelbutton:hover {
+    color:#FF0000;
+    background-color: #444444;
+}
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.score {
+    font-family: : 'Press Start 2P', cursive;
+}

@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Slime Me</title>
+        <script src="header.js"></script>
+        <script src="asset.js"></script>
+        <script src="slimeme.js"></script>
+        <link rel="stylesheet" type="text/css" href="slimeme.css">
+    </head>
+
+    <script language="javascript">
+        
+        function resize() {
+            canvas.width = document.body.offsetWidth;
+            canvas.height = document.body.offsetHeight;
+            console.log(document.offsetWidth);
+        }
+        
+        function onDOMContentLoaded(event) {
+            document.addEventListener("visibilitychange", function() {
+            });
+            window.addEventListener("resize", resize);
+            resize();
+        }
+        
+        
+        //  event called when the page's DOM is loaded. Occurs before onLoad
+        window.addEventListener("DOMContentLoaded",onDOMContentLoaded); 
+    </script>
+    
+    <body class="noselect" >
+        <canvas id="canvas"></canvas>
+    </body>
+</html>

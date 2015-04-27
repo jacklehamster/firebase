@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Politicalpong</title>
+        <script src="header.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="../css.css">
+        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+        <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+        <script src="game.js"></script>
+    </head>
+
+    <script language="javascript">
+        
+        function resize() {
+            canvas.width = document.body.offsetWidth;
+            canvas.height = document.body.offsetHeight;
+        }
+        
+        var game;
+        function onDOMContentLoaded(event) {
+            var roomName = window.location.hash.substr(1);
+            game = new Game(roomName.split(" vs ")[0],roomName.split(" vs ")[1]);
+            document.addEventListener("visibilitychange", function(e) {
+                game.active = document.visibilityState=="visible";
+            });
+            window.addEventListener("resize", resize);
+            resize();
+            
+            window.addEventListener("hashchange", 
+                function() {
+                    window.document.location.reload();
+                }
+            );
+            
+            window.addEventListener("keydown",
+                function(e) {
+                    if(e.keyCode=='27') {
+                        location.replace("../index.html");
+                    }
+                }
+            );
+
+        }
+        
+        
+        //  event called when the page's DOM is loaded. Occurs before onLoad
+        window.addEventListener("DOMContentLoaded",onDOMContentLoaded); 
+    </script>
+    
+    <body class="noselect" >
+        <canvas id="canvas"</canvas>
+    </body>
+</html>

@@ -1,0 +1,199 @@
+<html>
+    <head>
+        <title>Politinnis</title>
+        <script src="header.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="css.css">
+        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+        <script src="lobby.js"></script>
+    </head>
+
+    <script language="javascript">
+        
+        var lobby;
+        function onDOMContentLoaded(event) {
+            var roomName = window.location.hash.substr(1);
+            lobby = new Lobby(onLobbyUpdate);
+            document.addEventListener("visibilitychange", function(e) {
+            });
+            
+        }
+        
+        function showScore(score,bold) {
+            var str=""+ (score?score:0);
+            if(bold) str = "<B><font color='yellow'>"+str+"</font></B>";
+            return str;
+        }
+        
+        function countObjects(obj) {
+            var count = 0;
+            for(var id in obj) {
+                count++;
+            }
+            return count?count+"&nbsp;<img src='img/profile.png' height=15 width=10></img>":"";
+        }
+        
+        function enterRoom(e) {
+            var room = (e.currentTarget.id.split("tr_")[1]);
+            location.replace("game/game.html#"+room);
+        }
+        
+        function createRoom(e) {
+            document.getElementById('table').style.display = 'none';
+            document.getElementById('roomCreator').style.display = '';
+            var searchInput = document.getElementById('input-search');
+            var split = searchInput.value.split(" VS ");
+            searchInput.value = '';
+            var vs1 = document.getElementById('vs1');
+            var vs2 = document.getElementById('vs2');
+            vs1.value = split[0];
+            vs2.value = split[1] ? split[1]:"";
+            vs1.focus();
+            updateVs();
+            e.preventDefault();
+            
+        }
+        
+        function cancelRoomCreation() {
+            document.getElementById('table').style.display = '';
+            document.getElementById('roomCreator').style.display = 'none';
+            onLobbyUpdate(lobby);
+        }
+        
+        function begin() {
+            var enabled = vs1.value.trim()!="" && vs2.value.trim()!="";
+            if(enabled) {
+                var room = vs1.value.trim()+" vs "+vs2.value.trim();
+                location.replace("game/game.html#"+room);
+            }
+        }
+        
+        function onLobbyUpdate(lobby) {
+            var table = document.getElementById("table");
+            var trs = [];
+            for (var room in lobby.table) {
+                var entry = lobby.table[room];
+                room = decodeURIComponent(room);
+                
+                var searchInput = document.getElementById('input-search');
+                if(searchInput && searchInput.value!="") {
+                    if(room.indexOf(searchInput.value)<0) {
+                        continue;
+                    }
+                }
+                
+                var tr = document.getElementById('tr_'+room);
+                if(!tr) {
+                    tr = document.createElement("tr");
+                    tr.id = 'tr_'+room;
+                    tr.addEventListener("mousedown",enterRoom);
+                }
+                var tdTitle = document.getElementById('td_title_'+room);
+                if(!tdTitle) {
+                    tdTitle = tr.appendChild(document.createElement("td"));
+                    tdTitle.id = 'td_title_'+room;
+                }
+                var tdScore = document.getElementById('td_score_'+room);
+                if(!tdScore) {
+                    tdScore = tr.appendChild(document.createElement("td"));
+                    tdScore.id = 'td_score_'+room;
+                }
+                var tdCount = document.getElementById('td_count_'+room);
+                if(!tdCount) {
+                    tdCount = tr.appendChild(document.createElement("td"));
+                    tdCount.id = 'td_count_'+room;
+                    tdCount.style.fontSize = "9px";
+                    tdCount.style.minWidth = "50px";
+                }
+                
+                tdTitle.innerHTML = (room);
+                tdScore.innerHTML = showScore(entry.score?entry.score[0]:0,entry.lastWinner==0)+
+                    ":"+showScore(entry.score?entry.score[1]:0,entry.lastWinner==1);
+                tdCount.innerHTML = countObjects(entry.players);
+                tr.lastJoined = entry.lastJoined;
+                trs.push(tr);
+            }
+            trs.sort(function(a,b) { return -a.lastJoined+b.lastJoined;});
+            
+            var trSearch = document.getElementById('tr_search');
+            if(!trSearch) {
+                trSearch = document.createElement('tr');
+                trSearch.id = 'tr_search';
+                var tdSearch = trSearch.appendChild(document.createElement('td'));
+                tdSearch.setAttribute("colspan",3);
+                var input = tdSearch.appendChild(document.createElement('input'));
+                input.id = "input-search";
+                input.type = "text";
+                input.style.width = "100%";
+                input.addEventListener("change",updateSearch);
+                input.addEventListener("keyup",updateSearch);
+            }
+            trs.unshift(trSearch);
+            
+            var trCreate = document.getElementById('tr_create');
+            if(!trCreate) {
+                trCreate = document.createElement('tr');
+                trCreate.id = 'tr_create';
+                var tdCreate = trCreate.appendChild(document.createElement('td'));
+                tdCreate.className = "td-button";
+                tdCreate.setAttribute("colspan",3);
+                tdCreate.innerHTML = "CREATE ROOM";
+                tdCreate.style.cursor = "pointer";
+                trCreate.addEventListener("mousedown",createRoom);
+            }
+            trs.push(trCreate);
+            
+            while(table.children.length) {
+                table.removeChild(table.firstChild);
+            }
+            
+            for(var i=0;i<trs.length;i++) {
+                table.appendChild(trs[i]);
+            }
+            document.getElementById('input-search').focus();
+        }
+        
+        function updateSearch(e) {
+            var input = document.getElementById('input-search');
+            input.value = input.value.toUpperCase();
+            if(e.type=="onkeyup" && e.keyCode==27) {
+                input.value = "";
+            }
+            onLobbyUpdate(lobby);
+        }
+        
+        function updateVs() {
+            var vs1 = document.getElementById('vs1');
+            var vs2 = document.getElementById('vs2');
+            vs1.value = vs1.value.toUpperCase();
+            vs2.value = vs2.value.toUpperCase();
+            var beginbutton = document.getElementById('beginbutton');
+            var enabled = vs1.value.trim()!="" && vs2.value.trim()!="";
+            beginbutton.className = enabled ? "td-button" : "td-disabled-button";
+        }
+        
+        
+        //  event called when the page's DOM is loaded. Occurs before onLoad
+        window.addEventListener("DOMContentLoaded",onDOMContentLoaded); 
+    </script>
+    
+    <body class="noselect">
+        <table id="table" align="center">
+        </table>
+        <table id="roomCreator" align="center" width="100%" style="display:none">
+            <tr class="room-creator">
+                <td colspan="2"><input id='vs1' type="text" style="width:100%" onchange="updateVs()" onkeyup="updateVs()"></td>
+            </tr>
+            <tr class="room-creator">
+                <td colspan="2">VS</td>
+            </tr>
+            <tr class="room-creator">
+                <td colspan="2"><input id='vs2' type="text" style="width:100%"onchange="updateVs()" onkeyup="updateVs()"></td>
+            </tr>
+            <tr  class="room-creator">
+                <td id="beginbutton" class="td-button" onClick="begin()">BEGIN</td>
+                <td class="td-cancelbutton" onClick="cancelRoomCreation()">CANCEL</td>
+            </tr>
+        </table>
+    </body>
+</html>
