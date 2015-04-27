@@ -7,6 +7,15 @@ Demos built in JavaScript using Firebase
 
 ____
 
+PoliticalPonk : http://jacklehamster.github.io/firebase/mmoponk/
+
+A multiplayer game of pong, where you have to win for your beliefs!
+
+Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/mmoponk
+
+
+____
+
 Social Gamedev : http://jacklehamster.github.io/firebase/social-gamedev
 
 One of my most ambitious project. A game that you play and edit collaboratively in real-time. Does it sound crazy to you?
