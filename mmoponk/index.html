@@ -18,7 +18,6 @@
             lobby = new Lobby(onLobbyUpdate);
             document.addEventListener("visibilitychange", function(e) {
             });
-            document.getElementById('input-search').focus();
             
         }
         
@@ -145,7 +144,7 @@
                 tdCreate.style.cursor = "pointer";
                 trCreate.addEventListener("mousedown",createRoom);
             }
-            trs.push(trCreate);
+            trs.unshift(trCreate);
             
             while(table.children.length) {
                 table.removeChild(table.firstChild);
