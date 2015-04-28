@@ -57,6 +57,14 @@ function Game(leftSide,rightSide) {
     firebase.on('value', valueChanged);  // refresh whenever its value changes
     lobbyEntry.child('score').on('value', scoreChanged);
     lobbyEntry.child('message').on('value',messageChanged);
+    lobbyEntry.child('players').on('value',onPlayersLobby);
+    
+    var playing = {};
+    playing[selfID] = true;
+    function onPlayersLobby(snapshot) {
+       var o=snapshot.val();
+        playing = o;
+    }
     
     function scoreChanged(snapshot) {
        var o=snapshot.val();
@@ -166,7 +174,7 @@ function Game(leftSide,rightSide) {
         
         for(var id in players) {
             var player = players[id];
-            if(player) {
+            if(player && playing[id]) {
                 var w = canvas.width/100;
                 var h = canvas.height/8;
                 var pos = id==selfID?localPos:player.pos;

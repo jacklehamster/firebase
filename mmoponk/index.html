@@ -42,6 +42,13 @@
             location = ("game/game.html#"+room);
         }
         
+        function viewRoom(e) {
+            var room = (e.currentTarget.id.split("tr_")[1]);
+            if(messages[room]) {
+                messages[room].time = now-8500;
+            }
+        }
+        
         function createRoom(e) {
             document.getElementById('table').style.display = 'none';
             document.getElementById('roomCreator').style.display = '';
@@ -97,6 +104,7 @@
                     tr = document.createElement("tr");
                     tr.id = 'tr_'+room;
                     tr.addEventListener("mousedown",enterRoom);
+                    tr.addEventListener("mouseover",viewRoom);
                 }
                 var tdTitle = document.getElementById('td_title_'+room);
                 if(!tdTitle) {

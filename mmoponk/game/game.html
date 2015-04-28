@@ -94,7 +94,8 @@
             if(event.keyCode==13 && chatbox.style.display=="") {
                 var msg = encodeURIComponent(chat.value.trim());
                 chat.value = "";
-                game.chat(msg);
+                if(msg!="")
+                    game.chat(msg);
                 chatbox.style.display = "none";
                 event.stopPropagation();
             }
