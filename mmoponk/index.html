@@ -243,14 +243,24 @@
     </script>
     
     <body class="noselect">
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=119623958123619";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1487280494868304',
+      xfbml      : true,
+      version    : 'v2.3'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
         <table id="table" align="center">
         </table>
         <table id="roomCreator" align="center" width="100%" style="display:none">
@@ -276,7 +286,12 @@
         <br>
         <h4 style="color:#999999">This game is part of <a href="http://jams.gamejolt.io/multijamultra2015">#MultiJamUltra2015</a> and is also playable on <a href="http://gamejolt.com/games/arcade/politicalpong/63081/">Gamejolt</a></h4>
 
-<div class="fb-like" data-href="http://jacklehamster.github.io/firebase/mmoponk" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>        
+<div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div>
 <br>
 <div class="fb-comments" data-href="https://www.facebook.com/pages/Politicalpong/476005742554825" data-numposts="5" data-colorscheme="dark"></div>
 
