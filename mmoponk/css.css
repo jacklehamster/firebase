@@ -86,3 +86,9 @@ tr:hover {
 .score {
     font-family: : 'Press Start 2P', cursive;
 }
+.tip {
+//    background-color: white;
+    color: #aaaaaa;
+    font-size: 10px;
+    font-family: 'Press Start 2P', cursive;
+}

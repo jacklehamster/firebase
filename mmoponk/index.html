@@ -80,7 +80,7 @@
                 room = decodeURIComponent(room);
                 if(entry.message 
                    && (!messages[room] || messages[room].msg!=entry.message)) {
-                    messages[room] = {msg:entry.message,time:new Date().getTime()};
+                    messages[room] = {msg:entry.message,time:now};
                 }
                 
                 
@@ -180,6 +180,7 @@
             beginbutton.className = enabled ? "td-button" : "td-disabled-button";
         }
         
+        var now = 0;
         var FPS = 20;
         var FRAME_PERIOD = 1000/FPS;
         var lastFrame = 0;
@@ -191,25 +192,35 @@
             }
             requestAnimationFrame(step);
         }
-//        step(0);
+        step(0);
         
         function refresh(dtime) {
+            var table = document.getElementById("table");
             for(var room in messages) {
                 room = decodeURIComponent(room);
                 var message = messages[room];
-                var div = document.getElementById("msg_"+room);
-                if(!div) {
-                    var tdCount = document.getElementById('td_count_'+room);
-                    console.log(tdCount);
-                    if(tdCount) {
+                var tdCount = document.getElementById('td_count_'+room);
+                if(tdCount) {
+                    var time = now-message.time;
+                    var alpha = Math.max(0,time<9000?1:(10000-time)/1000);
+                    var fadeAmount = Math.floor(parseInt("AA",16) * alpha);
+                    fadeAmount = Math.floor(parseInt("100",16)+
+                                             fadeAmount).toString(16).substr(1);
+                    var fillColor = "#"+fadeAmount+fadeAmount+fadeAmount;
+
+                    var div = document.getElementById("msg_"+room);
+                    if(!div) {
+                        //console.log(tdCount);
                         div = document.body.appendChild(document.createElement('div'));
                         div.id = "msg_"+room;
                         div.style.position = "absolute";
-                        div.style.left = (tdCount.offsetLeft+tdCount.offsetWidth+table.offsetLeft+50)+"px";
-                        div.style.top = (tdCount.offsetTop+table.offsetTop-2)+"px";
-                        console.log(message.msg);
-                        div.innerHTML = message.msg;
+                        div.className = "tip";
                     }
+                    div.style.display = time<10000?"":"none";
+                    div.style.color = fillColor;
+                    div.style.left = (tdCount.offsetLeft+tdCount.offsetWidth+table.offsetLeft+50)+"px";
+                    div.style.top = (tdCount.offsetTop+table.offsetTop-2)+"px";
+                    div.innerHTML = decodeURIComponent(message.msg);
                 }
             }
         }

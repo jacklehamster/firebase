@@ -39,9 +39,9 @@ function Game(leftSide,rightSide) {
     var lobbyEntry = firebaseRoot.child('lobby/'+roomID);
     var firebase = firebaseRoot.child('games/'+roomID);
     var selfBase = firebase.child("players").child(selfID);
-    selfBase.onDisconnect().remove();
+//    selfBase.onDisconnect().remove();
     firebase.child('balls').child(selfID).onDisconnect().remove();
-    
+    firebase.child('players').child(selfID).onDisconnect().remove();
     lobbyEntry.child('players').child(selfID).set(true);
     lobbyEntry.child('players').child(selfID).onDisconnect().remove();
     lobbyEntry.child('lastJoined').set(new Date().getTime());
