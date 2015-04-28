@@ -89,6 +89,7 @@ tr:hover {
 .tip {
 //    background-color: white;
     color: #aaaaaa;
-    font-size: 10px;
+    font-size: 8px;
+    text-align: left;
     font-family: 'Press Start 2P', cursive;
 }

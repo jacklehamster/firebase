@@ -1,8 +1,9 @@
 <html>
     <head>
         <title>Politicalpong</title>
+        <link rel="icon" href="img/ping_pong.png" type="image/png"/>
         <link rel="shortcut icon" href="img/ping_pong.png" type="image/png"/>
-        <meta property="og:image" content="img/ping_pong.png" />
+        <meta property="og:image" content="http://i.imgur.com/LcTtYJP.png" />
         <script src="../../header.js"></script>
         <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" type="text/css" href="css.css">
@@ -181,7 +182,7 @@
         }
         
         var now = 0;
-        var FPS = 20;
+        var FPS = 60;
         var FRAME_PERIOD = 1000/FPS;
         var lastFrame = 0;
         function step(timestamp) {
@@ -204,9 +205,9 @@
                     var time = now-message.time;
                     var alpha = Math.max(0,time<9000?1:(10000-time)/1000);
                     var fadeAmount = Math.floor(parseInt("AA",16) * alpha);
-                    fadeAmount = Math.floor(parseInt("100",16)+
+                    var fade = Math.floor(parseInt("100",16)+
                                              fadeAmount).toString(16).substr(1);
-                    var fillColor = "#"+fadeAmount+fadeAmount+fadeAmount;
+                    var fillColor = "#"+fade+fade+fade;
 
                     var div = document.getElementById("msg_"+room);
                     if(!div) {
@@ -219,7 +220,7 @@
                     div.style.display = time<10000?"":"none";
                     div.style.color = fillColor;
                     div.style.left = (tdCount.offsetLeft+tdCount.offsetWidth+table.offsetLeft+50)+"px";
-                    div.style.top = (tdCount.offsetTop+table.offsetTop-2)+"px";
+                    div.style.top = (tdCount.offsetTop+table.offsetTop-2+(20*(1-alpha)))+"px";
                     div.innerHTML = decodeURIComponent(message.msg);
                 }
             }
