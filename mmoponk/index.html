@@ -12,6 +12,7 @@
 
     <script language="javascript">
         
+        var messages = {};
         var lobby;
         function onDOMContentLoaded(event) {
             var roomName = window.location.hash.substr(1);
@@ -77,6 +78,11 @@
             for (var room in lobby.table) {
                 var entry = lobby.table[room];
                 room = decodeURIComponent(room);
+                if(entry.message 
+                   && (!messages[room] || messages[room].msg!=entry.message)) {
+                    messages[room] = {msg:entry.message,time:new Date().getTime()};
+                }
+                
                 
                 var searchInput = document.getElementById('input-search');
                 if(searchInput && searchInput.value!="") {
@@ -174,6 +180,39 @@
             beginbutton.className = enabled ? "td-button" : "td-disabled-button";
         }
         
+        var FPS = 20;
+        var FRAME_PERIOD = 1000/FPS;
+        var lastFrame = 0;
+        function step(timestamp) {
+            now = timestamp;
+            if(now-lastFrame>FRAME_PERIOD) {
+                refresh(now-lastFrame);
+                lastFrame = now;
+            }
+            requestAnimationFrame(step);
+        }
+//        step(0);
+        
+        function refresh(dtime) {
+            for(var room in messages) {
+                room = decodeURIComponent(room);
+                var message = messages[room];
+                var div = document.getElementById("msg_"+room);
+                if(!div) {
+                    var tdCount = document.getElementById('td_count_'+room);
+                    console.log(tdCount);
+                    if(tdCount) {
+                        div = document.body.appendChild(document.createElement('div'));
+                        div.id = "msg_"+room;
+                        div.style.position = "absolute";
+                        div.style.left = (tdCount.offsetLeft+tdCount.offsetWidth+table.offsetLeft+50)+"px";
+                        div.style.top = (tdCount.offsetTop+table.offsetTop-2)+"px";
+                        console.log(message.msg);
+                        div.innerHTML = message.msg;
+                    }
+                }
+            }
+        }
         
         //  event called when the page's DOM is loaded. Occurs before onLoad
         window.addEventListener("DOMContentLoaded",onDOMContentLoaded); 

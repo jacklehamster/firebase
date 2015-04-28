@@ -6,12 +6,15 @@ function cleanName(name) {
 function Game(leftSide,rightSide) {
 //    leftSide = "Microsoft";
 //    rightSide = "Apple";
+    var currentMessage = null;
+    var messages = [];
     if(!leftSide) leftSide = "LEFT";
     if(!rightSide) rightSide = "RIGHT";
     var roomName = leftSide+" vs "+rightSide;
     var BALLDELAY = 3000;
     var self = this;
     this.active = true;
+    this.chatting = function() {return false};
     
     var score = null;
     var ballDelay = BALLDELAY;
@@ -53,6 +56,7 @@ function Game(leftSide,rightSide) {
     
     firebase.on('value', valueChanged);  // refresh whenever its value changes
     lobbyEntry.child('score').on('value', scoreChanged);
+    lobbyEntry.child('message').on('value',messageChanged);
     
     function scoreChanged(snapshot) {
        var o=snapshot.val();
@@ -75,6 +79,22 @@ function Game(leftSide,rightSide) {
            players = o.players?o.players:{};
            balls = o.balls?o.balls:{};
        }
+    }
+    
+    function messageChanged(snapshot) {
+        var o = snapshot.val();
+        if(o) {
+            currentMessage = o;
+            messages.unshift({msg:currentMessage,time:now});
+        }
+    }
+    
+    this.chat = function(msg) {
+        var selfPaddle = players[selfID];
+        if(selfPaddle) {
+            msg = (selfPaddle.pos.x<.5?leftSide:rightSide)+": "+msg;
+            lobbyEntry.child('message').set(msg);
+        }
     }
     
     function refresh(dtime) {
@@ -116,7 +136,28 @@ function Game(leftSide,rightSide) {
         }
         
         ctx.font=Math.round(canvas.width/100)+"px 'Press Start 2P'";
-        ctx.fillText("Press ESC to return to lobby",canvas.width*(1/80),canvas.height*(1-1/50));
+        if(!self.chatting()) {
+            ctx.fillText("Press ESC to return to lobby, TYPE to chat",canvas.width*(1/80),canvas.height*(1-1/50));
+        }
+        
+        if(messages.length) {
+            for(var i=0;i<messages.length;i++) {
+                var time = now-messages[i].time;
+                var alpha = Math.max(0,time<9000?1:(10000-time)/1000);
+                var fadeAmount = Math.floor(parseInt("AA",16) * alpha);
+                fadeAmount = Math.floor(parseInt("100",16)+
+                                         fadeAmount).toString(16).substr(1);
+                ctx.fillStyle = "#"+fadeAmount+fadeAmount+fadeAmount;
+                ctx.fillText(decodeURIComponent(messages[i].msg),
+                             canvas.width*(1/80),canvas.height*(1-(3+i)/40));
+            }
+            if(messages[messages.length-1]) {
+                if(now-messages[messages.length-1].time>10000) {
+                    messages.pop();
+                }
+            }
+            ctx.fillStyle = "#FFFFFF";
+        }
         
         for(var i=0;i<10;i++) {
             ctx.rect(canvas.width*(1/2-.01),
@@ -159,7 +200,7 @@ function Game(leftSide,rightSide) {
                     update:ball.update
                 };
                 delete pendingBalls[id];
-                console.log(ball);
+//                console.log(ball);
             }
             if(ball.update>localBalls[id].update) {
                 localBalls[id].x = ball.x;

@@ -18,9 +18,9 @@
             canvas.height = document.body.offsetHeight;
             var chat = document.getElementById("chat");
             var chatbox = document.getElementById("chatbox");
-            chat.style.width = "30%";
+            chat.style.width = canvas.width*(.85);
             chatbox.style.top = canvas.height*(1-1/20);
-            chatbox.style.left = canvas.width*(.6);
+            chatbox.style.left = canvas.width*(.05);
         }
         
         var game;
@@ -39,15 +39,63 @@
                 }
             );
             
-            window.addEventListener("keydown",
+            window.addEventListener("keyup",
                 function(e) {
-                    if(e.keyCode=='27') {
-                        location.replace("../index.html");
+                    var chatbox = document.getElementById("chatbox");
+                    var chat = document.getElementById("chat");
+                    if(e.keyCode==27) {
+                        if(chatbox.style.display=="none") {
+                            location.replace("../index.html");
+                        }
+                        else {
+                            chatbox.style.display = "none";
+                        }
+                    }
+                    else if(e.keyCode==13) {
+                        if(chatbox.style.display=="none") {
+                            chatbox.style.display = "";
+                            chat.focus();
+                        }
+                        else {
+                            chatbox.style.display = "none";
+                        }
+                        
+                        chatbox.style.display = "";
+                        chat.focus();
                     }
                 }
             );
+            
+            window.addEventListener("keydown",
+                function(e) {
+                    var chatbox = document.getElementById("chatbox");
+                    var chat = document.getElementById("chat");
+                    if(e.keyCode==27||e.keyCode==13) {
+                    }
+                    else if(chatbox.style.display=="none") {
+                        chatbox.style.display = "";
+                        chat.focus();
+                    }
+                });
             window.focus();
+            
+            game.chatting = function() {
+                var chatbox = document.getElementById("chatbox");
+                return chatbox.style.display!="none";
+            }
 
+        }
+        
+        function onKey(event) {
+            var chat = document.getElementById("chat");
+            var chatbox = document.getElementById("chatbox");
+            if(event.keyCode==13 && chatbox.style.display=="") {
+                var msg = encodeURIComponent(chat.value.trim());
+                chat.value = "";
+                game.chat(msg);
+                chatbox.style.display = "none";
+                event.stopPropagation();
+            }
         }
         
         
@@ -58,8 +106,8 @@
     <body class="noselect" >
         <canvas id="canvas"></canvas>
         <div id='chatbox' style="position:absolute;display:none">
-            <img src='../img/chat.png' width=20 height=20>
-            &nbsp;<input type="text" style="position:absolute" id="chat">
+            <img src='../img/chat.png' width=25 height=25>
+            &nbsp;<input type="text" style="position:absolute" id="chat" onkeyup="onKey(event)" maxlength=80>
         </div>
     </body>
 </html>
