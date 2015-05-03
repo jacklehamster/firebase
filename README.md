@@ -7,6 +7,15 @@ Demos built in JavaScript using Firebase
 
 ____
 
+Feed Me : http://jacklehamster.github.io/firebase/feedme/
+
+Feed FIDO or it will die. Anyone in the world can feed FIDO, he needs at least every day to survive!
+
+Source code: https://github.com/jacklehamster/firebase/tree/gh-pages/feedme
+
+
+____
+
 PoliticalPonk : http://jacklehamster.github.io/firebase/mmoponk/
 
 A multiplayer game of pong, where you have to win for your beliefs!
