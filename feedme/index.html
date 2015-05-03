@@ -3,7 +3,7 @@
 <head>
 <meta charset=utf-8 />
 <title>Feed Me</title>
-        <script src="../../header.js"></script>
+        <script src="header.js"></script>
         <link href='http://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
         <script type="text/javascript" src="img/feed.json"></script>
         <script type="text/javascript" src="animation.js"></script>    
@@ -85,6 +85,8 @@
         function(snapshot) {
             var serverNow = snapshot.val();
             offset = serverNow - new Date().getTime();
+        
+        
         }
     );
     
@@ -256,6 +258,17 @@ if(window.FileReader) {
             
             window.addEventListener("resize", resize);
             resize();
+            
+            var born = new Date("May 2, 2015");
+            var intro = document.getElementById("intro");
+            var diff = new Date(getTime()) - born.getTime();
+            diff /= 1000*60*60*24;
+            diff = Math.ceil(diff);
+            var div = document.createElement('div');
+            div.style.color = "red";
+            div.innerHTML = "FIDO has survived for " + diff + " days";
+            intro.appendChild(div);
+            
         }
     
         Sprite.refresh = function(dtime) {
