@@ -1,0 +1,49 @@
+.sprite {
+    position: absolute;
+    transform: translate(-50%,-50%);
+    cursor: pointer;
+}
+.label {
+    text-align: center;
+    font-family: "Architects Daughter";
+    font-size: 16px;
+}
+.sprite-image {
+    max-width: 100px;
+    max-height: 100px;
+}
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+html {
+    height:100%
+}
+body {
+    width:100%;
+    height:100%;
+    margin:0px;
+//    background-color: silver;
+}
+.scene {
+    text-align: center;
+    vertical-align: middle;
+}
+#cauldron {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+#cookbutton {
+    font-family: "Architects Daughter";
+    font-size: 25px;
+    cursor: pointer;
+}
+#cookbutton:hover {
+    background-color:#ccffcc;
+}

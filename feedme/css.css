@@ -1,0 +1,14 @@
+.Fido {
+    -ms-transform: scale(0.5,0.5); /* IE 9 */
+    -webkit-transform: scale(0.5,0.5); /* Safari */
+    transform: scale(0.5,0.5);
+    position: absolute;
+}
+
+input {
+    min-width: 300px;
+}
+body {
+    font-family: "Architects Daughter";
+    font-size: 20px;
+}

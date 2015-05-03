@@ -1,0 +1,256 @@
+var fidoAnimation = {
+    "frames": [
+        {
+            "label": "STILL",
+            "filename": "Fido0000",
+            "frame": {"x":10,"y":10,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "BLINK",
+            "filename": "Fido0001",
+            "frame": {"x":288,"y":10,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0002",
+            "frame": {"x":566,"y":10,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "STARE",
+            "filename": "Fido0003",
+            "frame": {"x":844,"y":10,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "MOVE",
+            "filename": "Fido0004",
+            "frame": {"x":1122,"y":10,"w":276,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":92,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0005",
+            "frame": {"x":1408,"y":10,"w":294,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":74,"y":5,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0006",
+            "frame": {"x":1712,"y":10,"w":264,"h":281},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":62,"y":7,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0007",
+            "frame": {"x":10,"y":301,"w":272,"h":280},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":31,"y":8,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0008",
+            "frame": {"x":292,"y":301,"w":253,"h":270},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":35,"y":4,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0009",
+            "frame": {"x":555,"y":301,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":0,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "EAT",
+            "filename": "Fido0010",
+            "frame": {"x":833,"y":301,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0011",
+            "frame": {"x":1111,"y":301,"w":276,"h":263},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":92,"y":2,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0012",
+            "frame": {"x":1397,"y":301,"w":304,"h":263},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":64,"y":2,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0013",
+            "frame": {"x":1711,"y":301,"w":287,"h":265},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":84,"y":0,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "EATING",
+            "filename": "Fido0014",
+            "frame": {"x":10,"y":591,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0015",
+            "frame": {"x":288,"y":591,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0016",
+            "frame": {"x":566,"y":591,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "HUNGRY",
+            "filename": "Fido0017",
+            "frame": {"x":844,"y":591,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "HUNGRYBLINK",
+            "filename": "Fido0018",
+            "frame": {"x":1122,"y":591,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "STARVING",
+            "filename": "Fido0019",
+            "frame": {"x":1400,"y":591,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "STARVINGBLINK",
+            "filename": "Fido0020",
+            "frame": {"x":1678,"y":591,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0021",
+            "frame": {"x":10,"y":863,"w":268,"h":262},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":100,"y":3,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "label": "DEAD",
+            "filename": "Fido0022",
+            "frame": {"x":288,"y":863,"w":266,"h":227},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":107,"y":54,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0023",
+            "frame": {"x":564,"y":863,"w":266,"h":215},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":107,"y":66,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0024",
+            "frame": {"x":840,"y":863,"w":266,"h":215},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":107,"y":66,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0025",
+            "frame": {"x":1116,"y":863,"w":266,"h":208},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":107,"y":73,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0026",
+            "frame": {"x":1392,"y":863,"w":266,"h":216},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":107,"y":65,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0027",
+            "frame": {"x":1668,"y":863,"w":266,"h":216},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":107,"y":65,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+        ,{
+            "filename": "Fido0028",
+            "frame": {"x":10,"y":1135,"w":266,"h":227},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":107,"y":54,"w":373,"h":288},
+            "sourceSize": {"w":373,"h":288}
+        }
+    ],
+    "meta": {
+        "app": "Adobe Flash Professional",
+        "version": "14.2.0.20",
+        "image": "img/feed.png",
+        "format": "RGBA8888",
+        "size": {"w":2048,"h":2048},
+        "scale": "1",
+        "className": "Fido"
+    }
+};

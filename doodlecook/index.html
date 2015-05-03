@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <title>Doodle Cook</title>
+        <link rel="icon" href="img/chow.jpg" type="image/jpg"/>
+        <link rel="shortcut icon" href="img/chow.jpg" type="image/jpg"/>
+        <meta property="og:image" content="http://i.imgur.com/LcTtYJP.png" />
+        <script src="../../header.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="css.css">
+        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+        <script src="doodle.js"></script>
+    </head>
+
+    <script language="javascript">
+        
+        function addIngredient(ingredient) {
+            var sprite = document.createElement("div");
+            sprite.style.left = (Math.random()*document.body.offsetWidth)+"px";
+            sprite.style.top = (Math.random()*document.body.offsetHeight)+"px";
+            sprite.className = "sprite";
+            var img = sprite.appendChild(document.createElement("img"));
+            img.src = ingredient.image;
+            img.className = "sprite-image";
+            img.onload = function() {
+                document.body.appendChild(sprite);
+            }
+            var label = document.createElement("div");
+            label.className = "label";
+            
+            label.innerHTML = ingredient.name;
+            sprite.appendChild(label);
+        }
+        
+        var messages = {};
+        function onDOMContentLoaded(event) {
+            document.addEventListener("visibilitychange", function(e) {
+            });
+            addIngredient({
+                name:"rice",                image:"http://vignette3.wikia.nocookie.net/starwarfare/images/d/da/Rice.png/revision/latest?cb=20140818082800"
+            });
+        }
+
+        var now = 0;
+        var FPS = 60;
+        var FRAME_PERIOD = 1000/FPS;
+        var lastFrame = 0;
+        function step(timestamp) {
+            now = timestamp;
+            if(now-lastFrame>FRAME_PERIOD) {
+                refresh(now-lastFrame);
+                lastFrame = now;
+            }
+            requestAnimationFrame(step);
+        }
+        step(0);
+        
+        function refresh(dtime) {
+            var sprites = document.getElementsByClassName("sprite");
+            for(var i=0;i<sprites.length;i++) {
+                var sprite = sprites[i];
+                var x = sprite.offsetLeft-document.body.offsetWidth/2;
+                var y = sprite.offsetTop-document.body.offsetHeight/2;
+                var dist = Math.sqrt(x*x+y*y);
+                var angle = Math.atan2(y,x);
+                angle += .2*(2*Math.PI/360);
+                sprite.style.left = (document.body.offsetWidth/2+Math.cos(angle)*dist) + "px";
+                sprite.style.top = (document.body.offsetHeight/2+Math.sin(angle)*dist) + "px";
+            }
+        }
+        
+        //  event called when the page's DOM is loaded. Occurs before onLoad
+        window.addEventListener("DOMContentLoaded",onDOMContentLoaded); 
+    </script>
+    
+    <body class="noselect">
+        <div id="cauldron" style="text-align:center">
+            <img width=160 height=130 src="img/cauldron.png">
+            <br><br>
+            <button id="cookbutton" style="width:150px;height:40px">COOK</button>
+        </div>
+    </body>
+</html>

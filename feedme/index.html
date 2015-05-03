@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8 />
+<title>Feed Me</title>
+        <link href='http://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="img/feed.json"></script>
+        <script type="text/javascript" src="animation.js"></script>    
+        <script type="text/javascript" src="fido.js"></script>    
+        <link rel="stylesheet" type="text/css" href="css.css">
+        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+    
+<script type="text/javascript">
+    
+        function resize() {
+            var drop = document.getElementById('drop');
+            drop.width = document.body.offsetWidth;
+            drop.height = document.body.offsetHeight;
+            var chat = document.getElementById("chat");
+            var chatbox = document.getElementById("chatbox");
+            chat.style.width = drop.width*(.85);
+            chatbox.style.top = drop.height*(1-1/20);
+            chatbox.style.left = drop.width*(.05);
+        }
+    
+    
+    
+    var fireBase = new Firebase("https://letscook.firebaseio.com/fido");
+  
+    var uniqueID = (new Date().getTime()+Math.random());
+    uniqueID = (uniqueID+"").split(".").join("");
+    
+    fireBase.child('cursor').child(uniqueID).onDisconnect().remove();
+    
+    fireBase.child('cursor').on('value',
+        function(snapshot) {
+            refreshCursor(snapshot.val());
+        }
+    );
+    
+    function refreshCursor(o) {
+        var existingCursor = {};
+        var cursors = document.getElementById('cursors');
+        for(var id in o) {
+            if(id!=uniqueID) {
+//                console.log(o[id]);
+                existingCursor[id] = true;
+                var c = document.getElementById(id);
+                if(!c) {
+                    c = document.createElement('img');
+                    c.id = id;
+                    c.src = 'img/cursor.png';
+                    c.style.position = "absolute";
+                    cursors.appendChild(c);
+                }
+                c.style.left = o[id].x+"px";
+                c.style.top = o[id].y+"px";
+            }
+        }
+        for(var i=cursors.children.length-1;i>=0;i--) {
+            var child = cursors.children[i];
+            if(!existingCursor[child.id]) {
+                cursors.removeChild(child);
+            }
+        }
+    }
+    
+    document.addEventListener("mousemove",
+        function(e) {
+            fireBase.child('cursor').child(uniqueID).set(
+                {x:e.pageX,y:e.pageY}
+            );
+        });
+    
+    document.addEventListener("mouseout",
+        function(e) {
+            fireBase.child('cursor').child(uniqueID).remove();
+        });
+                        
+    
+    var offset;
+    fireBase.child('time').set(Firebase.ServerValue.TIMESTAMP);
+    fireBase.child('time').once('value',
+        function(snapshot) {
+            var serverNow = snapshot.val();
+            offset = serverNow - new Date().getTime();
+        }
+    );
+    
+    function getTime() {
+        return new Date().getTime() + offset;
+    }
+    
+function addEventHandler(obj, evt, handler) {
+    if(obj.addEventListener) {
+        // W3C method
+        obj.addEventListener(evt, handler, false);
+    } else if(obj.attachEvent) {
+        // IE method.
+        obj.attachEvent('on'+evt, handler);
+    } else {
+        // Old school method.
+        obj['on'+evt] = handler;
+    }
+}
+    
+Function.prototype.bindToEventHandler = function bindToEventHandler() {
+  var handler = this;
+  var boundParameters = Array.prototype.slice.call(arguments);
+  //create closure
+  return function(e) {
+      e = e || window.event; // get window.event if e argument missing (in IE)   
+      boundParameters.unshift(e);
+      handler.apply(this, boundParameters);
+  }
+};    
+    
+if(window.FileReader) { 
+  addEventHandler(window, 'load', function() {
+    var status = document.getElementById('status');
+    var drop   = document.getElementById('drop');
+    var list   = document.getElementById('list');
+  	
+    function cancel(e) {
+      if (e.preventDefault) { e.preventDefault(); }
+      return false;
+    }
+  
+    // Tells the browser that we *can* drop on this target
+    addEventHandler(drop, 'dragover', cancel);
+    addEventHandler(drop, 'dragenter', cancel);
+      
+    addEventHandler(drop, 'drop', function (e) {
+      e = e || window.event; // get window.event if e argument missing (in IE)   
+      if (e.preventDefault) { e.preventDefault(); } // stops the browser from redirecting off to the image.
+
+      var mx = e.pageX;
+      var my = e.pageY;
+      var dt    = e.dataTransfer;
+      var files = dt.files;
+      for (var i=0; i<files.length; i++) {
+        var file = files[i];
+        var reader = new FileReader();
+
+        addEventHandler(reader, 'loadend', function(e, file) {
+            if((file.type!='image/gif'
+              &&file.type!='image/jpeg'
+              &&file.type!='image/png')
+              ||file.size>10000000) {
+                return;
+            }
+            console.log(file.size);
+            console.log(file);
+            var bin           = this.result; 
+//            var newFile       = document.createElement('div');
+//            newFile.innerHTML = 'Loaded : '+file.name+' size '+file.size+' B';
+//            list.appendChild(newFile);  
+            var fileNumber = list.getElementsByTagName('div').length;
+            status.innerHTML = fileNumber < files.length 
+                             ? 'Loaded 100% of file '+fileNumber+' of '+files.length+'...' 
+                             : 'Done loading. processed '+fileNumber+' files.';
+
+            
+/*            var myCanvas = document.getElementById('drop');
+            var ctx = myCanvas.getContext('2d');
+            var img = new Image;
+            img.onload = function(){
+                console.log(img.naturalWidth,img.naturalHeight);
+                var scale = Math.min(50/img.naturalWidth,50/img.naturalHeight);
+                console.log(scale);
+                ctx.drawImage(
+                    img,
+                    0,0,
+                    img.naturalWidth,img.naturalHeight,
+                    0,0,
+                    Math.round(img.naturalWidth/10),Math.round(img.naturalHeight/10)); // Or at whatever offset you like
+            };
+            img.src = bin;*/
+//            console.log(bin);
+            dropFood(mx,my,bin,file.name);
+//            list.appendChild(img);
+        }.bindToEventHandler(file));
+          
+        reader.readAsDataURL(file);
+      }
+      return false;
+    }); 
+  });
+    
+    function createFood(url,x,y) {
+    }
+    
+    var foodBase = fireBase.child("food");
+    
+    function dropFood(mx,my,bin,name) {
+        
+        var intro = document.getElementById("intro");
+        if(intro && intro.parentNode) {
+            intro.parentNode.removeChild(intro);
+        }
+        
+        foodBase.push(
+            {
+                name:name,
+                image:bin,
+                x:mx,
+                y:my
+            }
+        );
+    }
+    
+    var eaten = {};
+    foodBase.on('child_removed',
+        function(snapshot) {
+            var o = snapshot.val();
+            var id = snapshot.key();
+            eaten[id] = true;
+    });
+    
+    foodBase.on("child_added",
+        function(snapshot) {
+            var o = snapshot.val();
+            var img = document.createElement("img"); 
+            img.id = snapshot.key();
+            img.name = o.name;   
+            img.style.left = o.x+"px";
+            img.style.top = o.y+"px";
+            img.style.position = "absolute";
+            img.style.transform = "translate(-50%,-50%)";
+            img.className="Meal";
+            img.onload = function() {
+                var size = 80;
+                var scale = Math.min(size/img.naturalWidth,size/img.naturalHeight);
+                img.width = Math.round(img.naturalWidth*scale);
+                img.height = Math.round(img.naturalHeight*scale);
+                drop.appendChild(img);
+//                fido.gotoAndEat(mx,my,img);
+            }
+            img.src = o.image;
+        console.log("created",img);
+    });
+    
+} else { 
+  document.getElementById('status').innerHTML = 'Your browser does not support the HTML5 FileReader.';
+}
+    
+    
+        var fido;
+        function onDOMContentLoaded(event) {
+            document.addEventListener("visibilitychange", function(e) {
+            });
+            fido = new Fido();
+            drop.appendChild(fido.div);
+            fido.gotoAndPlay(1);
+            
+            window.addEventListener("resize", resize);
+            resize();
+        }
+    
+        Sprite.refresh = function(dtime) {
+            for(var i=0;i<Sprite.registry.length;i++) {
+                var sprite = Sprite.registry[i];
+                sprite.next();
+            }
+        }
+        window.addEventListener("keydown",
+            function(e) {
+                var chatbox = document.getElementById("chatbox");
+                var chat = document.getElementById("chat");
+                if(e.keyCode==27||e.keyCode==13) {
+                }
+                else if(chatbox.style.display=="none") {
+                    chatbox.style.display = "";
+                    chat.focus();
+                }
+            });
+        window.focus();
+        
+        
+        function onKey(event) {
+            var chat = document.getElementById("chat");
+            var chatbox = document.getElementById("chatbox");
+            if(event.keyCode==13 && chatbox.style.display=="") {
+                var msg = encodeURIComponent(chat.value.trim());
+                chat.value = "";
+                if(msg!="") {
+                    sendChat(msg);
+                }
+                chatbox.style.display = "none";
+                event.stopPropagation();
+            }
+        }
+    
+        function sendChat(msg) {
+            fidoChat.push(decodeURIComponent(msg));
+        }
+
+        
+        //  event called when the page's DOM is loaded. Occurs before onLoad
+        window.addEventListener("DOMContentLoaded",onDOMContentLoaded); 
+    
+        var fidoBase = fireBase.child("fido");
+        var fidoChat = fireBase.child('chat');
+   
+        fidoChat.on('child_added',
+            function(snapshot) {
+                var o = snapshot.val();
+                var newFile  = document.createElement('div');
+                newFile.id = snapshot.key();
+                newFile.innerHTML = o;
+                list.appendChild(newFile);
+            
+                if(list.children.length>7) {
+                    var div = list.firstChild;
+                    list.removeChild(div);
+                    if(div.id) {
+                        fidoChat.child(div.id).remove();
+                    }
+                }
+                
+            
+            });
+    
+    </script>
+<style>
+#drop {
+  height: 600px;
+  width: 100%;
+  border: 1px solid silver;
+  margin: 0px;
+  padding: 0px;
+}
+</style>
+</head>
+<body style="margin:0px;height:100%">
+  <DIV id="status" style="display:none">Drag the files from a folder to a selected area ...</DIV>
+    <div id="cursors"></div>
+  <div id="drop">
+    <div id="intro"  style="margin:10px;font-size:16px">
+      <b>FEED ME</b><br>
+      This game is another social experiment.
+      All you have to do is feed FIDO. To feed FIDO, drag an image from your computer into this page. You can also ask a friend to feed FIDO by simply going to this page. Anyone in the world can feed FIDO. You can also chat with other users if they're online.<br>If FIDO doesn't eat for 24 hours, he will starve to death. Don't let FIDO starve!<br><br>
+      </div>
+      <DIV id="list"  style="margin:10px;"></DIV>
+      
+    <div id='chatbox' style="position:absolute;display:none">
+        <img src='img/chat.png' width=25 height=25>
+        &nbsp;<input type="text" style="position:absolute" id="chat" onkeyup="onKey(event)" maxlength=80>
+    </div>
+  </div>
+</body>
+</html>
