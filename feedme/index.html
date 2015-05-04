@@ -271,17 +271,27 @@ if(window.FileReader) {
             
             window.addEventListener("resize", resize);
             resize();
-            
+            updateInfo();
+        }
+    
+        function updateInfo() {
             var born = new Date("May 2, 2015");
-            var intro = document.getElementById("intro");
-            var diff = new Date(getTime()) - born.getTime();
+            var info = document.getElementById("info");
+            var diff = getTime() - born.getTime();
             diff /= 1000*60*60*24;
             diff = Math.ceil(diff);
-            var div = document.createElement('div');
-            div.style.color = "red";
-            div.innerHTML = "FIDO has survived for " + diff + " days";
-            intro.appendChild(div);
-            
+            info.innerHTML = "FIDO has survived for " + diff + " days.";
+            if(fido && fido.lastMeal) {
+                var diff = getTime() - fido.lastMeal;
+                var hours = diff/(1000*60*60);
+                var minutes = Math.floor(diff/(1000*60));
+                if(hours>1) {
+                    info.innerHTML += " FIDO ate " + hours.toFixed (1) + " hours ago.";
+                }
+                else {
+                    info.innerHTML += " FIDO ate " + minutes + " minutes ago.";
+                }
+            }
         }
     
         Sprite.refresh = function(dtime) {
@@ -368,6 +378,7 @@ if(window.FileReader) {
       This game is another social experiment.
       All you have to do is feed FIDO. To feed FIDO, drag an image of food from your computer into this page. You can also ask a friend to feed FIDO. Anyone in the world can feed FIDO by simply going to this page. You can also chat with other users if they're online.<br>If FIDO doesn't eat for 24 hours, he will starve to death. Don't let FIDO starve!<br><br>
       </div>
+        <div id="info"   style="margin:10px;font-size:16px;color:red"></div>
       <DIV id="list"  style="margin:10px;"></DIV>
       
     <div id='chatbox' style="position:absolute;display:none">

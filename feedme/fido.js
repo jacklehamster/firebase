@@ -12,6 +12,7 @@ function Fido() {
             self.lastMeal = snapshot.val();
             self.refresh();
             self.div.style.visibility = '';
+            updateInfo();
         }
     );
     
@@ -19,7 +20,7 @@ function Fido() {
         var sinceLastMeal = !this.lastMeal?0 : getTime() - this.lastMeal;
         var seconds = sinceLastMeal/1000;
         var hours = seconds/60/60;
-        return seconds && seconds<8?-1:hours<10?0:hours<15?1:hours<24?2:3;
+        return seconds && seconds<8?-1:hours<8?0:hours<12?1:hours<24?2:3;
     }
     
     function hasFood() {
@@ -104,6 +105,8 @@ function Fido() {
                     this.gotoAndPlay("EAT",
                         function() {
                             this.lastMeal = getTime();
+                            updateInfo();
+                        
                             fidoBase.child("lastMeal").set(Firebase.ServerValue.TIMESTAMP);
 //                            console.log("Last meal:",this.lastMeal);
                             var split = div.name.split(".");
@@ -149,6 +152,7 @@ function Fido() {
     }
     
     self.lastMeal = 0;
+    updateInfo();
     
     return fido;
 }
