@@ -49,7 +49,10 @@
     var cache = {};
     imageCache.on('child_added',
         function(snapshot) {
-            cache[snapshot.key()] = snapshot.val();
+            var o = snapshot.val();
+            cache[snapshot.key()] = {
+                url:typeof(o)=="string"?o:o.url
+            }
         });
     
   
@@ -299,29 +302,41 @@ if(window.FileReader) {
     var binURL = {}, binKey = {}, sendingImage = {};
     function dropFood(mx,my,bin,name) {
         
+        var id = "_"+CryptoJS.MD5(new Date()+""+Math.random());
+        
+        showImage(id,name,mx,my,bin);
+        
         var hash = "_"+CryptoJS.MD5(bin);
         if(cache[hash]) {
-            bin = cache[hash];
+            bin = cache[hash].url;
+            foodBase.child(id).set(
+                {
+                    name:name,
+                    image:bin,
+                    x:mx,
+                    y:my
+                }
+            );
         }
         else {
             sendingImage[bin] = true;
             sendImage(bin,
                 function(data) {
                     console.log("Sent food",name,data);
-                    imageCache.child(hash).set(data.link);
+                    imageCache.child(hash).set({name:name,url:data.link});
                     binURL[bin] = data.link;
                     checkUpload(name,bin);
+                    foodBase.child(id).set(
+                        {
+                            name:name,
+                            image:data.link,
+                            x:mx,
+                            y:my
+                        }
+                    );
                 }
             );
         }
-        foodBase.push(
-            {
-                name:name,
-                image:bin,
-                x:mx,
-                y:my
-            }
-        );
     }
     
     var eaten = {};
@@ -335,30 +350,39 @@ if(window.FileReader) {
     foodBase.on("child_added",
         function(snapshot) {
             var o = snapshot.val();
-            var img = document.createElement("img"); 
-            img.id = snapshot.key();
-            img.name = o.name;   
-            img.style.left = o.x+"px";
-            img.style.top = o.y+"px";
-            img.style.position = "absolute";
-            img.style.transform = "translate(-50%,-50%)";
-            img.className="Meal";
-            img.onload = function() {
-                var size = 80;
-                var scale = Math.min(size/img.naturalWidth,size/img.naturalHeight);
-                img.width = Math.round(img.naturalWidth*scale);
-                img.height = Math.round(img.naturalHeight*scale);
-                drop.appendChild(img);
-                img.onload = null;
-            }
-            img.src = o.image;
+            var id = snapshot.key();
+        
+            showImage(id,o.name,o.x,o.y,o.image);
+        
             if(sendingImage[o.image]) {
-                binKey[o.image] = img.id;
+                binKey[o.image] = id;
                 checkUpload(o.name,o.image);
             }
             
 //        console.log("created",img);
     });
+    
+    function showImage(id,name,x,y,image) {
+        var img = document.getElementById(id);
+        if(!img)
+            img = document.createElement("img"); 
+        img.id = id;
+        img.name = name;   
+        img.style.left = x+"px";
+        img.style.top = y+"px";
+        img.style.position = "absolute";
+        img.style.transform = "translate(-50%,-50%)";
+        img.className="Meal";
+        img.onload = function() {
+            var size = 80;
+            var scale = Math.min(size/img.naturalWidth,size/img.naturalHeight);
+            img.width = Math.round(img.naturalWidth*scale);
+            img.height = Math.round(img.naturalHeight*scale);
+            drop.appendChild(img);
+            img.onload = null;
+        }
+        img.src = image;
+    }
     
 } else { 
   document.getElementById('status').innerHTML = 'Your browser does not support the HTML5 FileReader.';
@@ -498,7 +522,7 @@ if(window.FileReader) {
 
                 var br = lines.map(function(line) {
                     if(line.meal) {
-                        return (<span key={line.id} style={{color:line.color}}><img src={line.meal} height='20'/> {line.msg}<br/></span>);
+                        return (<span key={line.id} style={{color:line.color}}><a href={line.meal} target='_blank'><img src={line.meal} height='20'/></a> {line.msg}<br/></span>);
                     }
                     else {
                         return (<span key={line.id} style={{color:line.color}}>{line.msg}<br/></span>);
