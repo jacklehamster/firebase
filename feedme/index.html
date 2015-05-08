@@ -3,7 +3,10 @@
 <head>
 <meta charset=utf-8 />
 <title>Feed Me</title>
-
+    
+    <script src="build/react.js"></script>
+    <script src="build/JSXTransformer.js"></script>
+    
         <link rel="icon" href="img/400x400.png" type="image/png"/>
         <link rel="shortcut icon" href="img/400x400.png" type="image/png"/>
         <meta property="og:image" content="http://i.imgur.com/fUNfSLh.png" />
@@ -131,6 +134,35 @@ Function.prototype.bindToEventHandler = function bindToEventHandler() {
   }
 };    
     
+    
+function upload(file) {
+ 
+  // file is from a <input> tag or from Drag'n Drop
+  // Is the file an image?
+ 
+  if (!file || !file.type.match(/image.*/)) return;
+ 
+  // It is!
+  // Let's build a FormData object
+ 
+  var fd = new FormData();
+  fd.append("image", file); // Append the file
+  fd.append("key", "6528448c258cff474ca9701c5bab6927");
+  // Get your own key: http://api.imgur.com/
+ 
+  // Create the XHR (Cross-Domain XHR FTW!!!)
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "http://api.imgur.com/2/upload.json"); // Boooom!
+  xhr.onload = function() {
+    // Big win!
+    // The URL of the image is:
+    JSON.parse(xhr.responseText).upload.links.imgur_page;
+   }
+   // Ok, I don't handle the errors. An exercice for the reader.
+   // And now, we send the formdata
+   xhr.send(fd);
+ }    
+    
 if(window.FileReader) { 
   addEventHandler(window, 'load', function() {
     var status = document.getElementById('status');
@@ -177,6 +209,10 @@ if(window.FileReader) {
                              : 'Done loading. processed '+fileNumber+' files.';
 
             
+            
+            
+//            https://api.imgur.com/3/image
+            
 /*            var myCanvas = document.getElementById('drop');
             var ctx = myCanvas.getContext('2d');
             var img = new Image;
@@ -208,12 +244,15 @@ if(window.FileReader) {
     
     var foodBase = fireBase.child("food");
     
-    function dropFood(mx,my,bin,name) {
-        
+    function closeIntro() {
         var intro = document.getElementById("intro");
         if(intro && intro.parentNode) {
             intro.parentNode.removeChild(intro);
         }
+        
+    }
+    
+    function dropFood(mx,my,bin,name) {
         
         foodBase.push(
             {
@@ -274,26 +313,7 @@ if(window.FileReader) {
             updateInfo();
         }
     
-        function updateInfo() {
-            var born = new Date("May 2, 2015");
-            var info = document.getElementById("info");
-            var diff = getTime() - born.getTime();
-            diff /= 1000*60*60*24;
-            diff = Math.ceil(diff);
-            info.innerHTML = "FIDO has survived for " + diff + " days.";
-            if(fido && fido.lastMeal) {
-                var diff = getTime() - fido.lastMeal;
-                var hours = diff/(1000*60*60);
-                var minutes = Math.floor(diff/(1000*60));
-                if(hours>1) {
-                    info.innerHTML += " FIDO ate " + hours.toFixed (1) + " hours ago.";
-                }
-                else {
-                    info.innerHTML += " FIDO ate " + minutes + " minutes ago.";
-                }
-            }
-        }
-    
+
         Sprite.refresh = function(dtime) {
             for(var i=0;i<Sprite.registry.length;i++) {
                 var sprite = Sprite.registry[i];
@@ -328,8 +348,14 @@ if(window.FileReader) {
             }
         }
     
-        function sendChat(msg) {
-            fidoChat.push(decodeURIComponent(msg));
+        var color="#"+(parseInt("1000000")+Math.floor(Math.random()*parseInt("ffffff",16))).toString(16).substr(1);
+    
+        function sendChat(msg,meal) {
+            var obj = {color:color,msg:decodeURIComponent(msg),time:Firebase.ServerValue.TIMESTAMP};
+            if(meal) {
+                obj.meal = meal;
+            }
+            fidoChat.push(obj);
         }
 
         
@@ -338,27 +364,83 @@ if(window.FileReader) {
     
         var fidoBase = fireBase.child("fido");
         var fidoChat = fireBase.child('chat');
+        var chatList = new Array(20);
    
         fidoChat.on('child_added',
             function(snapshot) {
                 var o = snapshot.val();
-                var newFile  = document.createElement('div');
-                newFile.id = snapshot.key();
-                newFile.innerHTML = o;
-                list.appendChild(newFile);
-            
-                if(list.children.length>7) {
-                    var div = list.firstChild;
-                    list.removeChild(div);
-                    if(div.id) {
-                        fidoChat.child(div.id).remove();
-                    }
-                }
-                
-            
+                chatList.push({
+                    id:snapshot.key(),
+                    msg:(typeof(o)=='string')?o:o.msg,
+                    color:o.color
+                });
+                var oldMsg = chatList.shift();
+                if(oldMsg && oldMsg.id)
+                    fidoChat.child(oldMsg.id).remove();
+                updateChat();
             });
     
     </script>
+    
+    <script type="text/jsx">
+    
+        var FidoInfo = React.createClass({
+            getInitialState: function() {
+                return {
+                    born:new Date("May 2, 2015"),
+                    visibility:'hidden'
+                };
+            },
+            tick: function() {
+                var diff = getTime() - this.state.born.getTime();
+                diff /= 1000*60*60*24;
+                diff = Math.ceil(diff);
+                var days = diff;
+                var time = "";
+                if(fido && fido.lastMeal) {
+                    var diff = getTime() - fido.lastMeal;
+                    var hours = diff/(1000*60*60);
+                    var minutes = Math.floor(diff/(1000*60));
+                    if(hours>1) {
+                        time = hours.toFixed (1) + " hours";
+                    }
+                    else {
+                        time = minutes + " minutes";
+                    }
+                }
+                this.setState({visibility:'',days:days,time:time});
+            },
+            componentDidMount: function() {
+                this.interval = setInterval(this.tick,1000);
+            },
+            render: function() {
+                return <div style={{visibility:this.state.visibility}}>FIDO has survived for {this.state.days} days.<br/>FIDO ate {this.state.time} ago.</div>;
+            }
+        });    
+        
+        function updateInfo() {
+            React.render(<FidoInfo />, document.getElementById("info"));
+        }
+
+    </script>    
+    <script type="text/jsx">
+        var ChatLines = React.createClass({      
+            render: function() {
+                var lines = this.props.lines;
+
+                var br = lines.map(function(line) {
+                    return (<span key={line.id} style={{color:line.color}}>{line.msg}<br/></span>);
+                });
+                return (<div>{ br }</div>);
+            }
+        });
+
+        function updateChat() {
+            React.render(<ChatLines lines={ chatList }/>, 
+                          document.getElementById('list'));
+        }
+    </script>    
+    
 <style>
 #drop {
   height: 600px;
@@ -373,7 +455,8 @@ if(window.FileReader) {
   <DIV id="status" style="display:none">Drag the files from a folder to a selected area ...</DIV>
     <div id="cursors"></div>
   <div id="drop">
-    <div id="intro"  style="margin:10px;font-size:16px">
+    <div id="intro"  style="margin:10px;padding-left:5px;padding-right:5px;font-size:16px;background-color:#dddddd">
+        <img src="img/close_icon.png" style="margin:5px" alt="Close" title="Close" align="right" onclick="closeIntro()">        
       <h3><b>FEED ME</b></h3>
       This game is another social experiment.
       All you have to do is feed FIDO. To feed FIDO, drag an image of food from your computer into this page. You can also ask a friend to feed FIDO. Anyone in the world can feed FIDO by simply going to this page. You can also chat with other users if they're online.<br>If FIDO doesn't eat for 24 hours, he will starve to death. Don't let FIDO starve!<br><br>
@@ -386,5 +469,7 @@ if(window.FileReader) {
         &nbsp;<input type="text" style="position:absolute" id="chat" onkeyup="onKey(event)" maxlength=80>
     </div>
   </div>
+    
+    
 </body>
 </html>

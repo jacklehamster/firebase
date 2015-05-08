@@ -104,6 +104,7 @@ function Fido() {
                 if(div && div.parentNode) {
                     this.gotoAndPlay("EAT",
                         function() {
+                            var ateHoursAgo = (getTime()-this.lastMeal)/1000/60/60;
                             this.lastMeal = getTime();
                             updateInfo();
                         
@@ -113,10 +114,10 @@ function Fido() {
                             split.pop();
                         
                             if(!eaten[div.id]) {
-                                var msg = 'FIDO ate <b>'+split.join(" ")+'</b> (<img style="max-width:30px; max-height:20px" src="'+div.src+'">) at <b> '+new Date(this.lastMeal).toLocaleTimeString()+"</b>";
-                                var msg = 'FIDO ate <b>'+split.join(" ")+'</b> at <b> '+new Date(this.lastMeal).toLocaleTimeString()+"</b>";
+//                                var msg = 'FIDO ate <b>'+split.join(" ")+'</b> (<img style="max-width:30px; max-height:20px" src="'+div.src+'">) at <b> '+new Date(this.lastMeal).toLocaleTimeString()+"</b>";
+                                var msg = 'FIDO ate '+split.join(" ").toLowerCase()+' at '+new Date(this.lastMeal).toLocaleTimeString()+" and "+(ateHoursAgo<3?"ate too much.":ateHoursAgo<8?"is full":"is very satisfied.")+".";
 
-                                fidoChat.push(msg);
+                                sendChat(msg);
                             }
                         
                             div.parentNode.removeChild(div);
