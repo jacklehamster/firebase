@@ -20,6 +20,7 @@
 
 
         <script src="../../header.js"></script>
+        <script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/md5.js"></script>
         <link href='http://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
         <script type="text/javascript" src="img/feed.json"></script>
         <script type="text/javascript" src="animation.js"></script>    
@@ -43,6 +44,14 @@
     
     
     var fireBase = new Firebase("https://letscook.firebaseio.com/fido");
+    var imageCache = new Firebase("https://letscook.firebaseio.com/images");
+    
+    var cache = {};
+    imageCache.on('child_added',
+        function(snapshot) {
+            cache[snapshot.key()] = snapshot.val();
+        });
+    
   
     var uniqueID = (new Date().getTime()+Math.random());
     uniqueID = (uniqueID+"").split(".").join("");
@@ -135,34 +144,6 @@ Function.prototype.bindToEventHandler = function bindToEventHandler() {
 };    
     
     
-function upload(file) {
- 
-  // file is from a <input> tag or from Drag'n Drop
-  // Is the file an image?
- 
-  if (!file || !file.type.match(/image.*/)) return;
- 
-  // It is!
-  // Let's build a FormData object
- 
-  var fd = new FormData();
-  fd.append("image", file); // Append the file
-  fd.append("key", "6528448c258cff474ca9701c5bab6927");
-  // Get your own key: http://api.imgur.com/
- 
-  // Create the XHR (Cross-Domain XHR FTW!!!)
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://api.imgur.com/2/upload.json"); // Boooom!
-  xhr.onload = function() {
-    // Big win!
-    // The URL of the image is:
-    JSON.parse(xhr.responseText).upload.links.imgur_page;
-   }
-   // Ok, I don't handle the errors. An exercice for the reader.
-   // And now, we send the formdata
-   xhr.send(fd);
- }    
-    
 if(window.FileReader) { 
   addEventHandler(window, 'load', function() {
     var status = document.getElementById('status');
@@ -252,8 +233,87 @@ if(window.FileReader) {
         
     }
     
+    function sendImage(bin,callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST","https://api.imgur.com/3/image",true);
+//        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xmlhttp.setRequestHeader("Authorization","Client-ID 272171932fa0aa3");
+        xmlhttp.setRequestHeader("Accept",'application/json');
+// Authorization: auth,
+  //      Accept: 'application/json'
+        
+  
+        console.log(bin);
+        var data = {
+            image: bin.split(",")[1],
+            type: 'base64'
+          };
+        var blob = new Blob([bin.split(",")[1]], {type: 'base64'});
+        
+        xmlhttp.onreadystatechange=function()
+          {
+          if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                var obj = JSON.parse(xmlhttp.responseText);
+                callback(obj.data);
+            }
+          }        
+        xmlhttp.send(blob);        
+    }
+    
+    function updateMealsURL(bin,url) {
+        var meals = document.getElementsByClassName("Meal");
+        for(var i=0;i<meals.length;i++) {
+            if(meals[i].src==bin)
+                meals[i].src = url;
+        }
+    }
+    
+    function updateChatURLS(bin,url) {
+        for(var i=0;i<chatList.length;i++) {
+            if(chatList[i]) {
+                if(chatList[i].meal==bin) {
+                    chatList[i].meal = url;
+                    fidoChat.child(chatList[i].id).child("meal").set(url);
+                }
+            }
+        }
+    }
+    
+    function checkUpload(name,bin) {
+        if(sendingImage[bin]) {
+            var key = binKey[bin];
+            var url = binURL[bin];
+            if(key && url) {
+                updateMealsURL(bin,url);
+                updateChatURLS(bin,url);
+//                console.log(url);
+    //            foodBase.child(key).child("image").set(url);
+                delete binURL[bin];
+                delete binKey[bin];
+                delete sendingImage[bin];
+            }
+        }
+    }
+    
+    var binURL = {}, binKey = {}, sendingImage = {};
     function dropFood(mx,my,bin,name) {
         
+        var hash = "_"+CryptoJS.MD5(bin);
+        if(cache[hash]) {
+            bin = cache[hash];
+        }
+        else {
+            sendingImage[bin] = true;
+            sendImage(bin,
+                function(data) {
+                    console.log("Sent food",name,data);
+                    imageCache.child(hash).set(data.link);
+                    binURL[bin] = data.link;
+                    checkUpload(name,bin);
+                }
+            );
+        }
         foodBase.push(
             {
                 name:name,
@@ -289,10 +349,15 @@ if(window.FileReader) {
                 img.width = Math.round(img.naturalWidth*scale);
                 img.height = Math.round(img.naturalHeight*scale);
                 drop.appendChild(img);
-//                fido.gotoAndEat(mx,my,img);
+                img.onload = null;
             }
             img.src = o.image;
-        console.log("created",img);
+            if(sendingImage[o.image]) {
+                binKey[o.image] = img.id;
+                checkUpload(o.name,o.image);
+            }
+            
+//        console.log("created",img);
     });
     
 } else { 
@@ -348,7 +413,7 @@ if(window.FileReader) {
             }
         }
     
-        var color="#"+(parseInt("1000000")+Math.floor(Math.random()*parseInt("ffffff",16))).toString(16).substr(1);
+        var color="#"+(parseInt("1000000",16)+Math.floor(Math.random()*parseInt("ffffff",16))).toString(16).substr(1);
     
         function sendChat(msg,meal) {
             var obj = {color:color,msg:decodeURIComponent(msg),time:Firebase.ServerValue.TIMESTAMP};
@@ -364,7 +429,7 @@ if(window.FileReader) {
     
         var fidoBase = fireBase.child("fido");
         var fidoChat = fireBase.child('chat');
-        var chatList = new Array(20);
+        var chatList = new Array(12);
    
         fidoChat.on('child_added',
             function(snapshot) {
@@ -372,7 +437,8 @@ if(window.FileReader) {
                 chatList.push({
                     id:snapshot.key(),
                     msg:(typeof(o)=='string')?o:o.msg,
-                    color:o.color
+                    color:o.color,
+                    meal:o.meal
                 });
                 var oldMsg = chatList.shift();
                 if(oldMsg && oldMsg.id)
@@ -399,14 +465,16 @@ if(window.FileReader) {
                 var time = "";
                 if(fido && fido.lastMeal) {
                     var diff = getTime() - fido.lastMeal;
-                    var hours = diff/(1000*60*60);
-                    var minutes = Math.floor(diff/(1000*60));
-                    if(hours>1) {
-                        time = hours.toFixed (1) + " hours";
+                    var hours = Math.floor(diff/(1000*60*60));
+                    var minutes = Math.floor(diff/(1000*60))%60;
+                    var strs = [];
+                    if(hours>0) {
+                        strs.push(hours + " h");
                     }
-                    else {
-                        time = minutes + " minutes";
+                    if(minutes>0 || !hours) {
+                        strs.push(minutes + " min");
                     }
+                    time = strs.join(" ");
                 }
                 this.setState({visibility:'',days:days,time:time});
             },
@@ -429,7 +497,12 @@ if(window.FileReader) {
                 var lines = this.props.lines;
 
                 var br = lines.map(function(line) {
-                    return (<span key={line.id} style={{color:line.color}}>{line.msg}<br/></span>);
+                    if(line.meal) {
+                        return (<span key={line.id} style={{color:line.color}}><img src={line.meal} height='20'/> {line.msg}<br/></span>);
+                    }
+                    else {
+                        return (<span key={line.id} style={{color:line.color}}>{line.msg}<br/></span>);
+                    }
                 });
                 return (<div>{ br }</div>);
             }
@@ -469,7 +542,8 @@ if(window.FileReader) {
         &nbsp;<input type="text" style="position:absolute" id="chat" onkeyup="onKey(event)" maxlength=80>
     </div>
   </div>
-    
+    <div align="right" style="font-size:16px;">
+    FeedMe is built in JavaScript using technologies like <a href="https://www.firebase.com"><img style="vertical-align:bottom" src="http://www.zone-numerique.com/wp-content/uploads/2014/10/firebase-logo.jpg" height=25 title="Firebase" alt="Firebase"></a> and <a href="https://facebook.github.io/react/"><img  style="vertical-align:bottom" src="http://www.mauriziobonani.com/wp-content/uploads/2014/12/reactjs.png" height=25 title="React.js" alt="React.js"></a></div>
     
 </body>
 </html>

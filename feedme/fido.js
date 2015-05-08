@@ -115,9 +115,9 @@ function Fido() {
                         
                             if(!eaten[div.id]) {
 //                                var msg = 'FIDO ate <b>'+split.join(" ")+'</b> (<img style="max-width:30px; max-height:20px" src="'+div.src+'">) at <b> '+new Date(this.lastMeal).toLocaleTimeString()+"</b>";
-                                var msg = 'FIDO ate '+split.join(" ").toLowerCase()+' at '+new Date(this.lastMeal).toLocaleTimeString()+" and "+(ateHoursAgo<3?"ate too much.":ateHoursAgo<8?"is full":"is very satisfied.")+".";
+                                var msg = 'FIDO ate '+split.join(" ").toLowerCase()+' at '+new Date(this.lastMeal).toLocaleTimeString()+" and "+(ateHoursAgo<1?"ate too much.":ateHoursAgo<8?"is full":"is very satisfied.")+".";
 
-                                sendChat(msg);
+                                sendChat(msg,div.src);
                             }
                         
                             div.parentNode.removeChild(div);
