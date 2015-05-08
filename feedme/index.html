@@ -236,9 +236,12 @@ if(window.FileReader) {
         
     }
     
-    function sendImage(bin,callback) {
+    function sendImage(name,bin,callback) {
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST","https://api.imgur.com/3/image",true);
+        xmlhttp.open("POST","https://api.imgur.com/3/image"+
+            "?description=FEEDFIDO"+
+            "&title="+name
+            ,true);
 //        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xmlhttp.setRequestHeader("Authorization","Client-ID 272171932fa0aa3");
         xmlhttp.setRequestHeader("Accept",'application/json');
@@ -246,12 +249,7 @@ if(window.FileReader) {
   //      Accept: 'application/json'
         
   
-        console.log(bin);
-        var data = {
-            image: bin.split(",")[1],
-            type: 'base64'
-          };
-        var blob = new Blob([bin.split(",")[1]], {type: 'base64'});
+        var blob = new Blob([bin.split(",")[1]], {type:'base64'});
         
         xmlhttp.onreadystatechange=function()
           {
@@ -304,8 +302,6 @@ if(window.FileReader) {
         
         var id = "_"+CryptoJS.MD5(new Date()+""+Math.random());
         
-        showImage(id,name,mx,my,bin,true);
-        
         var hash = "_"+CryptoJS.MD5(bin);
         if(cache[hash]) {
             bin = cache[hash].url;
@@ -319,8 +315,10 @@ if(window.FileReader) {
             );
         }
         else {
+            showImage(id,name,mx,my,bin,true);
+
             sendingImage[bin] = true;
-            sendImage(bin,
+            sendImage(name,bin,
                 function(data) {
                     console.log("Sent food",name,data);
                     imageCache.child(hash).set({name:name,url:data.link});
@@ -373,7 +371,7 @@ if(window.FileReader) {
         img.style.position = "absolute";
         img.style.transform = "translate(-50%,-50%)";
         img.className="Meal";
-        img.donteat = donteat;
+        img.donteat = donteat?true:false;
         img.onload = function() {
             var size = 80;
             var scale = Math.min(size/img.naturalWidth,size/img.naturalHeight);
