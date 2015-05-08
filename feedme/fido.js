@@ -42,9 +42,13 @@ function Fido() {
             }
         }
         else if((this.currentLabel!="EAT" && this.currentLabel!="EATING") && hasFood() && hunger>=0) {
-            var meal = document.getElementsByClassName("Meal")[0];
-            if(meal) {
-                this.gotoAndEat(meal.offsetLeft,meal.offsetTop,meal);
+            var meals = document.getElementsByClassName("Meal");
+            for(var i=0;i<meals.length;i++) {
+                var meal = meals[i];
+                if(meal && !meal.donteat) {
+                    this.gotoAndEat(meal.offsetLeft,meal.offsetTop,meal);
+                    break;
+                }
             }
         }
         else if((this.currentLabel=="STILL"||this.currentLabel=="STARE"||this.currentLabel=="HUNGRY"||this.currentLabel=="STARVING") && Math.random()<.05) {
