@@ -408,13 +408,15 @@ if(window.FileReader) {
                 sprite.next();
             }
         }
+        var chatReady;
         window.addEventListener("keydown",
             function(e) {
                 var chatbox = document.getElementById("chatbox");
                 var chat = document.getElementById("chat");
-                if(e.keyCode==27||e.keyCode==13) {
+                if(e.keyCode==27) {
                 }
                 else if(chatbox.style.display=="none") {
+                    chatReady = false;
                     chatbox.style.display = "";
                     chat.focus();
                 }
@@ -425,7 +427,7 @@ if(window.FileReader) {
         function onKey(event) {
             var chat = document.getElementById("chat");
             var chatbox = document.getElementById("chatbox");
-            if(event.keyCode==13 && chatbox.style.display=="") {
+            if(event.keyCode==13 && chatbox.style.display=="" && chatReady) {
                 var msg = encodeURIComponent(chat.value.trim());
                 chat.value = "";
                 if(msg!="") {
@@ -434,9 +436,23 @@ if(window.FileReader) {
                 chatbox.style.display = "none";
                 event.stopPropagation();
             }
+            chatReady = true;
+            if(event.keyCode==27) {
+                chat.value = "";
+                chatbox.style.display = "none";
+                chatReady = false;
+                event.stopPropagation();
+            }            
         }
     
-        var color="#"+(parseInt("1000000",16)+Math.floor(Math.random()*parseInt("ffffff",16))).toString(16).substr(1);
+        var color= localStorage.getItem("color");
+        if(!color) {
+            color = "#"+(parseInt("1000000",16)+Math.floor(Math.random()*parseInt("ffffff",16))).toString(16).substr(1);
+            localStorage.setItem(color);
+        }
+            
+            
+            
     
         function sendChat(msg,meal) {
             var obj = {color:color,msg:decodeURIComponent(msg),time:Firebase.ServerValue.TIMESTAMP};
