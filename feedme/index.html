@@ -448,7 +448,7 @@ if(window.FileReader) {
         var color= localStorage.getItem("color");
         if(!color) {
             color = "#"+(parseInt("1000000",16)+Math.floor(Math.random()*parseInt("ffffff",16))).toString(16).substr(1);
-            localStorage.setItem(color);
+            localStorage.setItem("color",color);
         }
             
             
