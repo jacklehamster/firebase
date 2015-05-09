@@ -119,7 +119,7 @@ function Fido() {
                         
                             if(!eaten[div.id]) {
 //                                var msg = 'FIDO ate <b>'+split.join(" ")+'</b> (<img style="max-width:30px; max-height:20px" src="'+div.src+'">) at <b> '+new Date(this.lastMeal).toLocaleTimeString()+"</b>";
-                                var msg = 'FIDO ate '+split.join(" ").toLowerCase()+' at '+new Date(this.lastMeal).toLocaleTimeString();
+                                var msg = 'FIDO ate '+split.join(" ").toLowerCase()+' at %TIME%';
 
                                 sendChat(msg,div.src);
                             }

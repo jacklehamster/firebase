@@ -122,6 +122,10 @@
         return new Date().getTime() + offset;
     }
     
+    function toLocalTime(time) {
+        return new Date(time-offset);
+    }
+    
 function addEventHandler(obj, evt, handler) {
     if(obj.addEventListener) {
         // W3C method
@@ -343,23 +347,29 @@ if(window.FileReader) {
             var o = snapshot.val();
             var id = snapshot.key();
             eaten[id] = true;
+            if(backFood.length) {
+                var foodarea = document.getElementById('foodarea');
+                foodarea.appendChild(backFood.pop());
+            }
     });
     
     foodBase.on("child_added",
         function(snapshot) {
             var o = snapshot.val();
             var id = snapshot.key();
-        
+            
             showImage(id,o.name,o.x,o.y,o.image);
-        
+
             if(sendingImage[o.image]) {
                 binKey[o.image] = id;
                 checkUpload(o.name,o.image);
             }
+        
             
 //        console.log("created",img);
     });
     
+    var backFood = [];
     function showImage(id,name,x,y,image,donteat) {
         var foodarea = document.getElementById('foodarea');
         var img = document.getElementById(id);
@@ -380,6 +390,12 @@ if(window.FileReader) {
             img.height = Math.round(img.naturalHeight*scale);
             foodarea.appendChild(img);
             img.onload = null;
+            
+            var meals = document.getElementsByClassName("Meal");
+            if(meals.length>40) {
+                meals[0].parentNode.removeChild(meals[0]);
+                backFood.push(meals[0]);
+            }
         }
         img.src = image;
     }
@@ -429,7 +445,7 @@ if(window.FileReader) {
             var chat = document.getElementById("chat");
             var chatbox = document.getElementById("chatbox");
             if(event.keyCode==13 && chatbox.style.display=="" && chatReady) {
-                var msg = encodeURIComponent(chat.value.trim());
+                var msg = (chat.value.trim());
                 chat.value = "";
                 if(msg!="") {
                     sendChat(msg);
@@ -456,7 +472,7 @@ if(window.FileReader) {
             
     
         function sendChat(msg,meal) {
-            var obj = {color:color,msg:decodeURIComponent(msg),time:Firebase.ServerValue.TIMESTAMP};
+            var obj = {color:color,msg:msg,time:Firebase.ServerValue.TIMESTAMP};
             if(meal) {
                 obj.meal = meal;
             }
@@ -478,7 +494,8 @@ if(window.FileReader) {
                     id:snapshot.key(),
                     msg:(typeof(o)=='string')?o:o.msg,
                     color:o.color,
-                    meal:o.meal
+                    meal:o.meal,
+                    time:o.time
                 });
                 var oldMsg = chatList.shift();
                 if(oldMsg && oldMsg.id)
@@ -537,11 +554,16 @@ if(window.FileReader) {
                 var lines = this.props.lines;
 
                 var br = lines.map(function(line) {
+                    var msg = line.msg;
+                    if(line.time) {
+                        var time = toLocalTime(line.time).toLocaleTimeString();
+                        msg = line.msg.split("%TIME%").join(time);
+                    }
                     if(line.meal) {
-                        return (<span key={line.id} style={{color:line.color}}><a href={line.meal} target='_blank'><img src={line.meal} height='20'/></a> {line.msg}<br/></span>);
+                        return (<span key={line.id} style={{color:line.color}}><a href={line.meal} target='_blank'><img src={line.meal} height='20'/></a> {msg}<br/></span>);
                     }
                     else {
-                        return (<span key={line.id} style={{color:line.color}}>{line.msg}<br/></span>);
+                        return (<span key={line.id} style={{color:line.color}}>{msg}<br/></span>);
                     }
                 });
                 return (<div>{ br }</div>);
