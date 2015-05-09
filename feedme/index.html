@@ -114,13 +114,12 @@
                         
     
     var offset;
-    fireBase.child('time').set(Firebase.ServerValue.TIMESTAMP);
-    fireBase.child('time').once('value',
+    var timeBase = new Firebase("https://letscook.firebaseio.com/.info/serverTimeOffset");
+
+    timeBase.once('value',
         function(snapshot) {
-            var serverNow = snapshot.val();
-            offset = serverNow - new Date().getTime();
-        
-        
+            offset = snapshot.val();
+            console.log(offset);
         }
     );
     
