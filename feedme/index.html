@@ -361,6 +361,7 @@ if(window.FileReader) {
     });
     
     function showImage(id,name,x,y,image,donteat) {
+        var foodarea = document.getElementById('foodarea');
         var img = document.getElementById(id);
         if(!img)
             img = document.createElement("img"); 
@@ -377,7 +378,7 @@ if(window.FileReader) {
             var scale = Math.min(size/img.naturalWidth,size/img.naturalHeight);
             img.width = Math.round(img.naturalWidth*scale);
             img.height = Math.round(img.naturalHeight*scale);
-            drop.appendChild(img);
+            foodarea.appendChild(img);
             img.onload = null;
         }
         img.src = image;
@@ -567,14 +568,16 @@ if(window.FileReader) {
   <DIV id="status" style="display:none">Drag the files from a folder to a selected area ...</DIV>
     <div id="cursors"></div>
   <div id="drop">
-    <div id="intro"  style="margin:10px;padding-left:5px;padding-right:5px;font-size:16px;background-color:#dddddd">
+      <div id="foodarea">
+      </div>
+    <div id="intro"  style="margin:10px;padding-left:5px;padding-right:5px;font-size:16px;background-color:#dddddd; position:relative">
         <img src="img/close_icon.png" style="margin:5px" alt="Close" title="Close" align="right" onclick="closeIntro()">        
       <h3><b>FEED ME</b></h3>
       This game is another social experiment.
       All you have to do is feed FIDO. To feed FIDO, drag an image of food from your computer into this page. You can also ask a friend to feed FIDO. Anyone in the world can feed FIDO by simply going to this page. You can also chat with other users if they're online.<br>If FIDO doesn't eat for 24 hours, he will starve to death. Don't let FIDO starve!<br><br>
       </div>
-        <div id="info"   style="margin:10px;font-size:16px;color:red"></div>
-      <DIV id="list"  style="margin:10px;"></DIV>
+        <div id="info"   style="margin:10px;font-size:16px;color:red; position:relative"></div>
+      <DIV id="list"  style="margin:10px; position:relative"></DIV>
       
     <div id='chatbox' style="position:absolute;display:none">
         <img src='img/chat.png' width=25 height=25>
