@@ -41,7 +41,7 @@ function Fido() {
                 this.setPosition(pos.x,pos.y + (this.goal.y-pos.y)/10);
             }
         }
-        else if((this.currentLabel!="EAT" && this.currentLabel!="EATING") && hasFood() && hunger>=0) {
+        else if((this.currentLabel!="EAT" && this.currentLabel!="EATING") && hasFood() && (hunger>=0|| document.getElementsByClassName("Meal").length>10)) {
             var meals = document.getElementsByClassName("Meal");
             for(var i=0;i<meals.length;i++) {
                 var meal = meals[i];
@@ -133,7 +133,7 @@ function Fido() {
                             this.gotoAndPlay("EATING",
                                 keepEating = function() {
                                 
-                                    if(Sprite.now-time>2000 && document.getElementsByClassName("Meal").length<10) {
+                                    if(Sprite.now-time>2000) {
                                         this.gotoAndPlay("STILL");
                                     }
                                     else {
