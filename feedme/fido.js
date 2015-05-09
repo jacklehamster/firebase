@@ -132,7 +132,8 @@ function Fido() {
                             var keepEating;
                             this.gotoAndPlay("EATING",
                                 keepEating = function() {
-                                    if(Sprite.now-time>2000) {
+                                
+                                    if(Sprite.now-time>2000 && document.getElementsByClassName("Meal").length<10) {
                                         this.gotoAndPlay("STILL");
                                     }
                                     else {
