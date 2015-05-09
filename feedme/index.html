@@ -46,12 +46,18 @@
     var fireBase = new Firebase("https://letscook.firebaseio.com/fido");
     var imageCache = new Firebase("https://letscook.firebaseio.com/images");
     
+    var randomCache = [];
     var cache = {};
     imageCache.on('child_added',
         function(snapshot) {
             var o = snapshot.val();
-            cache[snapshot.key()] = {
+            var c = {
+                flagged:typeof(o)=="string"?null:o.flagged,
                 url:typeof(o)=="string"?o:o.url
+            };
+            cache[snapshot.key()] = c;
+            if(c.flagged!="nswf") {
+                randomCache.push(c);
             }
         });
     
@@ -308,7 +314,12 @@ if(window.FileReader) {
         
         var hash = "_"+CryptoJS.MD5(bin);
         if(cache[hash]) {
-            bin = cache[hash].url;
+            if(cache[hash].flagged=='nsfw') {
+                bin = randomCache[Math.floor(Math.random()*randomCache.length)].url;
+            }
+            else {            
+                bin = cache[hash].url;
+            }
             foodBase.child(id).set(
                 {
                     name:name,

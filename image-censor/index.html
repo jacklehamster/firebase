@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+    
+    <script src="build/react.js"></script>
+    <script src="build/JSXTransformer.js"></script>
+    
+        <link rel="icon" href="img/400x400.png" type="image/png"/>
+        <link rel="shortcut icon" href="img/400x400.png" type="image/png"/>
+        <meta property="og:image" content="http://i.imgur.com/fUNfSLh.png" />
+        <meta property="og:url" content="http://jacklehamster.github.io/firebase/feedme/"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Image Censor"/>
+        <meta property="og:description" content="Admin tool for selecting images to be censored" />
+        <meta property="fb:admins" content="530453181"/>
+        <meta property="fb:app_id" content="815492315195047"/>
+        <script src="../../header.js"></script>
+    
+        <link rel="stylesheet" type="text/css" href="css.css">
+        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+
+    <script type="text/javascript">
+    
+        var imageCache = new Firebase("https://letscook.firebaseio.com/images");
+        
+        var imagesData = {};
+        imageCache.on("child_added",updateChild);
+        imageCache.on("child_changed",updateChild);
+        
+        function updateChild(snapshot) {
+            var o = snapshot.val();
+            var id = snapshot.key();
+            imagesData[id] =
+                {
+                    id:id,
+                    name:o.name,
+                    url:o.url,
+                    flagged:o.flagged
+                };
+            updateAll();
+        }
+        
+        function validateImage() {
+            imageCache.child(imageID).child('flagged').set("clear");
+        }
+        
+        function slaughterImage() {
+            imageCache.child(imageID).child('flagged').set("nswf");
+        }
+    </script>    
+    <script type="text/jsx">
+        var imageID;
+        var ImageView = React.createClass({      
+            render: function() {
+                var images = this.props.images;
+                var image = null;
+                var unflagged = 0;
+                var count = 0;
+                for(var id in images) {
+                    if(!images[id].flagged) {
+                        if(!image)
+                            image = images[id];
+                        unflagged++;
+                    }
+                    count++;
+                }
+                imageID = image?image.id:null;
+                return !image?<span/>:(<div><img id='img' style={{maxWidth:'400px', maxHeight:'300px'}} key={image.id} src={image.url} title={image.name} alt={image.name}/><br/><span>{unflagged} / {count}</span></div>);
+            }
+        });
+
+        function updateImage() {
+            React.render(<ImageView images={ imagesData }/>, document.getElementById('imageView'));
+        }
+        
+        
+        var ImageList = React.createClass({      
+            render: function() {
+                var images = [];
+                for(var id in this.props.images) {
+                    if(this.props.images[id].flagged=='clear') {
+                        images.push(this.props.images[id]);
+                    }
+                }
+                images.reverse();
+                var br = images.map(function(image) {
+                    return <img key={image.id} src={image.url} title={image.name} style={{maxWidth:'100px',maxHeight:'100px'}}/>
+                });
+                return (<div>{ br }</div>);
+            }
+        });
+
+        function updateList() {
+            React.render(<ImageList images={ imagesData }/>, document.getElementById('imageList'));
+        }
+        
+        function updateAll() {
+            updateImage();
+            updateList();
+        }
+    </script>    
+    
+</head>
+    <body>
+        
+        <div id="imageView"></div>
+        <input style="background-color:#66FF66" type="button" value="VALIDATE" onClick="validateImage()"/>
+        <input style="background-color:pink" type="button" value="SLAUGHTER" onClick="slaughterImage()"/>
+        <div id="imageList"></div>
+        
+    </body>
+    
+</html>

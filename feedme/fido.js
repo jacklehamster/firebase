@@ -124,7 +124,9 @@ function Fido() {
                                 sendChat(msg,div.src);
                             }
                         
-                            div.parentNode.removeChild(div);
+                            if(div.parentNode) {
+                                div.parentNode.removeChild(div);
+                            }
                             foodBase.child(div.id).remove();
                             delete eaten[div.id];
                             div = null;
