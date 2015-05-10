@@ -312,7 +312,7 @@ if(window.FileReader) {
     var binURL = {}, binKey = {}, sendingImage = {};
     function dropFood(mx,my,bin,name) {
         
-        var id = uniqueID;// "_"+CryptoJS.MD5(new Date()+""+Math.random());
+        var id = "_"+CryptoJS.MD5(uniqueID+bin);
         
         var hash = "_"+CryptoJS.MD5(bin);
         if(cache[hash]) {
@@ -373,6 +373,18 @@ if(window.FileReader) {
             console.log("Food count:",foodCount);
     });
     
+    foodBase.on("child_changed",
+        function(snapshot) {
+            var o = snapshot.val();
+            var id = snapshot.key();
+            
+            var img = showImage(id,o.name,o.x,o.y,o.image);
+
+            if(sendingImage[o.image]) {
+                binKey[o.image] = id;
+                checkUpload(o.name,o.image);
+            }
+    });
     
     foodBase.on("child_added",
         function(snapshot) {
