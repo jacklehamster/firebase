@@ -164,6 +164,14 @@ function Fido() {
         foodBase.child(div.id).remove();
         delete eaten[div.id];
         div = null;
+        
+    
+        var hourSlot = Math.floor(getTime()/1000/60/60);
+        fidoSchedule.child(hourSlot).transaction(
+            function(count) {
+                return count+1;
+            }
+        );
     }
     
     self.lastMeal = 0;

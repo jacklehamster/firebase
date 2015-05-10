@@ -32,8 +32,10 @@
     
         function resize() {
             var drop = document.getElementById('drop');
+            var schedule = document.getElementById('schedule');
             drop.width = document.body.offsetWidth;
             drop.height = document.body.offsetHeight;
+            schedule.width = document.body.offsetWidth;
             var chat = document.getElementById("chat");
             var chatbox = document.getElementById("chatbox");
             chat.style.width = drop.width*(.85);
@@ -181,6 +183,20 @@ if(window.FileReader) {
       var mx = e.pageX;
       var my = e.pageY;
       var dt    = e.dataTransfer;
+      var items = dt.items;
+      for(var i=0;i<items.length;i++) {
+          var item = items[i];
+          console.log(item);
+          if(item.kind=="string" && item.type=="text/uri-list") {
+              item.getAsString(
+                  function(data) {
+                      var url = data;
+                      var name = url.split("/").pop();
+                      dropFood(mx,my,url,name,true);
+                  }
+              );
+          }
+      }
       var files = dt.files;
       for (var i=0; i<files.length; i++) {
         var file = files[i];
@@ -193,7 +209,6 @@ if(window.FileReader) {
               ||file.size>10000000) {
                 return;
             }
-            console.log(file.size);
             console.log(file);
             var bin           = this.result; 
 //            var newFile       = document.createElement('div');
@@ -310,9 +325,21 @@ if(window.FileReader) {
     }
     
     var binURL = {}, binKey = {}, sendingImage = {};
-    function dropFood(mx,my,bin,name) {
+    function dropFood(mx,my,bin,name,sentURL) {
         
         var id = "_"+CryptoJS.MD5(uniqueID+bin);
+        if(sentURL) {
+            foodBase.child(id).set(
+                {
+                    name:name,
+                    image:bin,
+                    x:mx,
+                    y:my
+                }
+            );
+            return;
+        }
+        
         
         var hash = "_"+CryptoJS.MD5(bin);
         if(cache[hash]) {
@@ -370,7 +397,6 @@ if(window.FileReader) {
                 meal.parentNode.removeChild(meal);
             }
             foodCount--;
-            console.log("Food count:",foodCount);
     });
     
     foodBase.on("child_changed",
@@ -401,7 +427,6 @@ if(window.FileReader) {
             if(foodCount>100) {
                 disposableFood.push(img);
             }
-            console.log("Food count:",foodCount);
     });
     
     var disposableFood = [];
@@ -526,8 +551,38 @@ if(window.FileReader) {
     
         var fidoBase = fireBase.child("fido");
         var fidoChat = fireBase.child('chat');
+        var fidoSchedule = fireBase.child("schedule");
         var chatList = new Array(12);
    
+        fidoSchedule.on('value',
+            function(snapshot) {
+                var canvas = document.getElementById('schedule');
+                var context = canvas.getContext("2d");
+                context.clearRect(0,0,canvas.width,canvas.height);
+                var array = [];
+                var o = snapshot.val();
+                var maxCount = 0;
+                for(var hourSlot in o) {
+                    array.push({
+                        time:parseInt(hourSlot)*1000*60*60,
+                        count:o[hourSlot]
+                    });
+                    maxCount = Math.max(maxCount,o[hourSlot]);
+                }
+                array.sort(
+                    function(a,b) {return a.hourSlot<b.hourSlot?-1:a.hourSlot>b.hourSlot?1:0}
+                );
+            
+                context.beginPath();
+                context.lineStyle = "#000000";
+                for(var i=0;i<array.length;i++) {
+                    var percent = array[i].count / maxCount;
+                    context.moveTo(i,canvas.height);
+                    context.lineTo(i,(1-percent)*canvas.height);
+                }
+                context.stroke();
+            });
+    
         fidoChat.on('child_added',
             function(snapshot) {
                 var o = snapshot.val();
@@ -647,6 +702,8 @@ if(window.FileReader) {
         &nbsp;<input type="text" style="position:absolute" id="chat" onkeyup="onKey(event)" maxlength=80>
     </div>
   </div>
+    <canvas id='schedule' width="800" height=20>
+    </canvas>
     <div align="right" style="font-size:16px;">
     FeedMe is built in JavaScript using technologies like <a href="https://www.firebase.com"><img style="vertical-align:bottom" src="http://www.zone-numerique.com/wp-content/uploads/2014/10/firebase-logo.jpg" height=25 title="Firebase" alt="Firebase"></a> and <a href="https://facebook.github.io/react/"><img  style="vertical-align:bottom" src="http://www.mauriziobonani.com/wp-content/uploads/2014/12/reactjs.png" height=25 title="React.js" alt="React.js"></a></div>
     
