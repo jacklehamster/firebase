@@ -83,7 +83,6 @@
                         images.push(this.props.images[id]);
                     }
                 }
-                images.reverse();
                 var br = images.map(function(image) {
                     return <img key={image.id} src={image.url} title={image.name} style={{maxWidth:'100px',maxHeight:'100px'}}/>
                 });
