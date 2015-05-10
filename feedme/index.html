@@ -171,6 +171,7 @@ if(window.FileReader) {
       if (e.preventDefault) { e.preventDefault(); }
       return false;
     }
+      
   
     // Tells the browser that we *can* drop on this target
     addEventHandler(drop, 'dragover', cancel);
@@ -184,18 +185,25 @@ if(window.FileReader) {
       var my = e.pageY;
       var dt    = e.dataTransfer;
       var items = dt.items;
-      for(var i=0;i<items.length;i++) {
-          var item = items[i];
-          console.log(item);
-          if(item.kind=="string" && item.type=="text/uri-list") {
+        
+      function analyze(item) {
+          if(item.kind=="string") {
+              var type = item.type;
               item.getAsString(
                   function(data) {
-                      var url = data;
-                      var name = url.split("/").pop();
-                      dropFood(mx,my,url,name,true);
+                      if(type=="text/uri-list") {
+                          var url = data;
+                          var name = url.split("/").pop();
+                          dropFood(mx,my,url,name,true);
+                      }
+                      console.log(type,data);
                   }
               );
           }
+      }
+        
+      for(var i=0;i<items.length;i++) {
+          analyze(items[i]);
       }
       var files = dt.files;
       for (var i=0; i<files.length; i++) {
@@ -209,7 +217,7 @@ if(window.FileReader) {
               ||file.size>10000000) {
                 return;
             }
-            console.log(file);
+//            console.log(file);
             var bin           = this.result; 
 //            var newFile       = document.createElement('div');
 //            newFile.innerHTML = 'Loaded : '+file.name+' size '+file.size+' B';
@@ -329,12 +337,16 @@ if(window.FileReader) {
         
         var id = "_"+CryptoJS.MD5(uniqueID+bin);
         if(sentURL) {
-            foodBase.child(id).set(
-                {
-                    name:name,
-                    image:bin,
-                    x:mx,
-                    y:my
+            showImage(id,name,mx,my,bin,false,
+                function() {
+                    foodBase.child(id).set(
+                        {
+                            name:name,
+                            image:bin,
+                            x:mx,
+                            y:my
+                        }
+                    );
                 }
             );
             return;
@@ -432,7 +444,7 @@ if(window.FileReader) {
     var disposableFood = [];
     
     var backFood = [];
-    function showImage(id,name,x,y,image,donteat) {
+    function showImage(id,name,x,y,image,donteat,callback) {
         var foodarea = document.getElementById('foodarea');
         var img = document.getElementById(id);
         if(!img)
@@ -457,6 +469,9 @@ if(window.FileReader) {
             if(meals.length>40) {
                 meals[0].parentNode.removeChild(meals[0]);
                 backFood.push(meals[0]);
+            }
+            else if(callback) {
+                callback();
             }
         }
         img.src = image;
