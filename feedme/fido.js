@@ -65,6 +65,11 @@ function Fido() {
                 Math.random()*document.body.offsetHeight);
             bored = (hunger==1?1000:200)*Math.random();
         }
+        
+        if(disposableFood.length) {
+            var food = disposableFood.pop();
+            doEat(food);
+        }
     }
     
     self.gotoAndWalk = function(x,y) {
@@ -108,28 +113,7 @@ function Fido() {
                 if(div && div.parentNode) {
                     this.gotoAndPlay("EAT",
                         function() {
-                            var ateHoursAgo = (getTime()-this.lastMeal)/1000/60/60;
-                            this.lastMeal = getTime();
-                            updateInfo();
-                        
-                            fidoBase.child("lastMeal").set(Firebase.ServerValue.TIMESTAMP);
-//                            console.log("Last meal:",this.lastMeal);
-                            var split = div.name.split(".");
-                            split.pop();
-                        
-                            if(!eaten[div.id]) {
-//                                var msg = 'FIDO ate <b>'+split.join(" ")+'</b> (<img style="max-width:30px; max-height:20px" src="'+div.src+'">) at <b> '+new Date(this.lastMeal).toLocaleTimeString()+"</b>";
-                                var msg = 'FIDO ate '+split.join(" ").toLowerCase()+' at %TIME%';
-
-                                sendChat(msg,div.src);
-                            }
-                        
-                            if(div.parentNode) {
-                                div.parentNode.removeChild(div);
-                            }
-                            foodBase.child(div.id).remove();
-                            delete eaten[div.id];
-                            div = null;
+                            doEat(div);
 
                             var keepEating;
                             this.gotoAndPlay("EATING",
@@ -157,6 +141,29 @@ function Fido() {
         }
 
         self.gotoAndPlay("MOVE",callback);
+    }
+    
+    function doEat(div) {
+        var ateHoursAgo = (getTime()-this.lastMeal)/1000/60/60;
+        self.lastMeal = getTime();
+        updateInfo();
+
+        fidoBase.child("lastMeal").set(Firebase.ServerValue.TIMESTAMP);
+        var split = div.name.split(".");
+        split.pop();
+
+        if(!eaten[div.id]) {
+            var msg = 'FIDO ate '+split.join(" ").toLowerCase()+' at %TIME%';
+
+            sendChat(msg,div.src);
+        }
+
+        if(div.parentNode) {
+            div.parentNode.removeChild(div);
+        }
+        foodBase.child(div.id).remove();
+        delete eaten[div.id];
+        div = null;
     }
     
     self.lastMeal = 0;

@@ -62,8 +62,12 @@
         });
     
   
-    var uniqueID = (new Date().getTime()+Math.random());
-    uniqueID = (uniqueID+"").split(".").join("");
+    var uniqueID = localStorage.getItem("uniqueID");
+    if(!uniqueID) {
+        uniqueID = (new Date().getTime()+Math.random());
+        uniqueID = "_"+(uniqueID+"").split(".").join("");
+        localStorage.setItem("uniqueID",uniqueID);
+    }
     
     fireBase.child('cursor').child(uniqueID).onDisconnect().remove();
     
@@ -119,7 +123,6 @@
     timeBase.once('value',
         function(snapshot) {
             offset = snapshot.val();
-            console.log(offset);
         }
     );
     
@@ -309,7 +312,7 @@ if(window.FileReader) {
     var binURL = {}, binKey = {}, sendingImage = {};
     function dropFood(mx,my,bin,name) {
         
-        var id = "_"+CryptoJS.MD5(new Date()+""+Math.random());
+        var id = uniqueID;// "_"+CryptoJS.MD5(new Date()+""+Math.random());
         
         var hash = "_"+CryptoJS.MD5(bin);
         if(cache[hash]) {
@@ -352,6 +355,7 @@ if(window.FileReader) {
     }
     
     var eaten = {};
+    var foodCount = 0;
     foodBase.on('child_removed',
         function(snapshot) {
             var o = snapshot.val();
@@ -361,23 +365,34 @@ if(window.FileReader) {
                 var foodarea = document.getElementById('foodarea');
                 foodarea.appendChild(backFood.pop());
             }
+            var meal = document.getElementById(id);
+            if(meal && meal.parentNode) {
+                meal.parentNode.removeChild(meal);
+            }
+            foodCount--;
+            console.log("Food count:",foodCount);
     });
+    
     
     foodBase.on("child_added",
         function(snapshot) {
             var o = snapshot.val();
             var id = snapshot.key();
             
-            showImage(id,o.name,o.x,o.y,o.image);
+            var img = showImage(id,o.name,o.x,o.y,o.image);
 
             if(sendingImage[o.image]) {
                 binKey[o.image] = id;
                 checkUpload(o.name,o.image);
             }
-        
-            
-//        console.log("created",img);
+            foodCount++;
+            if(foodCount>100) {
+                disposableFood.push(img);
+            }
+            console.log("Food count:",foodCount);
     });
+    
+    var disposableFood = [];
     
     var backFood = [];
     function showImage(id,name,x,y,image,donteat) {
@@ -408,6 +423,7 @@ if(window.FileReader) {
             }
         }
         img.src = image;
+        return img;
     }
     
 } else { 
