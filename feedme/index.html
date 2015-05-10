@@ -446,6 +446,9 @@ if(window.FileReader) {
         var fido;
         function onDOMContentLoaded(event) {
             document.addEventListener("visibilitychange", function(e) {
+                if(document.visibilityState!="visible") {
+                    fireBase.child('cursor').child(uniqueID).onDisconnect().remove();
+                }
             });
             fido = new Fido();
             drop.appendChild(fido.div);
