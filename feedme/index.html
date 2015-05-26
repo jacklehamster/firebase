@@ -378,7 +378,7 @@ if(window.FileReader) {
             sendImage(name,bin,
                 function(data) {
                     console.log("Sent food",name,data);
-                    imageCache.child(hash).set({name:name,url:data.link});
+                    imageCache.child(hash).set({name:name,url:data.link,deletehash:data.deletehash});
                     binURL[bin] = data.link;
                     checkUpload(name,bin);
                     foodBase.child(id).set(
@@ -721,7 +721,7 @@ if(window.FileReader) {
     <canvas id='schedule' width="800" height=20>
     </canvas>
     <div align="right" style="font-size:16px;">
-    FeedMe is built in JavaScript using technologies like <a href="https://www.firebase.com"><img style="vertical-align:bottom" src="http://www.zone-numerique.com/wp-content/uploads/2014/10/firebase-logo.jpg" height=25 title="Firebase" alt="Firebase"></a> and <a href="https://facebook.github.io/react/"><img  style="vertical-align:bottom" src="http://www.mauriziobonani.com/wp-content/uploads/2014/12/reactjs.png" height=25 title="React.js" alt="React.js"></a></div>
+    FeedMe is built in JavaScript using technologies like <a href="https://www.firebase.com"><img style="vertical-align:bottom" src="http://www.zone-numerique.com/wp-content/uploads/2014/10/firebase-logo.jpg" height=25 title="Firebase" alt="Firebase"></a> and <a href="https://facebook.github.io/react/"><img  style="vertical-align:bottom" src="https://facebook.github.io/react/img/logo.svg" height=25 title="React.js" alt="React.js"></a></div>
     
 </body>
 </html>
