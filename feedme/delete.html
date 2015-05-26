@@ -1,0 +1,33 @@
+        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+<script>
+    var imageCache = new Firebase("https://letscook.firebaseio.com/images");
+    var list = [];
+    imageCache.on('child_added',
+        function(snapshot) {
+            var o = snapshot.val();
+            o.id = snapshot.key();
+            list.push(o);
+            refresh();
+        });
+
+    var t;
+    function refresh() {
+        if(t)clearTimeout(t);
+        t = setTimeout(
+            function() {
+                var html = [];
+                for(var i=0;i<list.length;i++) {
+                    var o = list[i];
+                    var h = "<a title='"+JSON.stringify(o)+"' target=_blank href='"+o.url+"'>"+o.url+"</a> <button onClick='deleteURL(\""+o.id+"\")'>DELETE</button>";
+                    html.push(h);
+                }
+                document.body.innerHTML = html.join("<br>\n");
+            },10);
+    }
+    
+    function deleteURL(id) {
+        imageCache.child(id).remove();
+        location.reload();
+    }
+
+</script>
