@@ -1,0 +1,958 @@
+<head>
+    <style>
+        @font-face { font-family: CA; src: url('ca.ttf'); } 
+    </style>
+</head>
+
+
+<script src="md5.js"></script>
+<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+<script src="jquery-2.1.4.min.js"></script>
+<script src="http://w.soundcloud.com/player/api.js"></script>
+
+<script>
+    var GAME_ID = "80588";
+    var pk = "492d325dba54e52135a808c69f4ba265";
+    var username = window.location.search.split("gjapi_username=")[1];
+    username = username?username.split("&")[0]:null;
+    var token = window.location.search.split("gjapi_token=")[1];
+    token = token?token.split("&")[0]:null;
+    
+    var NG_userid = window.location.search.split("NewgroundsAPI_UserID=")[1];
+    NG_userid = NG_userid?NG_userid.split("&")[0]:null;
+    var NG_username = window.location.search.split("ng_username=")[1];
+    NG_username = NG_username?NG_username.split("&")[0]:null;
+
+    var customSrc = false;
+//    NG_userid = "3303991";
+//    NG_username = "jacklehamster";
+    
+    
+    var empty_image = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+    var topScores = [];
+    var profiles = {};
+    
+//    username = "jacklehamster";
+//    token = "";
+    
+    
+//    console.log(CryptoJS.MD5("password")+"");    
+//    console.log(username,token);
+    var keys = [];
+    var defaultSpeed = 8;
+    var defaultTailSize = 0;
+    var frame = 0;
+    var personalFurthest = 0;
+    var hist = [];
+    var cycle = 0;
+    var theScore = 0;
+    var highScore = 0;
+    
+    var transImg = {
+        'E':'E',
+        'N':'N',
+        'NE':'NE',
+        'NS':'NS',
+        'NW':'NW',
+        'S':'S',
+        'SE':'SE',
+        'SW':'SW',
+        'W':'W',
+        'WE':'WE',
+        'EW':'WE',
+        'EN':'NE',
+        'SN':'NS',
+        'WN':'NW',
+        'ES':'SE',
+        'WS':'SW'
+    };
+    
+    var num_array = [];
+    var firebase = new Firebase("https://dobuki.firebaseio.com/tron");
+    var furthestLived = 0;
+    firebase.child('furthest').on('value',
+        function(snapshot) {
+            furthestLived = snapshot.val();
+        });
+    
+    
+    var fb_hists = firebase.child('hist');
+    fb_hists.child('count').on('value',
+        function(snapshot) {
+            var count = snapshot.val();
+            while(num_array.length < count) {
+                num_array.push(num_array.length);
+            }
+        });
+    
+    
+    function swap(i,j,array) {
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    
+    function makePlayer(obj) {
+        var player = {
+            src:obj.src,
+            hist:obj.hist,
+            index:0,
+            pos:{x:obj.hist[0][3].x,y:obj.hist[0][3].y}, 
+            dir:obj.hist[0][1], frame:0, 
+            tail:null, tailend:null, speed:hist[0][2], tailsize:0 
+        };
+        players.push(player);
+        
+        for(var f=0;f<frame-cycle;f++) {
+            var h = player.hist[player.index];
+            if(h && h[0]==f) {
+                player.index++;
+                player.dir = h[1];
+                player.speed = h[2];
+            }
+            if(f%player.speed==0) {
+                var d = getMovFromDir(player.dir);
+                player.pos.x += d.x;
+                player.pos.y += d.y;
+            }
+        }
+    }
+    
+    var spawning = false;
+    var cache = {};
+    function spawnPlayer() {
+        spawning = true;
+        var num = Math.min(num_array.length-1, 10);
+        for(var i=0;i<num;i++) {
+            swap(i,Math.floor(i + Math.random()*(num_array.length-1-i)),num_array);
+        }
+        var slice = num_array.slice(0,num);
+        
+        var array = [];
+        
+        function func() {
+            var furthest = -1;
+            if(array.length) {
+                furthest = 0;
+                var furthestCommand = lastCommand(array[0]);
+                for(var i=1;i<array.length;i++) {
+                    var command = lastCommand(array[i]);
+                    if(command>furthestCommand) {
+                        furthest = i;
+                        furthestCommand = command;
+                    }
+                }
+            }
+            if(furthest>=0) {
+                if(!array[furthest].player) {
+                    makePlayer(array[furthest]);
+                }
+            }
+            spawning = false;
+        }
+            
+        function lastCommand(obj) {
+            var h = obj.hist[obj.hist.length-1];
+            return h[0];
+        }
+        
+        var loading = 0;
+        for(var i=0;i<slice.length;i++) {
+            var key = "key_" + slice[i];
+            if(cache[key]) {
+                array.push(cache[key]);
+            }
+            else {
+                loading ++;
+                fb_hists.child(key).once('value',
+                    function(snapshot) {
+                        var obj = snapshot.val();
+                        cache[snapshot.key()] = obj;
+                        array.push(obj);
+                        loading--;
+                        if(!loading) {
+                            func();
+                        }
+                    });
+            }
+        }
+        if(!loading) {
+            func();
+        }
+    }
+    
+    function makeTail(player,size) {
+        player.tail = { x:player.pos.x, y:player.pos.y, player:player, isTail:true };
+        var node = player.tail;
+        for(var i=0;i<size;i++) {
+            node = appendTail(node,player.pos.x,player.pos.y, player);
+        }
+        player.tailend = node;
+    }
+    
+    function appendTail(tail,x,y,player) {
+        player.tailsize++;
+        var node = {x:x,y:y,isTail:true,player:player};
+        node.p = tail;
+        tail.n = node;
+        return node;
+    }
+    
+    function insertTail(tail,x,y,player) {
+        player.tailsize++;
+        var node = {x:x,y:y,isTail:true,player:player};
+        node.n = tail;
+        tail.p = node;
+        return node;
+    }
+    
+    function cutTail(tail) {
+        tail.player.tailsize--;
+        var node = tail.p;
+        delete node.n;
+        return node;
+    }
+
+    function onKey(event) {
+      keys[event.keyCode] = event.type=="keydown";
+        event.preventDefault();
+        handleKeys(keys,event.keyCode,event.type=="keydown");
+    }
+    
+    function handleKeys(keys,keyCode,keydown) {
+        var dir = hero.dir;
+        var speed = hero.speed;
+        if(keydown) {
+            switch(keyCode) {
+                case 37://left
+                    dir = 2;
+                    break;
+                case 39://right
+                    dir = 0;
+                    break;
+                case 38://up
+                    dir = 3;
+                    break;
+                case 40://down
+                    dir = 1;
+                    break;
+                case 32://space
+                    if(paused()) {
+                        unpause();
+                    }
+                    break;
+            }
+            speed = 3;
+        }
+        else {
+            speed = defaultSpeed;
+        }
+        if(dir!=hero.dir || speed!=hero.speed) {
+            hero.dir = dir;
+            hero.speed = speed;
+            hero.update = true;
+        }            
+    }
+    
+    function fetchTopScores(callback) {
+        var url = "http://gamejolt.com/api/game/v1/scores/?game_id="+GAME_ID;
+        url += "&format=json";
+        url += "&limit="+20;
+        url += "&pk=";
+        var sig = CryptoJS.MD5(url+pk)+"";
+        url += "&signature="+sig;
+
+        $.ajax({
+          url: url
+        })
+          .done(function( data ) {
+            var obj = JSON.parse(data);
+            var scores = [];
+            if(obj.response.scores && obj.response.scores.length) {
+                scores = obj.response.scores;
+            }
+            if(callback) {
+                callback(scores);
+            }
+          });
+    }
+    
+    function fetchUserScore(user,token,callback) {
+        if(!user) {
+            setTimeout(callback,10,0);
+            return;
+        }
+        var url = "http://gamejolt.com/api/game/v1/scores/?game_id="+GAME_ID;
+        url += "&format=json";
+        url += "&username="+user;
+        url += "&user_token="+token;
+        url += "&pk=";
+        var sig = CryptoJS.MD5(url+pk)+"";
+        url += "&signature="+sig;
+
+        $.ajax({
+          url: url
+        })
+          .done(function( data ) {
+            var obj = JSON.parse(data);
+            var hs = 0;
+            if(obj.response.scores && obj.response.scores.length) {
+                hs = obj.response.scores[0].sort;
+            }
+            if(callback) {
+                callback(hs);
+            }
+          });
+    }
+    
+    var _guestName = null;
+    if(NG_username) {
+        _guestName = NG_username;
+    }
+    function guestName() {
+        if(!_guestName) {
+            _guestName = prompt("Nice Score! Enter your name","");
+        }
+        return _guestName;
+    }
+    
+    function submitScore(user,token,score) {
+        var url = "http://gamejolt.com/api/game/v1/scores/add/?game_id="+GAME_ID;
+        if(user) {
+            url += "&username="+user;
+            url += "&user_token="+token;
+        }
+        else {
+            url += "&guest="+guestName();
+            if(!_guestName || !_guestName.length)
+                return;
+        }
+        url += "&score="+score;
+        url += "&sort="+score;
+        if(customSrc) {
+            url += "&extra_data=" + JSON.stringify({src:hero.src});
+        }
+        url += "&pk=";
+        var sig = CryptoJS.MD5(url+pk)+"";
+        url += "&signature="+sig;
+        
+        $.ajax({
+          url: url
+        })
+          .done(function( data ) {
+            fetchLeaderboard();
+        });
+    }
+    
+    function fetchUsersById(ids,callback) {
+        if(!ids.length) {
+            setTimeout(callback,10,[]);
+            return;
+        }
+        
+        var url = "http://gamejolt.com/api/game/v1/users/?game_id="+GAME_ID+
+            "&user_id="+ids.join(",")+"&format=json&pk=";
+        var sig = CryptoJS.MD5(url+pk)+"";
+        url += "&signature="+sig;
+        
+        $.ajax({
+          url: url
+        })
+          .done(function( data ) {
+            var obj = JSON.parse(data);
+            if(callback) {
+                callback(obj.response.users);
+            }
+          });
+    }
+    
+    function fetchUser(user,callback) {
+        if(!user) {
+            if(NG_userid) {
+                customSrc = true;
+                var src = "http://uimg.ngfiles.com/icons/"+NG_userid.slice(0,4)+"/"+NG_userid+"_small.jpg"
+                setTimeout(callback,10,src);
+                return;
+            }
+            else {
+                setTimeout(callback,10,null);
+                return;
+            }
+        }
+        
+        var url = "http://gamejolt.com/api/game/v1/users/?game_id="+GAME_ID+
+            "&username="+user+"&format=json&pk=";
+        var sig = CryptoJS.MD5(url+pk)+"";
+        url += "&signature="+sig;
+        
+        $.ajax({
+          url: url
+        })
+          .done(function( data ) {
+            var obj = JSON.parse(data);
+            var user = obj.response.users[0];
+            
+            profiles[user.username] = user;
+            profiles[user.id] = user;
+            
+            var avatar_url = user.avatar_url;
+            var img = new Image();
+            img.src = avatar_url;
+            img.onload = function() {
+                makeDirty(hero.pos.x,hero.pos.y);
+            }
+            if(callback) {
+                callback(avatar_url);
+            }
+          });
+    }
+    
+    
+    //http://gamejolt.com/api/game/v1/users/?game_id=80588&username=jacklehamster&pk=&signature=09b20c91798ed96cae27d2dc5a8755bc
+    
+    var imgs;
+    var grid;
+    var template;
+    var gridHeight = 40, gridWidth = 60;
+    
+    function init() {
+        template = new Image();
+        template.src = "ground.jpg";
+        template.onload = function() {
+            imgs = new Array(gridWidth);
+            grid = new Array(gridWidth);
+            for(var i=0;i<imgs.length;i++) {
+                imgs[i] = new Array(gridHeight);
+                grid[i] = new Array(gridHeight);
+            }
+            
+            for(var y=0;y<gridHeight;y++) {
+                for(var x=0;x<gridWidth;x++) {
+                    var img = new Image();
+                    img.src = template.src;
+                    img.width = 16;
+                    img.height = 16;
+                    matrix.appendChild(img);
+                    imgs[x][y] = img;
+                }
+                matrix.appendChild(document.createElement("br"));
+            }
+        }
+        
+          document.addEventListener("keydown",onKey);
+          document.addEventListener("keyup",onKey);
+          window.focus();
+        
+        requestAnimationFrame(onframe);
+        pause();
+        fetchUser(username,
+            function(src) {
+                hero.src = src ? src : getSrc("cycle-blue.jpg");
+            });
+        fetchUserScore(username,token,
+            function(score) {
+                highScore = score;
+                refreshScore();
+            });
+        fetchLeaderboard();
+    }
+    
+    function fetchLeaderboard() {
+        fetchTopScores(
+            function(scores) {
+                var ids = [];
+                for(var i=0;i<scores.length;i++) {
+                    var user_id = scores[i].user_id;
+                    if(user_id && ids.indexOf(user_id)<0 
+                       && !profiles[user_id]) {
+                        ids.push(user_id);
+                    }
+                }
+                fetchUsersById(ids,
+                    function(users) {
+                        for(var i=0;i<users.length;i++) {
+                            var user = users[i];
+                            profiles[user.username] = user;
+                            profiles[user.id] = user;
+                            refreshLeaderboard();
+                        }
+                    });
+                
+                topScores = scores;
+                refreshLeaderboard();
+            });
+    }
+    
+    
+    var now,
+        dt   = 0,
+        last = timestamp(),
+        step = 1/60;
+
+    function onframe() {
+      now = timestamp();
+      dt = dt + Math.min(1, (now - last) / 1000);
+      while(dt > step) {
+        dt = dt - step;
+        update(step);
+      }
+      render(dt);
+      last = now;
+      requestAnimationFrame(onframe);
+    }
+
+    
+    function update() {
+        if(grid && !paused()) {
+            frame++;
+            
+            if(!hero.KO) {
+                if(frame-cycle > furthestLived) {
+                    cycle = frame;
+                }
+                
+                
+                if(!spawning && players.length<3+frame/1000 && !particles.length && frame>300) {
+                    spawnPlayer();
+                }
+
+
+                for(var i=0;i<players.length;i++) {
+                    var player = players[i];
+                    if(!player.tail)
+                        makeTail(player,defaultTailSize);
+                    movePlayer(player);
+                }
+
+                var ps = [];
+                for(var i=0;i<players.length;i++) {
+                    if(!players[i].KO) {
+                        ps.push(players[i]);
+                    }
+                }
+                players = ps;
+            }
+            else if(frame-hero.KO>100) {
+                
+                if(theScore && (username || theScore==highScore)) {
+                    submitScore(username,token,theScore);
+                }
+                restart();
+            }
+            
+            if(particles.length) {
+                for(var i=0;i<particles.length;i++) {
+                    refreshParticle(particles[i]);
+                }
+                var particle = particles[particles.length-1];
+                if(particle.life<0) {
+                    particles.pop();
+                    document.body.removeChild(particle);
+                    particleBin.push(particle);
+                }
+            }
+            
+            if(bonuses.length) {
+                for(var i=0;i<bonuses.length;i++) {
+                    refreshBonus(bonuses[i]);
+                }
+                var bonus = bonuses[bonuses.length-1];
+                if(bonus.life<0) {
+                    bonuses.pop();
+                    document.body.removeChild(bonus);
+                    bonusBin.push(bonus);
+                }
+            }
+        }        
+    }
+    
+    function getMovFromDir(dir) {
+        var dx = 0, dy = 0;
+        switch(dir) {
+            case 0:
+                dx = 1;
+                break;
+            case 1:
+                dy = 1;
+                break;
+            case 2:
+                dx = -1;
+                break;
+            case 3:
+                dy = -1;
+                break;
+        }
+        return {x:dx,y:dy};
+    }
+    
+    function movePlayer(player) {
+        if(frame%player.speed!=0) {
+            return;
+        }
+        if(player.hist) {
+            if(player.index<player.hist.length) {
+                var h = player.hist[player.index];
+                if(h && h[0]==frame) {
+                    player.dir = h[1];
+                    player.index++;
+                }
+            }
+        }
+        else if(player.update) {
+            delete player.update;
+            hist.push([frame,player.dir,player.speed]);
+        }
+        
+        var d = getMovFromDir(player.dir);
+        
+        //  cut tail
+        if((player==hero?frame:frame-cycle)/100<player.tailsize) {
+            grid[player.tailend.x][player.tailend.y] = null;
+            makeDirty(player.tailend.x,player.tailend.y);        
+            player.tailend = cutTail(player.tailend);
+            makeDirty(player.tailend.x,player.tailend.y);
+        }
+        
+        //  insert new tail
+        if(outOfBound(player.pos.x,player.pos.y)) {
+            player.KO = frame;
+            explode(player);
+            return;
+        }
+        grid[player.pos.x][player.pos.y] = player.tail = insertTail(player.tail,player.pos.x,player.pos.y,player);
+        makeDirty(player.pos.x,player.pos.y);
+        
+        //  move player
+        var nextX = player.pos.x + d.x;
+        var nextY = player.pos.y + d.y;
+        if(outOfBound(nextX,nextY) || grid[nextX][nextY]!=null) {
+            player.KO = frame;
+            explode(player);
+            
+            if(player==hero) {
+                if(frame>personalFurthest) {
+                    fb_hists.child('count').transaction(
+                        function(current_value) {
+                            var val = current_value||0;
+                            fb_hists.child("key_"+val).set({src:player.src=="cycle-blue.jpg"?"cycle-red.jpg":player.src,hist:hist});
+                            return (current_value || 0) + 1;
+                        });
+                    if(frame>furthestLived) {
+                        firebase.child('furthest').transaction(
+                            function(current_value) {
+                                var val = current_value||0;
+                                furthestLived = Math.max(val,frame);
+                                return furthestLived;
+                            });
+                    }
+                    personalFurthest = frame;
+                }
+            }
+            else {
+                if(!outOfBound(nextX,nextY)) {
+                    if(grid[nextX][nextY] && (grid[nextX][nextY].player == hero || grid[nextX][nextY] == hero)) {
+                        bonus(player,player.tailsize*10);
+                        theScore += player.tailsize*10;
+                        highScore = Math.max(theScore, highScore);
+                        refreshScore();
+                    }
+                }
+            }
+            return;
+        }
+        
+        player.pos.x = nextX;
+        player.pos.y = nextY;
+        grid[player.pos.x][player.pos.y] = player;
+        makeDirty(player.pos.x,player.pos.y);
+    }
+    
+    function refreshScore() {
+        scorediv.innerHTML = "BEST : " + highScore + "<br>" + "SCORE: "+theScore;
+    }
+    
+    function outOfBound(x,y) {
+        return x<0 || x>=gridWidth || y<0 || y>=gridHeight;
+    }
+    
+    var particleBin = [];
+    var bonusBin = [];
+    
+    function explode(player) {
+        for(var i=0; i<10; i++) {
+            var particle = particleBin.pop();
+            if(!particle) {
+                particle = document.createElement("img");
+                particle.width = 5;
+                particle.height = 5;
+                particle.style.position = "absolute";
+            }
+            particle.src = player.src;
+            particle.px = player.pos.x * 16+8-2;
+            particle.py = player.pos.y * 16+8-2;
+            particle.dx = (Math.random()-.5)*8;
+            particle.dy = (-Math.random())*6;
+            particle.life = 10+Math.round(Math.random()*50);
+            particles.push(particle);
+            document.body.appendChild(particle);
+        }
+        particles.sort(particleComparer);
+        setTimeout(destroyTail,500,player.tail);
+        explosionsound.currentTime = 0;
+        explosionsound.play();
+        if(player==hero)
+            humsound.pause();
+
+    }
+    
+    function bonus(player,scoreplus) {
+        var bonus = bonusBin.pop();
+        if(!bonus) {
+            bonus = document.createElement("span");
+            bonus.style.position = "absolute";
+            bonus.style.color = "white";
+            bonus.style.backgroundColor = "black";
+            bonus.style.fontFamily = "CA,Charcoal,sans-serif";
+        }
+        bonus.innerHTML = "+"+scoreplus;
+        bonus.px = player.pos.x * 16+8-2;
+        bonus.py = player.pos.y * 16+8-2;
+        bonus.life = 20;
+        bonuses.push(bonus);
+        document.body.appendChild(bonus);
+    }
+    
+    function destroyTail(tail) {
+        for(var t = tail; t; t = t.n) {
+            if(!outOfBound(t.x,t.y)) {
+                grid[t.x][t.y] = null;
+                makeDirty(t.x,t.y);
+            }
+        }
+    }
+    
+    
+    function particleComparer(p1,p2) {
+        return p2.life-p1.life;
+    }
+    
+    function refreshParticle(particle) {
+        particle.px += particle.dx;
+        particle.py += particle.dy;
+        particle.dy +=.2;
+        particle.life --;
+        particle.style.posLeft = particle.style.left = Math.round(particle.px) + "px";
+        particle.style.posTop = particle.style.top = Math.round(particle.py) + "px";
+    }
+    
+    function refreshBonus(bonus) {
+        bonus.py -=.1;
+        bonus.life --;
+        bonus.style.posLeft = bonus.style.left = Math.round(bonus.px) + "px";
+        bonus.style.posTop = bonus.style.top = Math.round(bonus.py) + "px";
+    }
+    
+    
+    function makeDirty(x,y) {
+        dirtyTiles.push(
+            {
+                x:x,
+                y:y
+            });
+    }
+    
+    function render(dt) {
+        if(imgs) {
+            for(var i = 0; i < dirtyTiles.length; i++) {
+                var tile = dirtyTiles[i];
+                var cell = grid[tile.x][tile.y];
+                var src = null;
+                if(cell) {
+                    if(cell.src) {
+                        src = cell.src;
+                    }
+                    else if(cell.isTail) {
+                        src = renderTail(cell);
+                    }
+                }
+                
+                if(!src) {
+                    src = template.src;
+                }
+                if(imgs[tile.x][tile.y])
+                    imgs[tile.x][tile.y].src = src;
+            }
+            dirtyTiles = [];            
+        }
+    }
+    
+    function renderTail(tail) {
+        var front, back;
+        if(tail.player.tail==tail) {
+            front = tail.player.pos;
+        }
+        else {
+            front = tail.p;
+        }
+        
+        back = tail.n;
+        
+        var dd = [];
+
+        if(front.x-tail.x==-1) dd.push('W');
+        else if(front.x-tail.x==1) dd.push('E');
+        else if(front.y-tail.y==-1) dd.push('N');
+        else if(front.y-tail.y==1) dd.push('S');
+        
+        if(back) {
+            if(tail.x-back.x==-1) dd.push('E');
+            else if(tail.x-back.x==1) dd.push('W');
+            else if(tail.y-back.y==-1) dd.push('S');
+            else if(tail.y-back.y==1) dd.push('N');
+        }
+        var src = transImg[dd.join("")];
+        if(!src)
+            return empty_image;
+        if(tail.player!=hero) {
+            src+="-red";
+        }
+        return getSrc(src+".jpg");
+    }
+
+    function timestamp() {
+      return window.performance && window.performance.now ? window.performance.now() : new Date().getTime();
+    }    
+    
+    var hero = {pos:{x:Math.floor(10 + (gridWidth-20)*Math.random()),y:Math.floor(10 + (gridHeight-20)*Math.random())}, 
+                dir:Math.floor(4*Math.random()), frame:0, tail:null, tailend:null, speed:defaultSpeed, tailsize:0 
+               };
+    var players = [hero];
+    var dirtyTiles = [];
+    var particles = [];
+    var bonuses = [];
+//    alert(window.location.search);
+    
+    
+    hist.push([frame,hero.dir,hero.speed,{x:hero.pos.x,y:hero.pos.y}]);
+    
+    function restart() {
+        theScore = 0;
+        
+        keys = [];
+        frame = 0;
+        cycle = 0;
+        hist = [];
+        hero = {src:hero.src,
+            pos:{x:Math.floor(gridWidth*Math.random()),y:Math.floor(gridHeight*Math.random())}, 
+                    dir:Math.floor(4*Math.random()), frame:0, tail:null, tailend:null, speed:defaultSpeed, tailsize:0 
+                   };
+        players = [hero];
+        dirtyTiles = [];
+        for(var y=0;y<gridHeight;y++) {
+            for(var x=0;x<gridWidth;x++) {
+                var img = imgs[x][y];
+                grid[x][y] = null;
+                img.src = template.src;
+            }
+        }
+        hist.push([frame,hero.dir,hero.speed,{x:hero.pos.x,y:hero.pos.y}]);
+        pause();
+    }
+    
+    
+    function pause() {
+        cover.style.display = "";
+        humsound.pause();
+        var widget = SC.Widget(document.getElementById('soundcloud_widget'));
+        widget.seekTo(0);
+        widget.play();
+    }
+    
+    function unpause() {
+        cover.style.display = "none";
+        refreshScore();
+        humsound.play();
+        var widget = SC.Widget(document.getElementById('soundcloud_widget'));
+        widget.pause();
+    }
+    
+    function paused() {
+        return cover.style.display!="none";
+    }
+    
+    var cachedSrc = {};
+    function getSrc(src) {
+        if(!cachedSrc[src]) {
+            var image = cachedSrc[src] = new Image();
+            image.src = src;
+        }
+        return cachedSrc[src].src;
+    }
+    
+    function refreshLeaderboard() {
+        var html = "";
+        for(var i=0;i<topScores.length;i++) {
+            var scoreLine = topScores[i%topScores.length];
+            var extra = scoreLine.extra_data ? JSON.parse(scoreLine.extra_data) : null;
+            
+            html += "<tr>";
+            html += "<td width=10 align='center'>"+(i+1)+"</td>";
+            html += "<td width=20>";
+            var user = profiles[scoreLine.user_id];
+            var src = user ? user.avatar_url : extra && extra.src ? extra.src : empty_image;
+            html += "<img src="+src+" width=16 height=16 />";
+            html += "</td>";
+            html += "<td width=200 style='font-size:15' valign='middle'>";
+            var name = scoreLine.user;
+            if(!name || !name.length) {
+                name = scoreLine.guest;
+            }
+            html += name;
+            html += "</td>";
+            html += "<td align='right'>";
+            html += scoreLine.score;
+            html += "</td>";
+            html += "</tr>";
+        }
+        leaderboard.innerHTML = html;
+    }
+    
+    var mute = false;
+    function toggleSound() {
+        mute = !mute;
+        soundButton.src = mute?"soundoff.jpg":"soundon.jpg";
+        var widget = SC.Widget(document.getElementById('soundcloud_widget'));
+        widget.setVolume(mute?0:100);
+        humsound.volume = mute?0:1;
+        explosionsound.volume = mute?0:1;
+    }
+</script>
+
+
+
+
+
+<html>
+    <body bgcolor="black" onload="init()">
+        <div id="scorediv" style="position:absolute; font-family:CA,Charcoal,sans-serif; font-size:20; color:white"></div>
+        <div id="cover" style="width:960px; height:640px;align:center; position:absolute"><br><br><p><center><img width=500 height=500 src='title.gif' /></center></p></div>
+        <table>
+            <tr>
+                <td valign="top">
+                    <div id="matrix" style="min-width:960px"/>
+                </td>
+                <td valign="top">
+                    <div style="width:100%; align:right">
+                        <img id="soundButton" onclick="toggleSound();" height="20" widgh="25" src="soundon.jpg"/>
+                    </div>
+                    <br>
+                    <table id="leaderboard" style="font-family:CA,Charcoal,sans-serif; font-size:16; color:#f0f0f0">
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <audio id="explosionsound" src="boom5.mp3"></audio>
+    <audio id="humsound" src="humcut.mp3" loop></audio>
+<iframe id="soundcloud_widget" width="100%" height="0" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/178575509&amp;auto_play=true&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>      
+    </body>
+</html>
